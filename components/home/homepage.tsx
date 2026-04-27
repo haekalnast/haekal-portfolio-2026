@@ -1,9 +1,9 @@
 "use client";
 
-import { motion, useAnimationControls } from "framer-motion";
+import { motion, useAnimationFrame, useMotionValue } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { cn } from "@/lib/cn";
 
 type MarqueeItem = {
@@ -14,7 +14,11 @@ type MarqueeItem = {
   kind: "hero" | "mockup";
   defaultCardBg: string;
   defaultTextColor?: string;
+  hoverCardBg?: string;
+  hoverTextColor?: string;
   defaultImageUrl?: string;
+  mediaWidth?: number;
+  mediaHeight?: number;
 };
 
 type FeaturedCard = {
@@ -32,6 +36,8 @@ const marqueeItems: MarqueeItem[] = [
     kind: "hero",
     defaultCardBg: "#240040",
     defaultTextColor: "#B48CFF",
+    hoverCardBg: "#B48CFF",
+    hoverTextColor: "#240040",
   },
   {
     key: "b2b-mockup",
@@ -40,7 +46,9 @@ const marqueeItems: MarqueeItem[] = [
     href: "https://www.behance.net/",
     kind: "mockup",
     defaultCardBg: "#B48CFF",
-    defaultImageUrl: "https://www.figma.com/api/mcp/asset/4312bf5e-ad20-435d-af81-004f8a0db338",
+    defaultImageUrl: "https://www.figma.com/api/mcp/asset/2d44c91f-075a-46ae-88b3-4cc9d66abc94",
+    mediaWidth: 272,
+    mediaHeight: 186,
   },
   {
     key: "compro-hero",
@@ -49,6 +57,8 @@ const marqueeItems: MarqueeItem[] = [
     kind: "hero",
     defaultCardBg: "#661A00",
     defaultTextColor: "#FF814D",
+    hoverCardBg: "#FF814D",
+    hoverTextColor: "#661A00",
   },
   {
     key: "compro-mockup",
@@ -57,7 +67,9 @@ const marqueeItems: MarqueeItem[] = [
     href: "https://www.behance.net/",
     kind: "mockup",
     defaultCardBg: "#FF814D",
-    defaultImageUrl: "https://www.figma.com/api/mcp/asset/740b2d34-e8f7-415d-8acb-85b307e7d799",
+    defaultImageUrl: "https://www.figma.com/api/mcp/asset/51a71833-419a-4070-b919-edc3fe0a9884",
+    mediaWidth: 272,
+    mediaHeight: 186,
   },
   {
     key: "trading-hero",
@@ -66,6 +78,8 @@ const marqueeItems: MarqueeItem[] = [
     kind: "hero",
     defaultCardBg: "#001A33",
     defaultTextColor: "#73B8FF",
+    hoverCardBg: "#73B8FF",
+    hoverTextColor: "#001A33",
   },
   {
     key: "trading-mockup",
@@ -74,7 +88,9 @@ const marqueeItems: MarqueeItem[] = [
     href: "https://www.behance.net/",
     kind: "mockup",
     defaultCardBg: "#73B8FF",
-    defaultImageUrl: "https://www.figma.com/api/mcp/asset/0b0d8428-8210-46a5-ad60-7ddfb870d200",
+    defaultImageUrl: "https://www.figma.com/api/mcp/asset/04b5daca-64b8-4b21-84ff-44be593cc8f2",
+    mediaWidth: 206,
+    mediaHeight: 186,
   },
   {
     key: "merchant-hero",
@@ -83,6 +99,8 @@ const marqueeItems: MarqueeItem[] = [
     kind: "hero",
     defaultCardBg: "#330000",
     defaultTextColor: "#FF7878",
+    hoverCardBg: "#FF7878",
+    hoverTextColor: "#330000",
   },
   {
     key: "merchant-mockup",
@@ -91,7 +109,9 @@ const marqueeItems: MarqueeItem[] = [
     href: "https://www.behance.net/",
     kind: "mockup",
     defaultCardBg: "#FF7878",
-    defaultImageUrl: "https://www.figma.com/api/mcp/asset/00e7b7fd-c261-4a2d-93e4-801b46f0391c",
+    defaultImageUrl: "https://www.figma.com/api/mcp/asset/887cfb82-fe15-469a-8872-350b9f376ecf",
+    mediaWidth: 272,
+    mediaHeight: 186,
   },
   {
     key: "ewallet-hero",
@@ -100,6 +120,8 @@ const marqueeItems: MarqueeItem[] = [
     kind: "hero",
     defaultCardBg: "#322200",
     defaultTextColor: "#FEE97F",
+    hoverCardBg: "#FEE97F",
+    hoverTextColor: "#322200",
   },
   {
     key: "ewallet-mockup",
@@ -108,7 +130,9 @@ const marqueeItems: MarqueeItem[] = [
     href: "https://www.behance.net/",
     kind: "mockup",
     defaultCardBg: "#FEE97F",
-    defaultImageUrl: "https://www.figma.com/api/mcp/asset/3b239509-fc93-460e-8d2b-76c4a9587074",
+    defaultImageUrl: "https://www.figma.com/api/mcp/asset/6b25901b-42d5-4871-8e31-f5700949cc2f",
+    mediaWidth: 174,
+    mediaHeight: 186,
   },
 ];
 
@@ -183,8 +207,10 @@ function FloatingNavbar() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "rounded-full px-5 py-3 text-base leading-4 transition-colors",
-                  index === 0 ? "bg-[#F2F2F2] text-black" : "text-[#707070] hover:text-black",
+                  "flex h-[46px] w-[84px] items-center justify-center rounded-[230px] text-center text-base leading-4 transition-colors",
+                  index === 0
+                    ? "bg-[#F2F2F2] text-black"
+                    : "text-[#707070] hover:bg-[#F2F2F2] hover:text-[#707070]",
                 )}
               >
                 {item.label}
@@ -222,8 +248,10 @@ function FloatingNavbar() {
               key={item.href}
               href={item.href}
               className={cn(
-                "rounded-full px-5 py-3 text-base leading-4",
-                index === 0 ? "bg-[#F2F2F2] text-black" : "text-[#707070]",
+                "flex h-[46px] w-[84px] items-center justify-center rounded-[230px] text-center text-base leading-4 transition-colors",
+                index === 0
+                  ? "bg-[#F2F2F2] text-black"
+                  : "text-[#707070] hover:bg-[#F2F2F2] hover:text-[#707070]",
               )}
             >
               {item.label}
@@ -275,49 +303,50 @@ function HeroSection() {
 }
 
 function MarqueeShowcase() {
-  const controls = useAnimationControls();
-  const [isPaused, setPaused] = useState(false);
+  const [isPausedByIcon, setIsPausedByIcon] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const x = useMotionValue(0);
 
   const loopItems = useMemo(() => [...marqueeItems, ...marqueeItems], []);
+  const itemFullWidth = 326; // 312 card + 14 gap
+  const oneSetWidth = marqueeItems.length * itemFullWidth;
 
-  const startAnimation = useCallback(() => {
-    controls.start({
-      x: ["0%", "-50%"],
-      transition: {
-        duration: 42,
-        ease: "linear",
-        repeat: Number.POSITIVE_INFINITY,
-      },
-    });
-  }, [controls]);
-
-  useEffect(() => {
-    startAnimation();
-  }, [startAnimation]);
+  useAnimationFrame((_, delta) => {
+    if (isPausedByIcon || isDragging) return;
+    const speed = 36; // px per second
+    const moved = (speed * delta) / 1000;
+    let next = x.get() - moved;
+    if (next <= -oneSetWidth) next += oneSetWidth;
+    x.set(next);
+  });
 
   return (
     <div className="relative left-1/2 h-[342px] w-screen -translate-x-1/2 overflow-hidden">
       <motion.div
         className="flex min-w-max gap-[14px] pt-8"
-        animate={controls}
+        style={{ x }}
         drag="x"
         dragConstraints={{ left: -1200, right: 0 }}
         dragElastic={0.08}
-        onHoverStart={() => {
-          setPaused(true);
-          controls.stop();
-        }}
-        onHoverEnd={() => {
-          setPaused(false);
-          startAnimation();
-        }}
-        onDragStart={() => controls.stop()}
+        onDragStart={() => setIsDragging(true)}
         onDragEnd={() => {
-          if (!isPaused) startAnimation();
+          setIsDragging(false);
+          const current = x.get();
+          const normalized = ((-current % oneSetWidth) + oneSetWidth) % oneSetWidth;
+          x.set(-normalized);
         }}
       >
         {loopItems.map((item, i) => (
-          <MarqueeCard key={`${item.key}-${i}`} item={item} />
+          <MarqueeCard
+            key={`${item.key}-${i}`}
+            item={item}
+            onIconHoverStart={() => {
+              setIsPausedByIcon(true);
+            }}
+            onIconHoverEnd={() => {
+              setIsPausedByIcon(false);
+            }}
+          />
         ))}
       </motion.div>
     </div>
@@ -345,8 +374,17 @@ function ArrowIcon({ hover = false }: { hover?: boolean }) {
   );
 }
 
-function MarqueeCard({ item }: { item: MarqueeItem }) {
+function MarqueeCard({
+  item,
+  onIconHoverStart,
+  onIconHoverEnd,
+}: {
+  item: MarqueeItem;
+  onIconHoverStart: () => void;
+  onIconHoverEnd: () => void;
+}) {
   const isMockup = item.kind === "mockup";
+  const [isIconHovered, setIsIconHovered] = useState(false);
 
   return (
     <article
@@ -355,14 +393,10 @@ function MarqueeCard({ item }: { item: MarqueeItem }) {
         isMockup ? "h-[278px]" : "h-[210px]",
       )}
     >
-      <Link href={item.href} target="_blank" className="absolute inset-0 z-20">
-        <span className="sr-only">{item.title}</span>
-      </Link>
-
       {isMockup ? (
         <div className="absolute inset-0">
           <div
-            className="absolute inset-x-0 top-0 h-[210px] rounded-[20px]"
+            className="absolute inset-x-0 top-0 h-[210px] rounded-[20px] transition-colors duration-300"
             style={{ backgroundColor: item.defaultCardBg }}
           >
             <div className="absolute inset-0 rounded-[20px] bg-[#F2F2F2] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
@@ -370,25 +404,59 @@ function MarqueeCard({ item }: { item: MarqueeItem }) {
               <Image
                 src={item.defaultImageUrl}
                 alt={item.title}
-                width={312}
-                height={210}
+                width={item.mediaWidth ?? 272}
+                height={item.mediaHeight ?? 186}
                 unoptimized
-                className="relative z-10 h-[210px] w-[312px] object-contain"
+                className={cn(
+                  "relative z-10 object-contain",
+                  item.key === "ewallet-mockup"
+                    ? "mx-auto mt-6 h-[186px] w-[174px]"
+                    : item.key === "trading-mockup"
+                      ? "mx-auto mt-6 h-[186px] w-[206px]"
+                      : "mx-auto mt-6 h-[186px] w-[272px]",
+                )}
               />
             )}
           </div>
-          <div className="pointer-events-none absolute left-0 top-[218px] opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+          <div
+            className={cn(
+              "pointer-events-none absolute left-0 top-[218px] transition-opacity duration-200",
+              isIconHovered ? "opacity-100" : "opacity-0",
+            )}
+          >
             <p className="text-[20px] leading-[30px] tracking-[-1px] text-black">{item.title}</p>
             <p className="text-base leading-6 text-[#707070]">{item.subtitle}</p>
           </div>
-          <span className="absolute bottom-[84px] left-4 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-[#FAFAFA] shadow-[0_0_0_1px_rgba(0,0,0,0.06)] transition-all duration-300">
-            <span className="block group-hover:hidden">
+          <Link
+            href={item.href}
+            target="_blank"
+            aria-label={item.title}
+            className="absolute bottom-[84px] left-4 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-[#FAFAFA] shadow-[0_0_0_1px_rgba(0,0,0,0.06)] transition-all duration-300"
+            onMouseEnter={() => {
+              setIsIconHovered(true);
+              onIconHoverStart();
+            }}
+            onMouseLeave={() => {
+              setIsIconHovered(false);
+              onIconHoverEnd();
+            }}
+            onFocus={() => {
+              setIsIconHovered(true);
+              onIconHoverStart();
+            }}
+            onBlur={() => {
+              setIsIconHovered(false);
+              onIconHoverEnd();
+            }}
+            tabIndex={0}
+          >
+            <span className={isIconHovered ? "hidden" : "block"}>
               <ArrowIcon />
             </span>
-            <span className="hidden group-hover:block">
+            <span className={isIconHovered ? "block" : "hidden"}>
               <ArrowIcon hover />
             </span>
-          </span>
+          </Link>
         </div>
       ) : (
         <div
@@ -397,17 +465,18 @@ function MarqueeCard({ item }: { item: MarqueeItem }) {
         >
           <div
             className="absolute inset-0 rounded-[20px] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-            style={{ backgroundColor: "#F2F2F2" }}
+            style={{ backgroundColor: item.hoverCardBg }}
           />
           <p
-            className="relative z-10 flex h-full items-center justify-center text-center text-[34px] leading-8 tracking-[-1px] transition-colors duration-300"
+            className="relative z-10 flex h-full items-center justify-center text-center text-[26px] leading-8 tracking-[-1px] transition-colors duration-300"
             style={{ color: item.defaultTextColor }}
           >
             <span className="group-hover:hidden">{item.title}</span>
-            <span className="hidden group-hover:inline text-black">
+            <span className="hidden group-hover:inline" style={{ color: item.hoverTextColor }}>
               {item.title}
             </span>
           </p>
+          <Link href={item.href} target="_blank" className="absolute inset-0" aria-label={item.title} />
         </div>
       )}
     </article>
