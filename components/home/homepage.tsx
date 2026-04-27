@@ -173,6 +173,17 @@ const instagramLinks = {
   brin: "https://www.instagram.com/brin_indonesia/",
 };
 
+const dockApps = [
+  { name: "Figma", icon: "https://www.figma.com/api/mcp/asset/3928281a-3d0f-4b48-b7b7-adc64467900d" },
+  { name: "Cursor", icon: "https://www.figma.com/api/mcp/asset/c4008ecb-0f80-475f-8f10-1e21da0f250c" },
+  { name: "Arc", icon: "https://www.figma.com/api/mcp/asset/e1a6a208-13a3-4ad6-9ea5-bdc252e12fa1" },
+  { name: "Affinity", icon: "https://www.figma.com/api/mcp/asset/7077e9dd-7ed2-4b04-95e6-2112418ef724" },
+  { name: "Github Desktop", icon: "https://www.figma.com/api/mcp/asset/0022a158-2622-49f7-85b1-51899b386bfe" },
+  { name: "Notion", icon: "https://www.figma.com/api/mcp/asset/99e8f6a5-ae66-4dcd-ac56-4bde678ac862" },
+  { name: "Framer", icon: "https://www.figma.com/api/mcp/asset/690d584b-d135-4799-b944-1b75510e8e5f" },
+  { name: "Spotify", icon: "https://www.figma.com/api/mcp/asset/cad70b18-1f0b-48a9-b78d-2cbb108071ce" },
+];
+
 function LogoMark() {
   return (
     <Link
@@ -382,6 +393,101 @@ function ArrowIcon({ hover = false }: { hover?: boolean }) {
   );
 }
 
+function SmartUnderlineLink({
+  href,
+  children,
+}: {
+  href: string;
+  children: string;
+}) {
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <Link
+      href={href}
+      target="_blank"
+      className="relative inline-block text-[#707070]"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      {children}
+      <motion.span
+        className="absolute right-0 bottom-0 left-0 h-px bg-[#707070]"
+        initial={{ scaleX: 0 }}
+        animate={{ scaleX: hovered ? 1 : 0 }}
+        transition={{ duration: 0.22, ease: "easeOut" }}
+        style={{ originX: 0 }}
+      />
+    </Link>
+  );
+}
+
+function AboutToolsCard() {
+  const [hoveredApp, setHoveredApp] = useState<string | null>(null);
+  const [isIconHovered, setIsIconHovered] = useState(false);
+
+  return (
+    <article className="relative w-full lg:w-[648px]">
+      <div className="relative h-[324px] overflow-hidden rounded-[20px] bg-[#F2F2F2] px-10 pt-6 pb-20">
+        <div className="relative mx-auto mt-[39px] h-[124px] w-full max-w-[880px]">
+          <div className="absolute top-[39px] h-[85px] w-full rounded-[20px] border border-[#484848] bg-[rgba(40,40,40,0.6)] shadow-[0_2px_2px_rgba(0,0,0,0.25)] backdrop-blur-[12px]" />
+          <div className="absolute top-[48px] left-[6px] flex h-[66px] items-center gap-[5px]">
+            {dockApps.map((app) => (
+              <div
+                key={app.name}
+                className="relative"
+                onMouseEnter={() => setHoveredApp(app.name)}
+                onMouseLeave={() => setHoveredApp(null)}
+              >
+                <motion.img
+                  src={app.icon}
+                  alt={app.name}
+                  width={66}
+                  height={66}
+                  className="h-[66px] w-[66px] object-cover"
+                  whileHover={{ scale: 1.12, y: -4 }}
+                  transition={{ type: "spring", stiffness: 280, damping: 20 }}
+                />
+                {hoveredApp === app.name && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 6 }}
+                    transition={{ duration: 0.18, ease: "easeOut" }}
+                    className="pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md bg-[#5A5A5A] px-3 py-1 text-sm text-white"
+                  >
+                    {app.name}
+                  </motion.div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <button
+          type="button"
+          aria-label="Tools details"
+          className="absolute bottom-4 left-4 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-[#FAFAFA] shadow-[0_0_0_1px_rgba(0,0,0,0.06)]"
+          onMouseEnter={() => setIsIconHovered(true)}
+          onMouseLeave={() => setIsIconHovered(false)}
+        >
+          {isIconHovered ? <ArrowIcon hover /> : <ArrowIcon />}
+        </button>
+      </div>
+
+      <motion.div
+        className="pt-2"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: isIconHovered ? 1 : 0 }}
+        transition={{ duration: 0.2, ease: "easeOut" }}
+      >
+        <p className="text-[20px] leading-[30px] tracking-[-1px] text-black">Tools I Use</p>
+        <p className="text-base leading-6 text-[#707070]">The stack behind my work</p>
+      </motion.div>
+    </article>
+  );
+}
+
 function MarqueeCard({
   item,
   onIconHoverStart,
@@ -508,46 +614,26 @@ function AboutSection() {
           </p>
           <p className="max-w-[720px] text-base leading-6 text-[#707070]">
             Currently building{" "}
-            <Link
-              href={instagramLinks.sfast}
-              target="_blank"
-              className="underline-offset-2 hover:underline"
-            >
+            <SmartUnderlineLink href={instagramLinks.sfast}>
               @sfast.official
-            </Link>
+            </SmartUnderlineLink>
             ,{" "}
-            <Link
-              href={instagramLinks.dipay}
-              target="_blank"
-              className="underline-offset-2 hover:underline"
-            >
+            <SmartUnderlineLink href={instagramLinks.dipay}>
               @dipayindonesia
-            </Link>
+            </SmartUnderlineLink>
             , and{" "}
-            <Link
-              href={instagramLinks.bpr}
-              target="_blank"
-              className="underline-offset-2 hover:underline"
-            >
+            <SmartUnderlineLink href={instagramLinks.bpr}>
               @bpr_qaya
-            </Link>
+            </SmartUnderlineLink>
             <br />
             Previously{" "}
-            <Link
-              href={instagramLinks.cimb}
-              target="_blank"
-              className="underline-offset-2 hover:underline"
-            >
+            <SmartUnderlineLink href={instagramLinks.cimb}>
               @cimb_niaga
-            </Link>{" "}
+            </SmartUnderlineLink>{" "}
             &amp;{" "}
-            <Link
-              href={instagramLinks.brin}
-              target="_blank"
-              className="underline-offset-2 hover:underline"
-            >
+            <SmartUnderlineLink href={instagramLinks.brin}>
               @brin_indonesia
-            </Link>
+            </SmartUnderlineLink>
             .
           </p>
         </div>
@@ -559,24 +645,7 @@ function AboutSection() {
         </Link>
       </div>
 
-      <article className="relative h-[324px] w-full overflow-hidden rounded-[20px] bg-[#F2F2F2] px-10 pt-6 pb-20 lg:w-[648px]">
-        <Image
-          src="https://www.figma.com/api/mcp/asset/694ca566-1cf1-4292-be4a-b67c5811f9c4"
-          alt="Tools card preview"
-          className="h-full w-full object-cover"
-          width={648}
-          height={324}
-          unoptimized
-        />
-        <Link
-          href="https://github.com"
-          target="_blank"
-          className="absolute bottom-4 left-4 flex h-8 w-8 items-center justify-center rounded-full bg-[#FAFAFA] shadow-[0_0_0_1px_rgba(0,0,0,0.06)]"
-          aria-label="Open tools details"
-        >
-          <span className="text-xl leading-none text-[#707070]">↗</span>
-        </Link>
-      </article>
+      <AboutToolsCard />
     </section>
   );
 }
@@ -672,10 +741,18 @@ function FooterSection() {
 }
 
 function FooterLink({ href, children }: { href: string; children: string }) {
+  const [hovered, setHovered] = useState(false);
+
   return (
-    <Link href={href} target="_blank" className="inline-flex items-center gap-1 hover:underline">
+    <Link
+      href={href}
+      target="_blank"
+      className="inline-flex items-center gap-1 hover:underline"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
       {children}
-      <span className="text-base leading-none">↗</span>
+      <ArrowIcon hover={hovered} />
     </Link>
   );
 }
