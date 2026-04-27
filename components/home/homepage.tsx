@@ -3,7 +3,7 @@
 import { motion, useAnimationFrame, useMotionValue } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { cn } from "@/lib/cn";
 
 type MarqueeItem = {
@@ -176,12 +176,14 @@ const instagramLinks = {
 const dockApps = [
   { name: "Figma", icon: "https://www.figma.com/api/mcp/asset/3928281a-3d0f-4b48-b7b7-adc64467900d" },
   { name: "Cursor", icon: "https://www.figma.com/api/mcp/asset/c4008ecb-0f80-475f-8f10-1e21da0f250c" },
-  { name: "Arc", icon: "https://www.figma.com/api/mcp/asset/e1a6a208-13a3-4ad6-9ea5-bdc252e12fa1" },
   { name: "Affinity", icon: "https://www.figma.com/api/mcp/asset/7077e9dd-7ed2-4b04-95e6-2112418ef724" },
   { name: "Github Desktop", icon: "https://www.figma.com/api/mcp/asset/0022a158-2622-49f7-85b1-51899b386bfe" },
   { name: "Notion", icon: "https://www.figma.com/api/mcp/asset/99e8f6a5-ae66-4dcd-ac56-4bde678ac862" },
   { name: "Framer", icon: "https://www.figma.com/api/mcp/asset/690d584b-d135-4799-b944-1b75510e8e5f" },
   { name: "Spotify", icon: "https://www.figma.com/api/mcp/asset/cad70b18-1f0b-48a9-b78d-2cbb108071ce" },
+  { name: "WhatsApp", icon: "https://www.figma.com/api/mcp/asset/15c7de87-fd3a-4e2f-9fc6-1110cf302c97" },
+  { name: "Finder", icon: "https://www.figma.com/api/mcp/asset/c7b30e4e-76ac-4525-a021-05506e87a664" },
+  { name: "Trash", icon: "https://www.figma.com/api/mcp/asset/5271f34d-aa24-47e4-9454-6abff83ccbf0" },
 ];
 
 function LogoMark() {
@@ -324,20 +326,45 @@ function HeroSection() {
 function MarqueeShowcase() {
   const [isPausedByIcon, setIsPausedByIcon] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const x = useMotionValue(0);
 
   const loopItems = useMemo(() => [...marqueeItems, ...marqueeItems], []);
   const itemFullWidth = 326; // 312 card + 14 gap
   const oneSetWidth = marqueeItems.length * itemFullWidth;
 
+  useEffect(() => {
+    const rafId = window.requestAnimationFrame(() => {
+      setIsMounted(true);
+    });
+    return () => window.cancelAnimationFrame(rafId);
+  }, []);
+
   useAnimationFrame((_, delta) => {
-    if (isPausedByIcon || isDragging) return;
+    if (!isMounted || isPausedByIcon || isDragging) return;
     const speed = 36; // px per second
     const moved = (speed * delta) / 1000;
     let next = x.get() - moved;
     if (next <= -oneSetWidth) next += oneSetWidth;
     x.set(next);
   });
+
+  if (!isMounted) {
+    return (
+      <div className="relative left-1/2 h-[342px] w-screen -translate-x-1/2 overflow-hidden">
+        <div className="flex min-w-max gap-[14px] pt-8">
+          {marqueeItems.map((item) => (
+            <MarqueeCard
+              key={`${item.key}-ssr`}
+              item={item}
+              onIconHoverStart={() => undefined}
+              onIconHoverEnd={() => undefined}
+            />
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="relative left-1/2 h-[342px] w-screen -translate-x-1/2 overflow-hidden">
@@ -427,40 +454,79 @@ function AboutToolsCard() {
   const [isIconHovered, setIsIconHovered] = useState(false);
 
   return (
-    <article className="relative w-full lg:w-[648px]">
-      <div className="relative h-[324px] overflow-hidden rounded-[20px] bg-[#F2F2F2] px-10 pt-6 pb-20">
-        <div className="relative mx-auto mt-[39px] h-[124px] w-full max-w-[880px]">
-          <div className="absolute top-[39px] h-[85px] w-full rounded-[20px] border border-[#484848] bg-[rgba(40,40,40,0.6)] shadow-[0_2px_2px_rgba(0,0,0,0.25)] backdrop-blur-[12px]" />
-          <div className="absolute top-[48px] left-[6px] flex h-[66px] items-center gap-[5px]">
-            {dockApps.map((app) => (
-              <div
-                key={app.name}
-                className="relative"
-                onMouseEnter={() => setHoveredApp(app.name)}
-                onMouseLeave={() => setHoveredApp(null)}
-              >
-                <motion.img
-                  src={app.icon}
-                  alt={app.name}
-                  width={66}
-                  height={66}
-                  className="h-[66px] w-[66px] object-cover"
-                  whileHover={{ scale: 1.12, y: -4 }}
-                  transition={{ type: "spring", stiffness: 280, damping: 20 }}
-                />
-                {hoveredApp === app.name && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 6 }}
-                    transition={{ duration: 0.18, ease: "easeOut" }}
-                    className="pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md bg-[#5A5A5A] px-3 py-1 text-sm text-white"
+    <article className="relative mx-auto w-[358px] md:w-full lg:w-[648px]">
+      <div className="relative h-[324px] overflow-hidden rounded-[20px] bg-[#F2F2F2] pl-10 md:pl-0 lg:pl-10">
+        <div className="absolute top-6 right-0 bottom-20 flex items-center">
+          <div className="relative h-[124px] w-[290px] overflow-hidden md:w-[530px] lg:w-[530px]">
+            <div className="absolute top-[39px] left-0 h-[85px] w-[880px] rounded-[20px] border border-[#484848] bg-[rgba(40,40,40,0.6)] shadow-[0_2px_2px_rgba(0,0,0,0.25)] backdrop-blur-[12px]" />
+            <div className="absolute top-[48px] left-[6px] flex h-[66px] w-[868px] items-center gap-[5px] md:hidden">
+              {dockApps.map((app, index) => {
+                const hoverable = index <= 3; // up to Github on mobile
+                return (
+                  <div
+                    key={`mobile-${app.name}`}
+                    className="relative"
+                    onMouseEnter={hoverable ? () => setHoveredApp(app.name) : undefined}
+                    onMouseLeave={hoverable ? () => setHoveredApp(null) : undefined}
                   >
-                    {app.name}
-                  </motion.div>
-                )}
-              </div>
-            ))}
+                    <motion.img
+                      src={app.icon}
+                      alt={app.name}
+                      width={66}
+                      height={66}
+                      className="h-[66px] w-[66px] shrink-0 object-cover"
+                      whileHover={hoverable ? { scale: 1.12, y: -4 } : undefined}
+                      transition={{ type: "spring", stiffness: 280, damping: 20 }}
+                    />
+                    {hoverable && hoveredApp === app.name && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 6 }}
+                        transition={{ duration: 0.18, ease: "easeOut" }}
+                        className="pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md bg-[#5A5A5A] px-3 py-1 text-sm text-white"
+                      >
+                        {app.name}
+                      </motion.div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+            <div className="absolute top-[48px] left-[6px] hidden h-[66px] w-[868px] items-center gap-[5px] md:flex">
+              {dockApps.map((app, index) => {
+                const hoverable = index <= 6; // up to Spotify on tablet/desktop
+                return (
+                  <div
+                    key={`desktop-${app.name}`}
+                    className="relative"
+                    onMouseEnter={hoverable ? () => setHoveredApp(app.name) : undefined}
+                    onMouseLeave={hoverable ? () => setHoveredApp(null) : undefined}
+                  >
+                    <motion.img
+                      src={app.icon}
+                      alt={app.name}
+                      width={66}
+                      height={66}
+                      className="h-[66px] w-[66px] shrink-0 object-cover"
+                      whileHover={hoverable ? { scale: 1.12, y: -4 } : undefined}
+                      transition={{ type: "spring", stiffness: 280, damping: 20 }}
+                    />
+                    {hoverable && hoveredApp === app.name && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 6 }}
+                        transition={{ duration: 0.18, ease: "easeOut" }}
+                        className="pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md bg-[#5A5A5A] px-3 py-1 text-sm text-white"
+                      >
+                        {app.name}
+                      </motion.div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
 
