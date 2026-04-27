@@ -165,6 +165,14 @@ const navItems = [
   { label: "Designs", href: "#designs" },
 ];
 
+const instagramLinks = {
+  sfast: "https://www.instagram.com/sfast.official/",
+  dipay: "https://www.instagram.com/dipayindonesia/",
+  bpr: "https://www.instagram.com/bpr_qaya/",
+  cimb: "https://www.instagram.com/cimb_niaga/",
+  brin: "https://www.instagram.com/brin_indonesia/",
+};
+
 function LogoMark() {
   return (
     <Link
@@ -427,10 +435,9 @@ function MarqueeCard({
             <p className="text-[20px] leading-[30px] tracking-[-1px] text-black">{item.title}</p>
             <p className="text-base leading-6 text-[#707070]">{item.subtitle}</p>
           </div>
-          <Link
-            href={item.href}
-            target="_blank"
-            aria-label={item.title}
+          <button
+            type="button"
+            aria-label={`${item.title} details`}
             className="absolute bottom-[84px] left-4 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-[#FAFAFA] shadow-[0_0_0_1px_rgba(0,0,0,0.06)] transition-all duration-300"
             onMouseEnter={() => {
               setIsIconHovered(true);
@@ -456,7 +463,7 @@ function MarqueeCard({
             <span className={isIconHovered ? "block" : "hidden"}>
               <ArrowIcon hover />
             </span>
-          </Link>
+          </button>
         </div>
       ) : (
         <div
@@ -500,9 +507,48 @@ function AboutSection() {
             real usage, and scalable systems.
           </p>
           <p className="max-w-[720px] text-base leading-6 text-[#707070]">
-            Currently building @sfast.official, @dipayindonesia, and @bpr_qaya.
+            Currently building{" "}
+            <Link
+              href={instagramLinks.sfast}
+              target="_blank"
+              className="underline-offset-2 hover:underline"
+            >
+              @sfast.official
+            </Link>
+            ,{" "}
+            <Link
+              href={instagramLinks.dipay}
+              target="_blank"
+              className="underline-offset-2 hover:underline"
+            >
+              @dipayindonesia
+            </Link>
+            , and{" "}
+            <Link
+              href={instagramLinks.bpr}
+              target="_blank"
+              className="underline-offset-2 hover:underline"
+            >
+              @bpr_qaya
+            </Link>
             <br />
-            Previously @cimb_niaga &amp; @brin_indonesia.
+            Previously{" "}
+            <Link
+              href={instagramLinks.cimb}
+              target="_blank"
+              className="underline-offset-2 hover:underline"
+            >
+              @cimb_niaga
+            </Link>{" "}
+            &amp;{" "}
+            <Link
+              href={instagramLinks.brin}
+              target="_blank"
+              className="underline-offset-2 hover:underline"
+            >
+              @brin_indonesia
+            </Link>
+            .
           </p>
         </div>
         <Link
