@@ -163,6 +163,11 @@ const FEATURED_ASSETS = {
   personal: "https://www.figma.com/api/mcp/asset/8c0eea6a-8f54-4cbb-8429-524080328d4c",
 } as const;
 
+const BPR_SCREEN_ASSETS = {
+  navbar: "/bpr-screen-navbar-user.png",
+  sections: "/bpr-screen-sections-user-512x2008.png",
+} as const;
+
 const navItems = [
   { label: "Home", href: "#home" },
   { label: "About", href: "#about" },
@@ -1101,7 +1106,7 @@ function FeaturedDesignCard({
       }}
     >
       <div className="relative h-full w-full overflow-hidden rounded-[20px] bg-[#F2F2F2]">
-        <div className="relative h-full w-full px-10 py-6">
+        <div className={cn("relative h-full w-full", card.id === "bpr" ? "px-0 py-0" : "px-10 py-6")}>
           {card.id === "bpr" && <BPRMockup hovered={isHoverState} />}
           {card.id === "sfast" && <SFASTMockup hovered={isHoverState} />}
           {card.id === "personal" && <PersonalMockup hovered={isHoverState} />}
@@ -1163,32 +1168,39 @@ function FeaturedDesignCard({
   );
 }
 
-function BPRMockup({ hovered }: { hovered: boolean }) {
+function BPRMockup({ hovered: _hovered }: { hovered: boolean }) {
   return (
     <div className="relative h-full w-full">
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div
-          className={cn(
-            "relative w-full max-w-[692px] overflow-hidden aspect-[692/412] transition-transform duration-500 ease-out",
-            hovered ? "scale-[1.02]" : "scale-100",
-          )}
-        >
-          <Image
-            src={FEATURED_ASSETS.bpr}
-            alt="BPR Platform"
-            fill
-            unoptimized
-            className="object-contain"
-            sizes="(min-width: 1024px) 692px, 100vw"
-          />
-          <div className="absolute left-[13.0058%] top-[11.165%] z-10 h-[77.6699%] w-[73.9884%] overflow-hidden rounded-[2px] bg-white">
-            <Image
-              src="https://www.figma.com/api/mcp/asset/88295d9f-e1bb-4986-9c79-24afb71bd5a9"
-              alt="BPR screen frame"
-              width={512}
-              height={320}
-              unoptimized
-              className="h-full w-full object-cover"
+      <div
+        className="absolute left-[-22px] top-4 h-[412px] w-[692px] overflow-hidden"
+      >
+        <Image
+          src={FEATURED_ASSETS.bpr}
+          alt="BPR Platform"
+          fill
+          unoptimized
+          className="object-cover"
+          sizes="692px"
+        />
+        <div className="absolute left-[90px] top-[46px] z-10 h-[320px] w-[512px] overflow-hidden rounded-[2px] bg-white">
+          <div className="absolute inset-0 z-10 overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+            <div className="w-[512px]">
+              <img
+                src={BPR_SCREEN_ASSETS.sections}
+                alt="BPR sections content"
+                width={512}
+                height={2008}
+                className="block h-[2008px] w-[512px] max-w-none"
+              />
+            </div>
+          </div>
+          <div className="pointer-events-none absolute inset-x-0 top-0 z-20 h-[26px] overflow-hidden bg-white">
+            <img
+              src={BPR_SCREEN_ASSETS.navbar}
+              alt="BPR mockup navbar"
+              width={1024}
+              height={52}
+              className="block h-[26px] w-[512px] max-w-none"
             />
           </div>
         </div>
