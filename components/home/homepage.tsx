@@ -3,7 +3,7 @@
 import { motion, useAnimationFrame, useMotionValue } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
 
 type MarqueeItem = {
@@ -22,10 +22,10 @@ type MarqueeItem = {
 };
 
 type FeaturedCard = {
+  id: "bpr" | "sfast" | "personal";
   title: string;
   subtitle: string;
   href: string;
-  imageUrl: string;
 };
 
 const marqueeItems: MarqueeItem[] = [
@@ -138,26 +138,30 @@ const marqueeItems: MarqueeItem[] = [
 
 const featuredCards: FeaturedCard[] = [
   {
+    id: "bpr",
     title: "BPR Platform",
-    subtitle: "Banking product for lending and customer operations.",
-    href: "https://www.behance.net/",
-    imageUrl: "https://www.figma.com/api/mcp/asset/bc345e34-7b5b-486a-a892-8e15bf7f1741",
+    subtitle: "Web | Fintech",
+    href: "https://bprqaya.id/",
   },
   {
-    title: "SFAST Mobile",
-    subtitle: "Trading experience with real-time market data.",
+    id: "sfast",
+    title: "SFAST Mobile App",
+    subtitle: "Mobile | Fintech",
     href: "https://www.behance.net/",
-    imageUrl:
-      "https://www.figma.com/api/mcp/asset/5eb0e6ae-acd4-4ba2-88cf-a29f3d091ba5",
   },
   {
-    title: "Personal Finance",
-    subtitle: "Financial planning, wallet, and payment overview.",
+    id: "personal",
+    title: "Dipay Personal",
+    subtitle: "Mobile | E-Wallet",
     href: "https://www.behance.net/",
-    imageUrl:
-      "https://www.figma.com/api/mcp/asset/0d6eacbd-c805-4b8e-bb05-8b6182333f7e",
   },
 ];
+
+const FEATURED_ASSETS = {
+  bpr: "https://www.figma.com/api/mcp/asset/3be41822-89f8-4007-b31f-c1340f0d50d3",
+  sfast: "https://www.figma.com/api/mcp/asset/04b5daca-64b8-4b21-84ff-44be593cc8f2",
+  personal: "https://www.figma.com/api/mcp/asset/8c0eea6a-8f54-4cbb-8429-524080328d4c",
+} as const;
 
 const navItems = [
   { label: "Home", href: "#home" },
@@ -185,6 +189,10 @@ const dockApps = [
   { name: "Finder", icon: "https://www.figma.com/api/mcp/asset/c7b30e4e-76ac-4525-a021-05506e87a664" },
   { name: "Trash", icon: "https://www.figma.com/api/mcp/asset/5271f34d-aa24-47e4-9454-6abff83ccbf0" },
 ];
+
+const PREMIUM_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
+const PREMIUM_DURATION = 0.32;
+const PREMIUM_DELAY = 0.04;
 
 function LogoMark() {
   return (
@@ -284,13 +292,32 @@ function FloatingNavbar() {
   );
 }
 
-function HeroSection() {
+function HeroSection({
+  activeArrowId,
+  onArrowHoverStart,
+  onArrowHoverEnd,
+}: {
+  activeArrowId: string | null;
+  onArrowHoverStart: (id: string) => void;
+  onArrowHoverEnd: (id: string) => void;
+}) {
+  const isGlobalFocus = activeArrowId !== null;
+
   return (
     <section
       id="home"
       className="mx-auto w-full max-w-[1440px] bg-[#FAFAFA] px-4 pt-[124px] pb-[80px] sm:px-10 lg:px-[60px]"
     >
-      <div className="py-6 sm:py-10 lg:py-14">
+      <motion.div
+        className="py-6 sm:py-10 lg:py-14"
+        initial={false}
+        animate={{
+          opacity: isGlobalFocus ? 0.14 : 1,
+          filter: isGlobalFocus ? "blur(1px)" : "blur(0px)",
+          scale: isGlobalFocus ? 0.995 : 1,
+        }}
+        transition={{ duration: PREMIUM_DURATION, ease: PREMIUM_EASE }}
+      >
         <div className="max-w-[800px] space-y-10">
           <div className="max-w-[640px] space-y-4">
             <p className="text-base leading-6 text-black">Bagas Al Haekal Nasution</p>
@@ -317,13 +344,25 @@ function HeroSection() {
             </p>
           </div>
         </div>
-      </div>
-      <MarqueeShowcase />
+      </motion.div>
+      <MarqueeShowcase
+        activeArrowId={activeArrowId}
+        onArrowHoverStart={onArrowHoverStart}
+        onArrowHoverEnd={onArrowHoverEnd}
+      />
     </section>
   );
 }
 
-function MarqueeShowcase() {
+function MarqueeShowcase({
+  activeArrowId,
+  onArrowHoverStart,
+  onArrowHoverEnd,
+}: {
+  activeArrowId: string | null;
+  onArrowHoverStart: (id: string) => void;
+  onArrowHoverEnd: (id: string) => void;
+}) {
   const [isPausedByIcon, setIsPausedByIcon] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
@@ -360,8 +399,13 @@ function MarqueeShowcase() {
             <MarqueeCard
               key={`${item.key}-ssr`}
               item={item}
-              onIconHoverStart={() => undefined}
-              onIconHoverEnd={() => undefined}
+              isGlobalDimmed={activeArrowId !== null && activeArrowId !== `${item.key}-ssr`}
+              onIconHoverStart={() => {
+                onArrowHoverStart(`${item.key}-ssr`);
+              }}
+              onIconHoverEnd={() => {
+                onArrowHoverEnd(`${item.key}-ssr`);
+              }}
             />
           ))}
         </div>
@@ -393,11 +437,14 @@ function MarqueeShowcase() {
           <MarqueeCard
             key={`${item.key}-${i}`}
             item={item}
+            isGlobalDimmed={activeArrowId !== null && activeArrowId !== `${item.key}-${i}`}
             onIconHoverStart={() => {
               setIsPausedByIcon(true);
+              onArrowHoverStart(`${item.key}-${i}`);
             }}
             onIconHoverEnd={() => {
               setIsPausedByIcon(false);
+              onArrowHoverEnd(`${item.key}-${i}`);
             }}
           />
         ))}
@@ -456,12 +503,30 @@ function SmartUnderlineLink({
   );
 }
 
-function AboutToolsCard() {
+function AboutToolsCard({
+  isGlobalDimmed,
+  onArrowHoverStart,
+  onArrowHoverEnd,
+}: {
+  isGlobalDimmed: boolean;
+  onArrowHoverStart: () => void;
+  onArrowHoverEnd: () => void;
+}) {
   const [hoveredApp, setHoveredApp] = useState<string | null>(null);
   const [isIconHovered, setIsIconHovered] = useState(false);
 
   return (
-    <article className="relative mx-auto w-[358px] md:w-full lg:w-[648px]">
+    <article
+      className={cn(
+        "relative mx-auto w-[358px] transition-all duration-300 md:w-full lg:w-[648px]",
+        isGlobalDimmed ? "opacity-15" : "opacity-100",
+      )}
+      style={{
+        transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)",
+        filter: isGlobalDimmed ? "blur(1px)" : "blur(0px)",
+        transform: isGlobalDimmed ? "scale(0.995)" : "scale(1)",
+      }}
+    >
       <div className="relative h-[324px] overflow-hidden rounded-[20px] bg-[#F2F2F2] pl-10 md:pl-0 lg:pl-10">
         <div className="absolute top-6 right-0 bottom-20 flex items-center">
           <div className="relative h-[124px] w-[290px] overflow-hidden md:w-[530px] lg:w-[530px]">
@@ -540,19 +605,53 @@ function AboutToolsCard() {
         <button
           type="button"
           aria-label="Tools details"
-          className="absolute bottom-4 left-4 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-[#FAFAFA] shadow-[0_0_0_1px_rgba(0,0,0,0.06)]"
-          onMouseEnter={() => setIsIconHovered(true)}
-          onMouseLeave={() => setIsIconHovered(false)}
+          className="absolute bottom-4 left-4 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-[#FAFAFA] shadow-[0_0_0_1px_rgba(0,0,0,0.06)] transition-all duration-300"
+          style={{ transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)" }}
+          onMouseEnter={() => {
+            setIsIconHovered(true);
+            onArrowHoverStart();
+          }}
+          onMouseLeave={() => {
+            setIsIconHovered(false);
+            onArrowHoverEnd();
+          }}
+          onFocus={() => {
+            setIsIconHovered(true);
+            onArrowHoverStart();
+          }}
+          onBlur={() => {
+            setIsIconHovered(false);
+            onArrowHoverEnd();
+          }}
         >
-          {isIconHovered ? <ArrowIcon hover /> : <ArrowIcon />}
+          <span className="relative block h-5 w-5">
+            <span
+              className={cn(
+                "absolute inset-0 transition-opacity duration-300",
+                isIconHovered ? "opacity-0" : "opacity-100",
+              )}
+              style={{ transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)" }}
+            >
+              <ArrowIcon />
+            </span>
+            <span
+              className={cn(
+                "absolute inset-0 transition-opacity duration-300",
+                isIconHovered ? "opacity-100" : "opacity-0",
+              )}
+              style={{ transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)" }}
+            >
+              <ArrowIcon hover />
+            </span>
+          </span>
         </button>
       </div>
 
       <motion.div
         className="pt-2"
         initial={{ opacity: 0 }}
-        animate={{ opacity: isIconHovered ? 1 : 0 }}
-        transition={{ duration: 0.2, ease: "easeOut" }}
+        animate={{ opacity: isIconHovered ? 1 : 0, y: isIconHovered ? 0 : 8 }}
+        transition={{ duration: PREMIUM_DURATION, ease: PREMIUM_EASE, delay: isIconHovered ? PREMIUM_DELAY : 0 }}
       >
         <p className="text-[20px] leading-[30px] tracking-[-1px] text-black">Tools I Use</p>
         <p className="text-base leading-6 text-[#707070]">The stack behind my work</p>
@@ -563,10 +662,12 @@ function AboutToolsCard() {
 
 function MarqueeCard({
   item,
+  isGlobalDimmed = false,
   onIconHoverStart,
   onIconHoverEnd,
 }: {
   item: MarqueeItem;
+  isGlobalDimmed?: boolean;
   onIconHoverStart: () => void;
   onIconHoverEnd: () => void;
 }) {
@@ -576,9 +677,15 @@ function MarqueeCard({
   return (
     <article
       className={cn(
-        "group relative w-[312px] shrink-0 overflow-visible rounded-[20px]",
+        "group relative w-[312px] shrink-0 overflow-visible rounded-[20px] transition-all duration-300",
+        isGlobalDimmed ? "opacity-15" : "opacity-100",
         isMockup ? "h-[278px]" : "h-[210px]",
       )}
+      style={{
+        transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)",
+        filter: isGlobalDimmed ? "blur(1px)" : "blur(0px)",
+        transform: isGlobalDimmed ? "scale(0.995)" : "scale(1)",
+      }}
     >
       {isMockup ? (
         <div className="absolute inset-0">
@@ -605,19 +712,20 @@ function MarqueeCard({
               />
             )}
           </div>
-          <div
-            className={cn(
-              "pointer-events-none absolute left-0 top-[218px] transition-opacity duration-200",
-              isIconHovered ? "opacity-100" : "opacity-0",
-            )}
+          <motion.div
+            className="pointer-events-none absolute left-0 top-[218px]"
+            initial={false}
+            animate={{ opacity: isIconHovered ? 1 : 0, y: isIconHovered ? 0 : 8 }}
+            transition={{ duration: PREMIUM_DURATION, ease: PREMIUM_EASE, delay: isIconHovered ? PREMIUM_DELAY : 0 }}
           >
             <p className="text-[20px] leading-[30px] tracking-[-1px] text-black">{item.title}</p>
             <p className="text-base leading-6 text-[#707070]">{item.subtitle}</p>
-          </div>
+          </motion.div>
           <button
             type="button"
             aria-label={`${item.title} details`}
             className="absolute bottom-[84px] left-4 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-[#FAFAFA] shadow-[0_0_0_1px_rgba(0,0,0,0.06)] transition-all duration-300"
+            style={{ transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)" }}
             onMouseEnter={() => {
               setIsIconHovered(true);
               onIconHoverStart();
@@ -636,11 +744,25 @@ function MarqueeCard({
             }}
             tabIndex={0}
           >
-            <span className={isIconHovered ? "hidden" : "block"}>
-              <ArrowIcon />
-            </span>
-            <span className={isIconHovered ? "block" : "hidden"}>
-              <ArrowIcon hover />
+            <span className="relative block h-5 w-5">
+              <span
+                className={cn(
+                  "absolute inset-0 transition-opacity duration-300",
+                  isIconHovered ? "opacity-0" : "opacity-100",
+                )}
+                style={{ transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)" }}
+              >
+                <ArrowIcon />
+              </span>
+              <span
+                className={cn(
+                  "absolute inset-0 transition-opacity duration-300",
+                  isIconHovered ? "opacity-100" : "opacity-0",
+                )}
+                style={{ transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)" }}
+              >
+                <ArrowIcon hover />
+              </span>
             </span>
           </button>
         </div>
@@ -669,13 +791,35 @@ function MarqueeCard({
   );
 }
 
-function AboutSection() {
+function AboutSection({
+  activeArrowId,
+  onArrowHoverStart,
+  onArrowHoverEnd,
+}: {
+  activeArrowId: string | null;
+  onArrowHoverStart: (id: string) => void;
+  onArrowHoverEnd: (id: string) => void;
+}) {
+  const aboutArrowId = "about-tools";
+  const isGlobalFocus = activeArrowId !== null;
+  const isAboutFocused = activeArrowId === aboutArrowId;
+
   return (
     <section
       id="about"
       className="mx-auto flex w-full max-w-[1440px] flex-col gap-10 bg-[#FAFAFA] px-4 py-20 sm:px-10 sm:py-[108px] lg:flex-row lg:gap-10 lg:px-[60px] lg:py-[124px]"
     >
-      <div className="w-full flex-1 space-y-10">
+      <div
+        className={cn(
+          "w-full flex-1 space-y-10 transition-all duration-300",
+          isGlobalFocus ? "opacity-15" : "opacity-100",
+        )}
+        style={{
+          transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)",
+          filter: isGlobalFocus ? "blur(1px)" : "blur(0px)",
+          transform: isGlobalFocus ? "scale(0.995)" : "scale(1)",
+        }}
+      >
         <div className="space-y-4">
           <h2 className="w-full text-[26px] leading-8 tracking-[-1px] text-black lg:max-w-[632px] lg:text-[32px] lg:leading-[40px]">
             Product designer working on financial platforms.
@@ -718,42 +862,125 @@ function AboutSection() {
         </Link>
       </div>
 
-      <AboutToolsCard />
+      <AboutToolsCard
+        isGlobalDimmed={isGlobalFocus && !isAboutFocused}
+        onArrowHoverStart={() => onArrowHoverStart(aboutArrowId)}
+        onArrowHoverEnd={() => onArrowHoverEnd(aboutArrowId)}
+      />
     </section>
   );
 }
 
-function FeaturedDesignsSection() {
+function FeaturedDesignsSection({
+  activeArrowId,
+  onArrowHoverStart,
+  onArrowHoverEnd,
+}: {
+  activeArrowId: string | null;
+  onArrowHoverStart: (id: string) => void;
+  onArrowHoverEnd: (id: string) => void;
+}) {
+  const isGlobalFocus = activeArrowId !== null;
+  const [revealedId, setRevealedId] = useState<FeaturedCard["id"] | null>(null);
+  const [hoveredCardId, setHoveredCardId] = useState<FeaturedCard["id"] | null>(null);
+  const sectionRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    const handlePointerDown = (event: PointerEvent) => {
+      if (!sectionRef.current) return;
+      if (!sectionRef.current.contains(event.target as Node)) {
+        setRevealedId(null);
+        setHoveredCardId(null);
+      }
+    };
+    window.addEventListener("pointerdown", handlePointerDown);
+    return () => {
+      window.removeEventListener("pointerdown", handlePointerDown);
+    };
+  }, []);
+
+  const sharedProps = {
+    revealedId,
+    setRevealedId,
+    hoveredCardId,
+    setHoveredCardId,
+  } as const;
+
   return (
     <section
+      ref={sectionRef}
       id="designs"
       className="mx-auto w-full max-w-[1440px] bg-[#FAFAFA] px-4 py-20 sm:px-10 sm:py-[108px] lg:px-[60px] lg:py-[124px]"
     >
-      <div className="mb-12 flex flex-col gap-8 lg:mb-12 lg:flex-row lg:items-center lg:justify-between">
-        <div className="space-y-4">
+      <motion.div
+        className="mb-12 flex flex-col gap-6 lg:mb-12 lg:flex-row lg:items-start lg:justify-between"
+        initial={false}
+        animate={{
+          opacity: isGlobalFocus ? 0.14 : 1,
+          filter: isGlobalFocus ? "blur(1px)" : "blur(0px)",
+          scale: isGlobalFocus ? 0.995 : 1,
+        }}
+        transition={{ duration: PREMIUM_DURATION, ease: PREMIUM_EASE }}
+      >
+        <div className="space-y-2">
           <h2 className="text-[32px] leading-[40px] tracking-[-1px] text-black lg:text-[40px] lg:leading-[56px]">
             Featured Designs
           </h2>
-          <p className="max-w-[720px] text-base leading-6 text-[#707070]">
-            Selected products I&apos;ve designed, from launched platforms to ongoing
-            builds.
+          <p className="max-w-[640px] text-base leading-6 text-[#707070]">
+            Selected products I&apos;ve designed, from launched platforms to ongoing builds.
           </p>
         </div>
         <Link
           href="https://www.behance.net/"
           target="_blank"
-          className="inline-flex h-[46px] w-fit items-center rounded-[230px] bg-[#F2F2F2] px-6 text-base leading-[21px] text-[#707070] transition-colors hover:text-black"
+          className="hidden h-[46px] w-fit items-center rounded-[230px] bg-[#F2F2F2] px-6 text-base leading-[21px] text-[#707070] transition-colors hover:text-black lg:inline-flex"
         >
-          Explore Designs
+          See All Designs
         </Link>
+      </motion.div>
+
+      <div className="relative">
+        <motion.div
+          className="pointer-events-none absolute inset-0 z-10 rounded-[20px] bg-white"
+          initial={false}
+          animate={{ opacity: 0 }}
+          transition={{ duration: PREMIUM_DURATION, ease: PREMIUM_EASE }}
+        />
+        <div className="grid gap-6 lg:grid-cols-2">
+          <FeaturedDesignCard
+            card={featuredCards[0]}
+            activeArrowId={activeArrowId}
+            onArrowHoverStart={onArrowHoverStart}
+            onArrowHoverEnd={onArrowHoverEnd}
+            {...sharedProps}
+          />
+          <div className="grid gap-6 md:grid-cols-2">
+            <FeaturedDesignCard
+              card={featuredCards[1]}
+              activeArrowId={activeArrowId}
+              onArrowHoverStart={onArrowHoverStart}
+              onArrowHoverEnd={onArrowHoverEnd}
+              {...sharedProps}
+            />
+            <FeaturedDesignCard
+              card={featuredCards[2]}
+              activeArrowId={activeArrowId}
+              onArrowHoverStart={onArrowHoverStart}
+              onArrowHoverEnd={onArrowHoverEnd}
+              {...sharedProps}
+            />
+          </div>
+        </div>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-[648px_648px] lg:grid-rows-[444px]">
-        <FeaturedDesignCard card={featuredCards[0]} className="lg:col-span-1 lg:row-span-1" />
-        <div className="grid gap-6 sm:grid-cols-2 lg:col-span-1 lg:row-span-1">
-          <FeaturedDesignCard card={featuredCards[1]} />
-          <FeaturedDesignCard card={featuredCards[2]} />
-        </div>
+      <div className="mt-12 flex justify-center lg:hidden">
+        <Link
+          href="https://www.behance.net/"
+          target="_blank"
+          className="inline-flex h-[46px] w-fit items-center rounded-[230px] bg-[#F2F2F2] px-6 text-base leading-[21px] text-[#707070] transition-colors hover:text-black"
+        >
+          See All Designs
+        </Link>
       </div>
     </section>
   );
@@ -761,35 +988,175 @@ function FeaturedDesignsSection() {
 
 function FeaturedDesignCard({
   card,
-  className,
+  activeArrowId,
+  onArrowHoverStart,
+  onArrowHoverEnd,
+  revealedId,
+  setRevealedId,
+  hoveredCardId,
+  setHoveredCardId,
 }: {
   card: FeaturedCard;
-  className?: string;
+  activeArrowId: string | null;
+  onArrowHoverStart: (id: string) => void;
+  onArrowHoverEnd: (id: string) => void;
+  revealedId: FeaturedCard["id"] | null;
+  setRevealedId: (id: FeaturedCard["id"] | null) => void;
+  hoveredCardId: FeaturedCard["id"] | null;
+  setHoveredCardId: (id: FeaturedCard["id"] | null) => void;
 }) {
+  const isRevealed = revealedId === card.id;
+  const isMockupHovered = hoveredCardId === card.id;
+  const isHoverState = isMockupHovered;
+  const cardArrowId = `design-${card.id}`;
+  const isGlobalDimmed = activeArrowId !== null && activeArrowId !== cardArrowId;
+
   return (
-    <article
-      className={cn(
-        "group relative h-[444px] overflow-hidden rounded-[20px] bg-black/5",
-        className,
-      )}
+    <motion.article
+      className="relative h-[444px]"
+      initial={false}
+      animate={{
+        opacity: isGlobalDimmed ? 0.14 : 1,
+        scale: isGlobalDimmed ? 0.995 : 1,
+        filter: isGlobalDimmed ? "blur(1px)" : "blur(0px)",
+      }}
+      transition={{ duration: PREMIUM_DURATION, ease: PREMIUM_EASE }}
+      style={{ zIndex: isRevealed ? 30 : 20 }}
+      onMouseEnter={() => setHoveredCardId(card.id)}
+      onMouseLeave={() => {
+        setHoveredCardId(null);
+        setRevealedId(null);
+      }}
     >
-      <Image
-        src={card.imageUrl}
-        alt={card.title}
-        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-        fill
-        unoptimized
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/20 to-transparent" />
-      <div className="absolute inset-x-6 bottom-6">
-        <h3 className="text-[26px] leading-8 tracking-[-1px] text-white">{card.title}</h3>
-        <p className="mt-1 max-w-[420px] text-sm leading-5 text-white/80">{card.subtitle}</p>
+      <div className="relative h-full w-full overflow-hidden rounded-[20px] bg-[#F2F2F2]">
+        <div className="relative h-full w-full px-10 py-6">
+          {card.id === "bpr" && <BPRMockup hovered={isHoverState} />}
+          {card.id === "sfast" && <SFASTMockup hovered={isHoverState} />}
+          {card.id === "personal" && <PersonalMockup hovered={isHoverState} />}
+        </div>
+
+        <button
+          type="button"
+          aria-label={`${card.title} details`}
+          className="absolute bottom-4 left-4 z-30 flex h-8 w-8 items-center justify-center rounded-full bg-[#FAFAFA] shadow-[0_0_0_1px_rgba(0,0,0,0.06)] transition-shadow duration-300 hover:shadow-[0_0_0_1px_rgba(0,0,0,0.06),0_0_50px_rgba(0,0,0,0.1)]"
+          style={{ transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)" }}
+          onMouseEnter={() => {
+            setRevealedId(card.id);
+            onArrowHoverStart(cardArrowId);
+          }}
+          onMouseLeave={() => {
+            setRevealedId(null);
+            onArrowHoverEnd(cardArrowId);
+          }}
+          onFocus={() => {
+            setRevealedId(card.id);
+            onArrowHoverStart(cardArrowId);
+          }}
+          onBlur={() => {
+            setRevealedId(null);
+            onArrowHoverEnd(cardArrowId);
+          }}
+          onClick={(event) => {
+            event.stopPropagation();
+            setRevealedId(isRevealed ? null : card.id);
+          }}
+        >
+          <ArrowIcon hover={isRevealed} />
+        </button>
       </div>
-      <Link href={card.href} target="_blank" className="absolute inset-0" aria-label={card.title} />
-      <span className="absolute bottom-4 left-4 flex h-8 w-8 items-center justify-center rounded-full bg-[#FAFAFA] shadow-[0_0_0_1px_rgba(0,0,0,0.06)] transition-transform group-hover:translate-y-[-2px]">
-        <span className="text-xl leading-none text-[#707070]">↗</span>
-      </span>
-    </article>
+
+      <motion.div
+        className="pointer-events-none absolute top-[460px] left-0"
+        initial={false}
+        animate={{ opacity: isRevealed ? 1 : 0, y: isRevealed ? 0 : 8 }}
+        transition={{ duration: PREMIUM_DURATION, ease: PREMIUM_EASE, delay: isRevealed ? PREMIUM_DELAY : 0 }}
+      >
+        <div className="mb-[6px] flex flex-wrap items-center gap-2">
+          <h3 className="text-[20px] leading-[30px] tracking-[-1px] text-black">{card.title}</h3>
+          <span className="inline-flex items-center gap-2 rounded-[8px] border border-[#DEDEE0] bg-[#F2F2F2] px-3 py-[3px] text-base leading-6 text-black">
+            <motion.span
+              className="inline-block h-2 w-2 rounded-full bg-[#14C95D]"
+              animate={{ opacity: [0.35, 1, 0.35], scale: [0.92, 1.08, 0.92] }}
+              transition={{ duration: 1.9, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
+            />
+            Live
+          </span>
+          <span className="inline-flex items-center rounded-[8px] border border-[#DEDEE0] bg-[#F2F2F2] px-3 py-[3px] text-base leading-6 text-black">
+            Case
+          </span>
+        </div>
+        <p className="text-base leading-6 text-[#707070]">{card.subtitle}</p>
+      </motion.div>
+    </motion.article>
+  );
+}
+
+function BPRMockup({ hovered }: { hovered: boolean }) {
+  return (
+    <div className="relative h-full w-full">
+      <div
+        className={cn(
+          "absolute inset-0 transition-transform duration-500 ease-out",
+          hovered ? "scale-[1.02]" : "scale-100",
+        )}
+      >
+        <Image
+          src={FEATURED_ASSETS.bpr}
+          alt="BPR Platform"
+          fill
+          unoptimized
+          className="object-contain object-center"
+          sizes="(min-width: 1024px) 648px, (min-width: 768px) 720px, 100vw"
+        />
+      </div>
+    </div>
+  );
+}
+
+function SFASTMockup({ hovered }: { hovered: boolean }) {
+  return (
+    <div className="relative h-full w-full">
+      <div
+        className={cn(
+          "absolute inset-0 transition-transform duration-500 ease-out",
+          hovered ? "scale-[1.04]" : "scale-100",
+        )}
+      >
+        <Image
+          src={FEATURED_ASSETS.sfast}
+          alt="SFAST Mobile App"
+          fill
+          unoptimized
+          className="object-contain object-center"
+          sizes="(min-width: 1024px) 312px, (min-width: 768px) 348px, 100vw"
+        />
+      </div>
+    </div>
+  );
+}
+
+function PersonalMockup({ hovered }: { hovered: boolean }) {
+  return (
+    <div className="relative h-full w-full">
+      <div
+        className={cn(
+          "absolute h-[351px] w-[174px] transition-all duration-500 ease-out",
+          hovered
+            ? "top-[46.5px] left-1/2 -translate-x-1/2 rotate-0"
+            : "top-0 left-0 rotate-[12deg]",
+        )}
+        style={{ transformOrigin: "50% 50%" }}
+      >
+        <Image
+          src={FEATURED_ASSETS.personal}
+          alt="Dipay Personal mockup"
+          width={174}
+          height={351}
+          unoptimized
+          className="h-full w-full object-contain"
+        />
+      </div>
+    </div>
   );
 }
 
@@ -842,15 +1209,46 @@ function FooterLink({ href, children }: { href: string; children: string }) {
 }
 
 export function Homepage() {
+  const [activeArrowId, setActiveArrowId] = useState<string | null>(null);
+  const isGlobalArrowFocus = activeArrowId !== null;
+  const handleArrowHoverStart = useCallback((id: string) => {
+    setActiveArrowId(id);
+  }, []);
+  const handleArrowHoverEnd = useCallback((id: string) => {
+    setActiveArrowId((prev) => (prev === id ? null : prev));
+  }, []);
+
   return (
     <div className="bg-[#FAFAFA] text-black">
       <FloatingNavbar />
       <main className="flex flex-col">
-        <HeroSection />
-        <AboutSection />
-        <FeaturedDesignsSection />
+        <HeroSection
+          activeArrowId={activeArrowId}
+          onArrowHoverStart={handleArrowHoverStart}
+          onArrowHoverEnd={handleArrowHoverEnd}
+        />
+        <AboutSection
+          activeArrowId={activeArrowId}
+          onArrowHoverStart={handleArrowHoverStart}
+          onArrowHoverEnd={handleArrowHoverEnd}
+        />
+        <FeaturedDesignsSection
+          activeArrowId={activeArrowId}
+          onArrowHoverStart={handleArrowHoverStart}
+          onArrowHoverEnd={handleArrowHoverEnd}
+        />
       </main>
-      <FooterSection />
+      <motion.div
+        initial={false}
+        animate={{
+          opacity: isGlobalArrowFocus ? 0.14 : 1,
+          filter: isGlobalArrowFocus ? "blur(1px)" : "blur(0px)",
+          scale: isGlobalArrowFocus ? 0.995 : 1,
+        }}
+        transition={{ duration: PREMIUM_DURATION, ease: PREMIUM_EASE }}
+      >
+        <FooterSection />
+      </motion.div>
     </div>
   );
 }
