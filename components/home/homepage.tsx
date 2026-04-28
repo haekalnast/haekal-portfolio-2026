@@ -228,7 +228,7 @@ function FloatingNavbar() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "flex h-[46px] w-[84px] items-center justify-center rounded-[230px] text-center text-base leading-4 transition-colors",
+                  "flex h-[46px] w-[84px] items-center justify-center rounded-[230px] text-center text-base leading-[21px] transition-colors",
                   index === 0
                     ? "bg-[#F2F2F2] text-black"
                     : "text-[#707070] hover:bg-[#F2F2F2] hover:text-[#707070]",
@@ -240,7 +240,7 @@ function FloatingNavbar() {
           </nav>
           <Link
             href="mailto:alhaekalnast@gmail.com"
-            className="rounded-[230px] bg-[#F2F2F2] px-6 py-3 text-base text-[#707070] transition-colors hover:text-black"
+            className="rounded-[230px] bg-[#F2F2F2] px-6 py-3 text-base leading-[21px] text-[#707070] transition-colors hover:text-black"
           >
             Let&apos;s Talk
           </Link>
@@ -252,7 +252,7 @@ function FloatingNavbar() {
           <LogoMark />
           <Link
             href="mailto:alhaekalnast@gmail.com"
-            className="rounded-[230px] bg-[#F2F2F2] px-6 py-3 text-base text-[#707070] transition-colors hover:text-black"
+            className="rounded-[230px] bg-[#F2F2F2] px-6 py-3 text-base leading-[21px] text-[#707070] transition-colors hover:text-black"
           >
             Let&apos;s Talk
           </Link>
@@ -269,7 +269,7 @@ function FloatingNavbar() {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex h-[46px] w-[84px] items-center justify-center rounded-[230px] text-center text-base leading-4 transition-colors",
+                "flex h-[46px] w-[84px] items-center justify-center rounded-[230px] text-center text-base leading-[21px] transition-colors",
                 index === 0
                   ? "bg-[#F2F2F2] text-black"
                   : "text-[#707070] hover:bg-[#F2F2F2] hover:text-[#707070]",
@@ -294,7 +294,7 @@ function HeroSection() {
         <div className="max-w-[800px] space-y-10">
           <div className="max-w-[640px] space-y-4">
             <p className="text-base leading-6 text-black">Bagas Al Haekal Nasution</p>
-            <h1 className="text-[52px] leading-[56px] tracking-[-1px] text-black max-sm:text-[52px] max-sm:leading-[56px] max-[390px]:text-[38px] max-[390px]:leading-[46px]">
+            <h1 className="text-[38px] leading-[46px] tracking-[-1px] text-black lg:text-[48px] lg:leading-[56px]">
               Design Digital Products
               <br />
               for Financial Tech
@@ -308,7 +308,7 @@ function HeroSection() {
           <div className="inline-flex items-center gap-4 rounded-[1000px] border border-black/5 bg-white px-4 py-[6px] pl-[6px]">
             <Link
               href="mailto:alhaekalnast@gmail.com"
-              className="rounded-[230px] bg-[#F2F2F2] px-6 py-3 text-base text-[#707070] transition-colors hover:text-black"
+              className="rounded-[230px] bg-[#F2F2F2] px-6 py-3 text-base leading-[21px] text-[#707070] transition-colors hover:text-black"
             >
               Let&apos;s Talk!
             </Link>
@@ -675,17 +675,17 @@ function AboutSection() {
       id="about"
       className="mx-auto flex w-full max-w-[1440px] flex-col gap-10 bg-[#FAFAFA] px-4 py-20 sm:px-10 sm:py-[108px] lg:flex-row lg:gap-10 lg:px-[60px] lg:py-[124px]"
     >
-      <div className="flex-1 space-y-10">
+      <div className="w-full flex-1 space-y-10">
         <div className="space-y-4">
-          <h2 className="max-w-[632px] text-[32px] leading-[40px] tracking-[-1px] text-black max-lg:text-[26px] max-lg:leading-8">
+          <h2 className="w-full text-[26px] leading-8 tracking-[-1px] text-black lg:max-w-[632px] lg:text-[32px] lg:leading-[40px]">
             Product designer working on financial platforms.
           </h2>
-          <p className="max-w-[720px] text-base leading-6 text-[#707070]">
+          <p className="w-full text-base leading-6 text-[#707070] lg:max-w-[720px]">
             I design products across trading, payments, and B2B systems. Working closely
             with product and engineering to simplify complex flows. Focused on clarity,
             real usage, and scalable systems.
           </p>
-          <p className="max-w-[720px] text-base leading-6 text-[#707070]">
+          <p className="w-full text-base leading-6 text-[#707070] lg:max-w-[720px]">
             Currently building{" "}
             <SmartUnderlineLink href={instagramLinks.sfast}>
               @sfast.official
@@ -712,7 +712,7 @@ function AboutSection() {
         </div>
         <Link
           href="#"
-          className="inline-flex h-[46px] items-center rounded-[230px] bg-[#F2F2F2] px-6 text-base text-[#707070] transition-colors hover:text-black"
+          className="inline-flex h-[46px] items-center rounded-[230px] bg-[#F2F2F2] px-6 text-base leading-[21px] text-[#707070] transition-colors hover:text-black"
         >
           About Me
         </Link>
@@ -731,7 +731,7 @@ function FeaturedDesignsSection() {
     >
       <div className="mb-12 flex flex-col gap-8 lg:mb-12 lg:flex-row lg:items-center lg:justify-between">
         <div className="space-y-4">
-          <h2 className="text-[56px] leading-[56px] tracking-[-1px] text-black max-lg:text-[40px] max-lg:leading-10">
+          <h2 className="text-[32px] leading-[40px] tracking-[-1px] text-black lg:text-[40px] lg:leading-[56px]">
             Featured Designs
           </h2>
           <p className="max-w-[720px] text-base leading-6 text-[#707070]">
@@ -742,7 +742,7 @@ function FeaturedDesignsSection() {
         <Link
           href="https://www.behance.net/"
           target="_blank"
-          className="inline-flex h-[46px] w-fit items-center rounded-[230px] bg-[#F2F2F2] px-6 text-base text-[#707070] transition-colors hover:text-black"
+          className="inline-flex h-[46px] w-fit items-center rounded-[230px] bg-[#F2F2F2] px-6 text-base leading-[21px] text-[#707070] transition-colors hover:text-black"
         >
           Explore Designs
         </Link>
@@ -795,10 +795,10 @@ function FeaturedDesignCard({
 
 function FooterSection() {
   return (
-    <footer className="mx-auto w-full max-w-[1440px] bg-[#F2F2F2] px-4 pb-[124px] sm:px-10 lg:px-[60px]">
-      <div className="flex flex-col gap-16 py-20">
+    <footer className="w-full bg-[#F2F2F2]">
+      <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-16 px-4 py-20 pb-[124px] sm:px-10 lg:px-[60px]">
         <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
-          <p className="text-[27px] leading-[27px] font-medium text-[#B9B9B9]">Haekal</p>
+          <LogoMark />
           <nav className="flex flex-col gap-4 text-base leading-6 text-black sm:flex-row sm:gap-6">
             <FooterLink href="https://example.com">Resume</FooterLink>
             <FooterLink href="https://linkedin.com">Linkedin</FooterLink>
@@ -814,18 +814,29 @@ function FooterSection() {
 }
 
 function FooterLink({ href, children }: { href: string; children: string }) {
-  const [hovered, setHovered] = useState(false);
-
   return (
     <Link
       href={href}
       target="_blank"
       className="inline-flex items-center gap-1 hover:underline"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
     >
       {children}
-      <ArrowIcon hover={hovered} />
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <path
+          d="M14.3763 12.7083V5.625H7.29297"
+          stroke="#141414"
+          strokeWidth="1.25"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M14.1667 5.83203L5.625 14.3737"
+          stroke="#141414"
+          strokeWidth="1.25"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
     </Link>
   );
 }
