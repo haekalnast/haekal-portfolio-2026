@@ -332,6 +332,11 @@ function MarqueeShowcase() {
   const loopItems = useMemo(() => [...marqueeItems, ...marqueeItems], []);
   const itemFullWidth = 326; // 312 card + 14 gap
   const oneSetWidth = marqueeItems.length * itemFullWidth;
+  const wrapX = (value: number) => {
+    let normalized = value % oneSetWidth;
+    if (normalized > 0) normalized -= oneSetWidth;
+    return normalized;
+  };
 
   useEffect(() => {
     const rafId = window.requestAnimationFrame(() => {
@@ -344,9 +349,7 @@ function MarqueeShowcase() {
     if (!isMounted || isPausedByIcon || isDragging) return;
     const speed = 36; // px per second
     const moved = (speed * delta) / 1000;
-    let next = x.get() - moved;
-    if (next <= -oneSetWidth) next += oneSetWidth;
-    x.set(next);
+    x.set(wrapX(x.get() - moved));
   });
 
   if (!isMounted) {
@@ -369,17 +372,21 @@ function MarqueeShowcase() {
   return (
     <div className="relative left-1/2 h-[342px] w-screen -translate-x-1/2 overflow-hidden">
       <motion.div
-        className="flex min-w-max gap-[14px] pt-8"
-        style={{ x }}
+        className={cn(
+          "flex min-w-max gap-[14px] pt-8 select-none",
+          isDragging ? "cursor-grabbing" : "cursor-grab",
+        )}
+        style={{ x, touchAction: "pan-y" }}
         drag="x"
-        dragConstraints={{ left: -1200, right: 0 }}
-        dragElastic={0.08}
+        dragElastic={0}
+        dragMomentum={false}
+        whileTap={{ cursor: "grabbing" }}
         onDragStart={() => setIsDragging(true)}
+        onDrag={() => {
+          x.set(wrapX(x.get()));
+        }}
         onDragEnd={() => {
           setIsDragging(false);
-          const current = x.get();
-          const normalized = ((-current % oneSetWidth) + oneSetWidth) % oneSetWidth;
-          x.set(-normalized);
         }}
       >
         {loopItems.map((item, i) => (
