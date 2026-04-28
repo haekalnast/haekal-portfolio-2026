@@ -716,12 +716,22 @@ function MarqueeCard({
     >
       {isMockup ? (
         <div className="absolute inset-0">
-          <div
+          <motion.div
             className="absolute inset-x-0 top-0 h-[210px] overflow-hidden rounded-[20px]"
-            style={{ backgroundColor: item.defaultCardBg }}
+            initial={false}
+            animate={{ backgroundColor: isCardHovered ? hoverFillColor : item.defaultCardBg }}
+            transition={{ duration: 0.42, ease: PREMIUM_EASE }}
+            style={{ willChange: "background-color" }}
           >
+            <motion.div
+              className="pointer-events-none absolute inset-0 z-[1] rounded-[20px]"
+              style={{ backgroundColor: hoverFillColor }}
+              initial={false}
+              animate={{ opacity: isCardHovered ? 1 : 0 }}
+              transition={{ duration: 0.12, ease: "linear" }}
+            />
             <motion.span
-              className="pointer-events-none absolute rounded-full"
+              className="pointer-events-none absolute z-[2] rounded-full"
               style={{ backgroundColor: hoverFillColor }}
               initial={false}
               animate={{
@@ -752,7 +762,7 @@ function MarqueeCard({
                 )}
               />
             )}
-          </div>
+          </motion.div>
           <motion.div
             className="pointer-events-none absolute left-0 top-[218px]"
             initial={false}
@@ -812,8 +822,15 @@ function MarqueeCard({
           className="relative h-[210px] w-[312px] overflow-hidden rounded-[20px] p-6 transition-colors duration-300"
           style={{ backgroundColor: item.defaultCardBg }}
         >
+          <motion.div
+            className="pointer-events-none absolute inset-0 z-[1] rounded-[20px]"
+            style={{ backgroundColor: hoverFillColor }}
+            initial={false}
+            animate={{ opacity: isCardHovered ? 1 : 0 }}
+            transition={{ duration: 0.12, ease: "linear" }}
+          />
           <motion.span
-            className="pointer-events-none absolute rounded-full"
+            className="pointer-events-none absolute z-[2] rounded-full"
             style={{ backgroundColor: hoverFillColor }}
             initial={false}
             animate={{
