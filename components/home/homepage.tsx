@@ -1166,20 +1166,32 @@ function FeaturedDesignCard({
 function BPRMockup({ hovered }: { hovered: boolean }) {
   return (
     <div className="relative h-full w-full">
-      <div
-        className={cn(
-          "absolute inset-0 transition-transform duration-500 ease-out",
-          hovered ? "scale-[1.02]" : "scale-100",
-        )}
-      >
-        <Image
-          src={FEATURED_ASSETS.bpr}
-          alt="BPR Platform"
-          fill
-          unoptimized
-          className="object-contain object-center"
-          sizes="(min-width: 1024px) 648px, (min-width: 768px) 720px, 100vw"
-        />
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div
+          className={cn(
+            "relative w-full max-w-[692px] overflow-hidden aspect-[692/412] transition-transform duration-500 ease-out",
+            hovered ? "scale-[1.02]" : "scale-100",
+          )}
+        >
+          <Image
+            src={FEATURED_ASSETS.bpr}
+            alt="BPR Platform"
+            fill
+            unoptimized
+            className="object-contain"
+            sizes="(min-width: 1024px) 692px, 100vw"
+          />
+          <div className="absolute left-[13.0058%] top-[11.165%] z-10 h-[77.6699%] w-[73.9884%] overflow-hidden rounded-[2px] bg-white">
+            <Image
+              src="https://www.figma.com/api/mcp/asset/88295d9f-e1bb-4986-9c79-24afb71bd5a9"
+              alt="BPR screen frame"
+              width={512}
+              height={320}
+              unoptimized
+              className="h-full w-full object-cover"
+            />
+          </div>
+        </div>
       </div>
     </div>
   );
