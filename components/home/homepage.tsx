@@ -3,7 +3,7 @@
 import { motion, useAnimationFrame, useMotionValue } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
 import { cn } from "@/lib/cn";
 
 type MarqueeItem = {
@@ -673,6 +673,27 @@ function MarqueeCard({
 }) {
   const isMockup = item.kind === "mockup";
   const [isIconHovered, setIsIconHovered] = useState(false);
+  const [isCardHovered, setIsCardHovered] = useState(false);
+  const [cursorPos, setCursorPos] = useState({ x: 156, y: 105 });
+  const [fillRadius, setFillRadius] = useState(220);
+  const hoverFillColor = isMockup ? "#F2F2F2" : (item.hoverCardBg ?? item.defaultCardBg);
+  const baseCircleSize = 2;
+
+  const updateCursorFill = (event: MouseEvent<HTMLElement>) => {
+    const bounds = event.currentTarget.getBoundingClientRect();
+    const x = event.clientX - bounds.left;
+    const y = event.clientY - bounds.top;
+    const clampedX = Math.max(0, Math.min(x, bounds.width));
+    const clampedY = Math.max(0, Math.min(y, bounds.height));
+    const maxDist = Math.max(
+      Math.hypot(clampedX, clampedY),
+      Math.hypot(bounds.width - clampedX, clampedY),
+      Math.hypot(clampedX, bounds.height - clampedY),
+      Math.hypot(bounds.width - clampedX, bounds.height - clampedY),
+    );
+    setCursorPos({ x: clampedX, y: clampedY });
+    setFillRadius(maxDist + 12);
+  };
 
   return (
     <article
@@ -686,14 +707,34 @@ function MarqueeCard({
         filter: isGlobalDimmed ? "blur(1px)" : "blur(0px)",
         transform: isGlobalDimmed ? "scale(0.995)" : "scale(1)",
       }}
+      onMouseEnter={(event) => {
+        setIsCardHovered(true);
+        updateCursorFill(event);
+      }}
+      onMouseMove={updateCursorFill}
+      onMouseLeave={() => setIsCardHovered(false)}
     >
       {isMockup ? (
         <div className="absolute inset-0">
           <div
-            className="absolute inset-x-0 top-0 h-[210px] rounded-[20px] transition-colors duration-300"
+            className="absolute inset-x-0 top-0 h-[210px] overflow-hidden rounded-[20px]"
             style={{ backgroundColor: item.defaultCardBg }}
           >
-            <div className="absolute inset-0 rounded-[20px] bg-[#F2F2F2] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+            <motion.span
+              className="pointer-events-none absolute rounded-full"
+              style={{ backgroundColor: hoverFillColor }}
+              initial={false}
+              animate={{
+                left: cursorPos.x,
+                top: cursorPos.y,
+                width: baseCircleSize,
+                height: baseCircleSize,
+                x: "-50%",
+                y: "-50%",
+                scale: isCardHovered ? (fillRadius * 2) / baseCircleSize : 0,
+              }}
+              transition={{ duration: 0.62, ease: PREMIUM_EASE }}
+            />
             {item.defaultImageUrl && (
               <Image
                 src={item.defaultImageUrl}
@@ -768,12 +809,23 @@ function MarqueeCard({
         </div>
       ) : (
         <div
-          className="relative h-[210px] w-[312px] rounded-[20px] p-6 transition-colors duration-300"
+          className="relative h-[210px] w-[312px] overflow-hidden rounded-[20px] p-6 transition-colors duration-300"
           style={{ backgroundColor: item.defaultCardBg }}
         >
-          <div
-            className="absolute inset-0 rounded-[20px] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-            style={{ backgroundColor: item.hoverCardBg }}
+          <motion.span
+            className="pointer-events-none absolute rounded-full"
+            style={{ backgroundColor: hoverFillColor }}
+            initial={false}
+            animate={{
+              left: cursorPos.x,
+              top: cursorPos.y,
+              width: baseCircleSize,
+              height: baseCircleSize,
+              x: "-50%",
+              y: "-50%",
+              scale: isCardHovered ? (fillRadius * 2) / baseCircleSize : 0,
+            }}
+            transition={{ duration: 0.62, ease: PREMIUM_EASE }}
           />
           <p
             className="relative z-10 flex h-full items-center justify-center text-center text-[26px] leading-8 tracking-[-1px] transition-colors duration-300"
