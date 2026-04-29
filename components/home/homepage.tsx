@@ -3,7 +3,7 @@
 import { motion, useAnimationFrame, useMotionValue } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type MouseEvent, type WheelEvent } from "react";
 import { cn } from "@/lib/cn";
 
 type MarqueeItem = {
@@ -209,6 +209,47 @@ const dockApps = [
 const PREMIUM_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 const PREMIUM_DURATION = 0.32;
 const PREMIUM_DELAY = 0.04;
+
+function useIsMobileViewport() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 767px)");
+    const update = () => setIsMobile(mediaQuery.matches);
+    update();
+    mediaQuery.addEventListener("change", update);
+    return () => mediaQuery.removeEventListener("change", update);
+  }, []);
+
+  return isMobile;
+}
+
+function useScrollRevealActive<T extends HTMLElement>(threshold = 0.55) {
+  const ref = useRef<T | null>(null);
+  const isMobile = useIsMobileViewport();
+  const [isActive, setIsActive] = useState(false);
+
+  useEffect(() => {
+    if (!isMobile) {
+      setIsActive(false);
+      return;
+    }
+    const node = ref.current;
+    if (!node) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsActive(entry.isIntersecting && entry.intersectionRatio >= threshold * 0.6);
+      },
+      { threshold: [0.15, threshold, 0.9] },
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [isMobile, threshold]);
+
+  return { ref, isActive };
+}
 
 function LogoMark() {
   return (
@@ -528,11 +569,51 @@ function AboutToolsCard({
   onArrowHoverStart: () => void;
   onArrowHoverEnd: () => void;
 }) {
+  const isMobile = useIsMobileViewport();
+  const { ref: cardRef, isActive: isMobileRevealActive } = useScrollRevealActive<HTMLElement>(0.52);
   const [hoveredApp, setHoveredApp] = useState<string | null>(null);
   const [isIconHovered, setIsIconHovered] = useState(false);
+  const isDetailsActive = isIconHovered || isMobileRevealActive;
+  const [mobileSequenceStep, setMobileSequenceStep] = useState(-1);
+  const [mobileSequenceDone, setMobileSequenceDone] = useState(false);
+  const mobileSequenceNames = useMemo(
+    () => ["Figma", "Cursor", "Affinity", "Github Desktop"],
+    [],
+  );
+  const wheelCooldownUntilRef = useRef(0);
+  const touchStartYRef = useRef<number | null>(null);
+  const touchCooldownUntilRef = useRef(0);
+  const isScrollSequenceActive = isMobile && isMobileRevealActive && !mobileSequenceDone;
+  const activeMobileTooltip =
+    isScrollSequenceActive && mobileSequenceStep >= 0
+      ? mobileSequenceNames[Math.min(mobileSequenceStep, mobileSequenceNames.length - 1)]
+      : null;
+  const activeTooltipName = activeMobileTooltip ?? hoveredApp;
+
+  useEffect(() => {
+    if (isScrollSequenceActive && mobileSequenceStep < 0) {
+      setMobileSequenceStep(0);
+    }
+  }, [isScrollSequenceActive, mobileSequenceStep]);
+
+  const advanceMobileTooltipSequence = useCallback(() => {
+    if (!isScrollSequenceActive) return false;
+    setMobileSequenceStep((prev) => {
+      const current = Math.max(0, prev);
+      const next = Math.min(current + 1, mobileSequenceNames.length - 1);
+      if (next === mobileSequenceNames.length - 1) {
+        window.setTimeout(() => {
+          setMobileSequenceDone(true);
+        }, 260);
+      }
+      return next;
+    });
+    return true;
+  }, [isScrollSequenceActive, mobileSequenceNames.length]);
 
   return (
     <article
+      ref={cardRef}
       className={cn(
         "relative mx-auto w-[358px] transition-all duration-300 md:w-full lg:w-[648px]",
         isGlobalDimmed ? "opacity-15" : "opacity-100",
@@ -541,6 +622,33 @@ function AboutToolsCard({
         transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)",
         filter: isGlobalDimmed ? "blur(1px)" : "blur(0px)",
         transform: isGlobalDimmed ? "scale(0.995)" : "scale(1)",
+        touchAction: isScrollSequenceActive ? "none" : "auto",
+      }}
+      onWheel={(event) => {
+        if (!isScrollSequenceActive) return;
+        if (Math.abs(event.deltaY) <= 2) return;
+        event.preventDefault();
+        const now = Date.now();
+        if (now < wheelCooldownUntilRef.current) return;
+        wheelCooldownUntilRef.current = now + 260;
+        advanceMobileTooltipSequence();
+      }}
+      onTouchStart={(event) => {
+        touchStartYRef.current = event.touches[0]?.clientY ?? null;
+      }}
+      onTouchMove={(event) => {
+        if (!isScrollSequenceActive) return;
+        const startY = touchStartYRef.current;
+        const currentY = event.touches[0]?.clientY;
+        if (startY == null || currentY == null) return;
+        const delta = startY - currentY;
+        if (Math.abs(delta) < 10) return;
+        event.preventDefault();
+        const now = Date.now();
+        if (now < touchCooldownUntilRef.current) return;
+        touchCooldownUntilRef.current = now + 260;
+        touchStartYRef.current = currentY;
+        if (delta > 0) advanceMobileTooltipSequence();
       }}
     >
       <div className="relative h-[324px] overflow-hidden rounded-[20px] bg-[#F2F2F2] pl-10 md:pl-0 lg:pl-10">
@@ -566,7 +674,7 @@ function AboutToolsCard({
                       whileHover={hoverable ? { scale: 1.12, y: -4 } : undefined}
                       transition={{ type: "spring", stiffness: 280, damping: 20 }}
                     />
-                    {hoverable && hoveredApp === app.name && (
+                    {hoverable && activeTooltipName === app.name && (
                       <motion.div
                         initial={{ opacity: 0, y: 8 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -600,7 +708,7 @@ function AboutToolsCard({
                       whileHover={hoverable ? { scale: 1.12, y: -4 } : undefined}
                       transition={{ type: "spring", stiffness: 280, damping: 20 }}
                     />
-                    {hoverable && hoveredApp === app.name && (
+                    {hoverable && activeTooltipName === app.name && (
                       <motion.div
                         initial={{ opacity: 0, y: 8 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -644,7 +752,7 @@ function AboutToolsCard({
             <span
               className={cn(
                 "absolute inset-0 transition-opacity duration-300",
-                isIconHovered ? "opacity-0" : "opacity-100",
+                isDetailsActive ? "opacity-0" : "opacity-100",
               )}
               style={{ transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)" }}
             >
@@ -653,7 +761,7 @@ function AboutToolsCard({
             <span
               className={cn(
                 "absolute inset-0 transition-opacity duration-300",
-                isIconHovered ? "opacity-100" : "opacity-0",
+                isDetailsActive ? "opacity-100" : "opacity-0",
               )}
               style={{ transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)" }}
             >
@@ -666,8 +774,8 @@ function AboutToolsCard({
       <motion.div
         className="pt-2"
         initial={{ opacity: 0 }}
-        animate={{ opacity: isIconHovered ? 1 : 0, y: isIconHovered ? 0 : 8 }}
-        transition={{ duration: PREMIUM_DURATION, ease: PREMIUM_EASE, delay: isIconHovered ? PREMIUM_DELAY : 0 }}
+        animate={{ opacity: isDetailsActive ? 1 : 0, y: isDetailsActive ? 0 : 8 }}
+        transition={{ duration: PREMIUM_DURATION, ease: PREMIUM_EASE, delay: isDetailsActive ? PREMIUM_DELAY : 0 }}
       >
         <p className="text-[20px] leading-[30px] tracking-[-1px] text-black">Tools I Use</p>
         <p className="text-base leading-6 text-[#707070]">The stack behind my work</p>
@@ -774,6 +882,7 @@ function MarqueeCard({
                   width={item.mediaWidth ?? 272}
                   height={item.mediaHeight ?? 186}
                   unoptimized
+                  draggable={false}
                   className={cn(
                     "relative z-10 object-contain",
                     item.key === "ewallet-mockup"
@@ -874,10 +983,11 @@ function MarqueeCard({
             className="relative z-10 flex h-full items-center justify-center text-center text-[26px] leading-8 tracking-[-1px] transition-colors duration-300"
             style={{ color: item.defaultTextColor }}
           >
-            <span className="group-hover:hidden">{item.title}</span>
-            <span className="hidden group-hover:inline" style={{ color: item.hoverTextColor }}>
-              {item.title}
-            </span>
+            {isCardHovered ? (
+              <span style={{ color: item.hoverTextColor }}>{item.title}</span>
+            ) : (
+              <span>{item.title}</span>
+            )}
           </p>
           <Link href={item.href} target="_blank" className="absolute inset-0" aria-label={item.title} />
         </motion.div>
@@ -1041,7 +1151,7 @@ function FeaturedDesignsSection({
           animate={{ opacity: 0 }}
           transition={{ duration: PREMIUM_DURATION, ease: PREMIUM_EASE }}
         />
-        <div className="grid gap-6 lg:grid-cols-2">
+        <div className="grid gap-[24px] lg:grid-cols-2">
           <FeaturedDesignCard
             card={featuredCards[0]}
             activeArrowId={activeArrowId}
@@ -1049,7 +1159,7 @@ function FeaturedDesignsSection({
             onArrowHoverEnd={onArrowHoverEnd}
             {...sharedProps}
           />
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="grid gap-[24px] md:grid-cols-2">
             <FeaturedDesignCard
               card={featuredCards[1]}
               activeArrowId={activeArrowId}
@@ -1102,13 +1212,19 @@ function FeaturedDesignCard({
 }) {
   const isRevealed = revealedId === card.id;
   const isMockupHovered = hoveredCardId === card.id;
-  const isHoverState = isMockupHovered;
+  const { ref: cardRef, isActive: isMobileRevealActive } = useScrollRevealActive<HTMLElement>(0.45);
+  const isHoverState = isMockupHovered || isMobileRevealActive;
+  const isRevealState = isRevealed || isMobileRevealActive;
   const cardArrowId = `design-${card.id}`;
   const isGlobalDimmed = activeArrowId !== null && activeArrowId !== cardArrowId;
 
   return (
     <motion.article
-      className="relative h-[444px]"
+      ref={cardRef}
+      className={cn(
+        "relative lg:h-[444px]",
+        isRevealState ? "h-[512px]" : "h-[444px]",
+      )}
       initial={false}
       animate={{
         opacity: isGlobalDimmed ? 0.14 : 1,
@@ -1116,24 +1232,30 @@ function FeaturedDesignCard({
         filter: isGlobalDimmed ? "blur(1px)" : "blur(0px)",
       }}
       transition={{ duration: PREMIUM_DURATION, ease: PREMIUM_EASE }}
-      style={{ zIndex: isRevealed ? 30 : 20 }}
+      style={{ zIndex: isRevealState ? 30 : 20 }}
       onMouseEnter={() => setHoveredCardId(card.id)}
       onMouseLeave={() => {
         setHoveredCardId(null);
         setRevealedId(null);
       }}
     >
-      <div className="relative h-full w-full overflow-hidden rounded-[20px] bg-[#F2F2F2]">
-        <div
+      <div className="relative h-[444px] w-full overflow-hidden rounded-[20px] bg-[#F2F2F2]">
+        <motion.div
           className={cn(
             "relative h-full w-full",
             card.id === "bpr" || card.id === "sfast" ? "px-0 py-0" : "px-10 py-6",
           )}
+          initial={false}
+          animate={{
+            scale: isHoverState ? 1.012 : 1,
+            y: isHoverState ? -2 : 0,
+          }}
+          transition={{ duration: 0.44, ease: PREMIUM_EASE }}
         >
           {card.id === "bpr" && <BPRMockup hovered={isHoverState} />}
           {card.id === "sfast" && <SFASTMockup hovered={isHoverState} />}
           {card.id === "personal" && <PersonalMockup hovered={isHoverState} />}
-        </div>
+        </motion.div>
 
         <button
           type="button"
@@ -1161,15 +1283,15 @@ function FeaturedDesignCard({
             window.open(card.href, "_blank", "noopener,noreferrer");
           }}
         >
-          <ArrowIcon hover={isRevealed} />
+          <ArrowIcon hover={isRevealState} />
         </button>
       </div>
 
       <motion.div
-        className="pointer-events-none absolute top-[460px] left-0"
+        className="pointer-events-none mt-4 lg:absolute lg:left-0 lg:top-[460px] lg:mt-0"
         initial={false}
-        animate={{ opacity: isRevealed ? 1 : 0, y: isRevealed ? 0 : 8 }}
-        transition={{ duration: PREMIUM_DURATION, ease: PREMIUM_EASE, delay: isRevealed ? PREMIUM_DELAY : 0 }}
+        animate={{ opacity: isRevealState ? 1 : 0, y: isRevealState ? 0 : 8 }}
+        transition={{ duration: 0.36, ease: PREMIUM_EASE, delay: isRevealState ? 0.2 : 0 }}
       >
         <div className="mb-[6px] flex flex-wrap items-center gap-2">
           <h3 className="text-[20px] leading-[30px] tracking-[-1px] text-black">{card.title}</h3>
