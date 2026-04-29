@@ -567,35 +567,69 @@ function AboutToolsCard({
   onArrowHoverEnd: () => void;
 }) {
   const isMobile = useIsMobileViewport();
-  const { ref: cardRef, isActive: isMobileRevealActive } = useScrollRevealActive<HTMLElement>(0.52);
+  const cardRef = useRef<HTMLElement | null>(null);
   const [hoveredApp, setHoveredApp] = useState<string | null>(null);
   const [isIconHovered, setIsIconHovered] = useState(false);
-  const isDetailsActive = isIconHovered || isMobileRevealActive;
   const [mobileSequenceStep, setMobileSequenceStep] = useState(-1);
   const [mobileSequenceDone, setMobileSequenceDone] = useState(false);
-  const [isCardInViewport, setIsCardInViewport] = useState(false);
+  const [isCardCentered, setIsCardCentered] = useState(false);
   const sequenceNames = useMemo(() => ["Figma", "Cursor", "Affinity"], []);
   const wheelCooldownUntilRef = useRef(0);
   const touchStartYRef = useRef<number | null>(null);
   const touchCooldownUntilRef = useRef(0);
-  const isScrollSequenceActive = isMobile && isCardInViewport && !mobileSequenceDone;
-  const activeMobileTooltip = isScrollSequenceActive && mobileSequenceStep >= 0
-    ? sequenceNames[Math.min(mobileSequenceStep, sequenceNames.length - 1)]
+  const lockScrollYRef = useRef(0);
+  const isScrollSequenceActive = isMobile && isCardCentered && !mobileSequenceDone;
+  const activeMobileTooltip = isScrollSequenceActive && mobileSequenceStep >= 0 && mobileSequenceStep < sequenceNames.length
+    ? sequenceNames[mobileSequenceStep]
     : null;
+  const isDetailsActive = isMobile ? (mobileSequenceDone && activeMobileTooltip === null) : isIconHovered;
   const activeTooltipName = isMobile ? (activeMobileTooltip ?? hoveredApp) : hoveredApp;
 
   useEffect(() => {
-    const node = cardRef.current;
-    if (!node) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsCardInViewport(entry.isIntersecting && entry.intersectionRatio >= 0.5);
-      },
-      { threshold: [0.2, 0.5, 0.8] },
-    );
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, [cardRef]);
+    if (!isMobile) return;
+    const updateCenteredState = () => {
+      const node = cardRef.current;
+      if (!node) return;
+      const rect = node.getBoundingClientRect();
+      const viewportCenterY = window.innerHeight / 2;
+      const cardCenterY = rect.top + rect.height / 2;
+      const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
+      const threshold = Math.min(96, rect.height * 0.22);
+      setIsCardCentered(isVisible && Math.abs(cardCenterY - viewportCenterY) <= threshold);
+    };
+    updateCenteredState();
+    window.addEventListener("scroll", updateCenteredState, { passive: true });
+    window.addEventListener("resize", updateCenteredState);
+    return () => {
+      window.removeEventListener("scroll", updateCenteredState);
+      window.removeEventListener("resize", updateCenteredState);
+    };
+  }, [isMobile]);
+
+  useEffect(() => {
+    if (!isScrollSequenceActive) return;
+    const body = document.body;
+    const html = document.documentElement;
+    lockScrollYRef.current = window.scrollY;
+    const previousBodyOverflow = body.style.overflow;
+    const previousBodyPosition = body.style.position;
+    const previousBodyTop = body.style.top;
+    const previousBodyWidth = body.style.width;
+    const previousHtmlOverflow = html.style.overflow;
+    body.style.overflow = "hidden";
+    html.style.overflow = "hidden";
+    body.style.position = "fixed";
+    body.style.top = `-${lockScrollYRef.current}px`;
+    body.style.width = "100%";
+    return () => {
+      body.style.overflow = previousBodyOverflow;
+      html.style.overflow = previousHtmlOverflow;
+      body.style.position = previousBodyPosition;
+      body.style.top = previousBodyTop;
+      body.style.width = previousBodyWidth;
+      window.scrollTo(0, lockScrollYRef.current);
+    };
+  }, [isScrollSequenceActive]);
 
   useEffect(() => {
     if (!isScrollSequenceActive) return;
@@ -606,10 +640,10 @@ function AboutToolsCard({
       if (now < wheelCooldownUntilRef.current) return;
       wheelCooldownUntilRef.current = now + 320;
       setMobileSequenceStep((prev) => {
-        const next = Math.min(prev + 1, sequenceNames.length);
+        const next = Math.min(prev + 1, sequenceNames.length + 1);
         if (next >= sequenceNames.length) {
           window.setTimeout(() => {
-            setMobileSequenceStep(-1);
+            setMobileSequenceStep(sequenceNames.length);
             setMobileSequenceDone(true);
           }, 320);
         }
@@ -628,10 +662,10 @@ function AboutToolsCard({
       touchCooldownUntilRef.current = now + 320;
       touchStartYRef.current = currentY;
       setMobileSequenceStep((prev) => {
-        const next = Math.min(prev + 1, sequenceNames.length);
+        const next = Math.min(prev + 1, sequenceNames.length + 1);
         if (next >= sequenceNames.length) {
           window.setTimeout(() => {
-            setMobileSequenceStep(-1);
+            setMobileSequenceStep(sequenceNames.length);
             setMobileSequenceDone(true);
           }, 320);
         }
