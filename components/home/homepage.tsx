@@ -164,8 +164,8 @@ const FEATURED_ASSETS = {
 } as const;
 
 const BPR_SCREEN_ASSETS = {
-  navbar: "/bpr-screen-navbar-user.png",
-  sections: "/bpr-screen-sections-user-512x2008.png",
+  navbar: "/bpr-screen-navbar-hq.png",
+  sections: "/bpr-screen-sections-hq.png",
 } as const;
 
 const navItems = [
