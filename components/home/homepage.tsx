@@ -1446,47 +1446,49 @@ function SFASTMockup({ hovered }: { hovered: boolean }) {
     <div className="relative h-full w-full">
       <div className="absolute inset-0 p-10">
         <div className="relative flex h-full w-full items-center justify-center rounded-[20px] bg-[#F2F2F2]">
-          <div className="relative h-[332px] w-[206px] shrink-0">
-            <div
-              className="absolute left-[94.55px] transition-[top] duration-500 ease-out"
-              style={{ top: `${darkPhoneTop}px` }}
-            >
-              <div className="relative h-[282.482px] w-[111.449px]">
-                <Image src={SFAST_MOCKUP_ASSETS.leftShell} alt="" fill unoptimized className="object-contain" sizes="111px" />
-                <div
-                  className="absolute left-[4.26px] top-[6.37px] h-[271.241px] w-[95.987px] overflow-hidden"
-                  style={darkScreenMaskStyle}
-                >
-                  <Image
-                    src={hovered ? SFAST_MOCKUP_ASSETS.leftScreenHover : SFAST_MOCKUP_ASSETS.leftScreenDefault}
-                    alt="SFAST dark mode"
-                    fill
-                    unoptimized
-                    className="object-cover"
-                    sizes="96px"
-                  />
+          <div className="relative h-[356px] w-[221px] shrink-0">
+            <div className="absolute left-1/2 top-1/2 h-[332px] w-[206px] -translate-x-1/2 -translate-y-1/2 scale-[1.0728]">
+              <div
+                className="absolute left-[94.55px] transition-[top] duration-500 ease-out"
+                style={{ top: `${darkPhoneTop}px` }}
+              >
+                <div className="relative h-[282.482px] w-[111.449px]">
+                  <Image src={SFAST_MOCKUP_ASSETS.leftShell} alt="" fill unoptimized className="object-contain" sizes="111px" />
+                  <div
+                    className="absolute left-[4.26px] top-[6.37px] h-[271.241px] w-[95.987px] overflow-hidden"
+                    style={darkScreenMaskStyle}
+                  >
+                    <Image
+                      src={hovered ? SFAST_MOCKUP_ASSETS.leftScreenHover : SFAST_MOCKUP_ASSETS.leftScreenDefault}
+                      alt="SFAST dark mode"
+                      fill
+                      unoptimized
+                      className="object-cover"
+                      sizes="96px"
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div
-              className="absolute left-0 transition-[top] duration-500 ease-out"
-              style={{ top: `${lightPhoneTop}px` }}
-            >
-              <div className="relative h-[286.877px] w-[104.416px]">
-                <Image src={SFAST_MOCKUP_ASSETS.rightShell} alt="" fill unoptimized className="object-contain" sizes="104px" />
-                <div
-                  className="absolute left-[15.01px] top-[6.66px] h-[276.031px] w-[86.62px] overflow-hidden"
-                  style={lightScreenMaskStyle}
-                >
-                  <Image
-                    src={hovered ? SFAST_MOCKUP_ASSETS.rightScreenHover : SFAST_MOCKUP_ASSETS.rightScreenDefault}
-                    alt="SFAST light mode"
-                    fill
-                    unoptimized
-                    className="object-cover"
-                    sizes="87px"
-                  />
+              <div
+                className="absolute left-0 transition-[top] duration-500 ease-out"
+                style={{ top: `${lightPhoneTop}px` }}
+              >
+                <div className="relative h-[286.877px] w-[104.416px]">
+                  <Image src={SFAST_MOCKUP_ASSETS.rightShell} alt="" fill unoptimized className="object-contain" sizes="104px" />
+                  <div
+                    className="absolute left-[15.01px] top-[6.66px] h-[276.031px] w-[86.62px] overflow-hidden"
+                    style={lightScreenMaskStyle}
+                  >
+                    <Image
+                      src={hovered ? SFAST_MOCKUP_ASSETS.rightScreenHover : SFAST_MOCKUP_ASSETS.rightScreenDefault}
+                      alt="SFAST light mode"
+                      fill
+                      unoptimized
+                      className="object-cover"
+                      sizes="87px"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
