@@ -762,21 +762,28 @@ function MarqueeCard({
               transition={{ duration: 0.62, ease: PREMIUM_EASE }}
             />
             {item.defaultImageUrl && (
-              <Image
-                src={item.defaultImageUrl}
-                alt={item.title}
-                width={item.mediaWidth ?? 272}
-                height={item.mediaHeight ?? 186}
-                unoptimized
-                className={cn(
-                  "relative z-10 object-contain",
-                  item.key === "ewallet-mockup"
-                    ? "mx-auto mt-6 h-[186px] w-[174px]"
-                    : item.key === "trading-mockup"
-                      ? "mx-auto mt-6 h-[186px] w-[206px]"
-                      : "mx-auto mt-6 h-[186px] w-[272px]",
-                )}
-              />
+              <motion.div
+                className="relative z-10 origin-center"
+                initial={false}
+                animate={{ scale: isCardHovered ? 1.02 : 1 }}
+                transition={{ duration: 0.5, ease: PREMIUM_EASE }}
+              >
+                <Image
+                  src={item.defaultImageUrl}
+                  alt={item.title}
+                  width={item.mediaWidth ?? 272}
+                  height={item.mediaHeight ?? 186}
+                  unoptimized
+                  className={cn(
+                    "relative z-10 object-contain",
+                    item.key === "ewallet-mockup"
+                      ? "mx-auto mt-6 h-[186px] w-[174px]"
+                      : item.key === "trading-mockup"
+                        ? "mx-auto mt-6 h-[186px] w-[206px]"
+                        : "mx-auto mt-6 h-[186px] w-[272px]",
+                  )}
+                />
+              </motion.div>
             )}
           </motion.div>
           <motion.div
