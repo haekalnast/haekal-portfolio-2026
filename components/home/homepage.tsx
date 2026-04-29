@@ -3,7 +3,7 @@
 import { motion, useAnimationFrame, useMotionValue } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useRef, useState, type MouseEvent, type WheelEvent } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
 import { cn } from "@/lib/cn";
 
 type MarqueeItem = {
@@ -230,10 +230,7 @@ function useScrollRevealActive<T extends HTMLElement>(threshold = 0.55) {
   const [isActive, setIsActive] = useState(false);
 
   useEffect(() => {
-    if (!isMobile) {
-      setIsActive(false);
-      return;
-    }
+    if (!isMobile) return;
     const node = ref.current;
     if (!node) return;
 
@@ -248,7 +245,7 @@ function useScrollRevealActive<T extends HTMLElement>(threshold = 0.55) {
     return () => observer.disconnect();
   }, [isMobile, threshold]);
 
-  return { ref, isActive };
+  return { ref, isActive: isMobile && isActive };
 }
 
 function LogoMark() {
@@ -576,40 +573,83 @@ function AboutToolsCard({
   const isDetailsActive = isIconHovered || isMobileRevealActive;
   const [mobileSequenceStep, setMobileSequenceStep] = useState(-1);
   const [mobileSequenceDone, setMobileSequenceDone] = useState(false);
-  const mobileSequenceNames = useMemo(
-    () => ["Figma", "Cursor", "Affinity", "Github Desktop"],
-    [],
-  );
+  const [isCardInViewport, setIsCardInViewport] = useState(false);
+  const sequenceNames = useMemo(() => ["Figma", "Cursor", "Affinity"], []);
   const wheelCooldownUntilRef = useRef(0);
   const touchStartYRef = useRef<number | null>(null);
   const touchCooldownUntilRef = useRef(0);
-  const isScrollSequenceActive = isMobile && isMobileRevealActive && !mobileSequenceDone;
-  const activeMobileTooltip =
-    isScrollSequenceActive && mobileSequenceStep >= 0
-      ? mobileSequenceNames[Math.min(mobileSequenceStep, mobileSequenceNames.length - 1)]
-      : null;
-  const activeTooltipName = activeMobileTooltip ?? hoveredApp;
+  const isScrollSequenceActive = isMobile && isCardInViewport && !mobileSequenceDone;
+  const activeMobileTooltip = isScrollSequenceActive && mobileSequenceStep >= 0
+    ? sequenceNames[Math.min(mobileSequenceStep, sequenceNames.length - 1)]
+    : null;
+  const activeTooltipName = isMobile ? (activeMobileTooltip ?? hoveredApp) : hoveredApp;
 
   useEffect(() => {
-    if (isScrollSequenceActive && mobileSequenceStep < 0) {
-      setMobileSequenceStep(0);
-    }
-  }, [isScrollSequenceActive, mobileSequenceStep]);
+    const node = cardRef.current;
+    if (!node) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsCardInViewport(entry.isIntersecting && entry.intersectionRatio >= 0.5);
+      },
+      { threshold: [0.2, 0.5, 0.8] },
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [cardRef]);
 
-  const advanceMobileTooltipSequence = useCallback(() => {
-    if (!isScrollSequenceActive) return false;
-    setMobileSequenceStep((prev) => {
-      const current = Math.max(0, prev);
-      const next = Math.min(current + 1, mobileSequenceNames.length - 1);
-      if (next === mobileSequenceNames.length - 1) {
-        window.setTimeout(() => {
-          setMobileSequenceDone(true);
-        }, 260);
-      }
-      return next;
-    });
-    return true;
-  }, [isScrollSequenceActive, mobileSequenceNames.length]);
+  useEffect(() => {
+    if (!isScrollSequenceActive) return;
+    const onWheelLock = (event: globalThis.WheelEvent) => {
+      if (event.deltaY <= 0 || Math.abs(event.deltaY) <= 2) return;
+      event.preventDefault();
+      const now = Date.now();
+      if (now < wheelCooldownUntilRef.current) return;
+      wheelCooldownUntilRef.current = now + 320;
+      setMobileSequenceStep((prev) => {
+        const next = Math.min(prev + 1, sequenceNames.length);
+        if (next >= sequenceNames.length) {
+          window.setTimeout(() => {
+            setMobileSequenceStep(-1);
+            setMobileSequenceDone(true);
+          }, 320);
+        }
+        return next;
+      });
+    };
+    const onTouchMoveLock = (event: TouchEvent) => {
+      const startY = touchStartYRef.current;
+      const currentY = event.touches[0]?.clientY;
+      if (startY == null || currentY == null) return;
+      const delta = startY - currentY;
+      if (delta <= 10) return;
+      event.preventDefault();
+      const now = Date.now();
+      if (now < touchCooldownUntilRef.current) return;
+      touchCooldownUntilRef.current = now + 320;
+      touchStartYRef.current = currentY;
+      setMobileSequenceStep((prev) => {
+        const next = Math.min(prev + 1, sequenceNames.length);
+        if (next >= sequenceNames.length) {
+          window.setTimeout(() => {
+            setMobileSequenceStep(-1);
+            setMobileSequenceDone(true);
+          }, 320);
+        }
+        return next;
+      });
+    };
+    const onTouchStartLock = (event: TouchEvent) => {
+      touchStartYRef.current = event.touches[0]?.clientY ?? null;
+    };
+    window.addEventListener("wheel", onWheelLock, { passive: false });
+    window.addEventListener("touchstart", onTouchStartLock, { passive: true });
+    window.addEventListener("touchmove", onTouchMoveLock, { passive: false });
+    return () => {
+      window.removeEventListener("wheel", onWheelLock);
+      window.removeEventListener("touchstart", onTouchStartLock);
+      window.removeEventListener("touchmove", onTouchMoveLock);
+    };
+  }, [isScrollSequenceActive, sequenceNames.length]);
 
   return (
     <article
@@ -624,32 +664,6 @@ function AboutToolsCard({
         transform: isGlobalDimmed ? "scale(0.995)" : "scale(1)",
         touchAction: isScrollSequenceActive ? "none" : "auto",
       }}
-      onWheel={(event) => {
-        if (!isScrollSequenceActive) return;
-        if (Math.abs(event.deltaY) <= 2) return;
-        event.preventDefault();
-        const now = Date.now();
-        if (now < wheelCooldownUntilRef.current) return;
-        wheelCooldownUntilRef.current = now + 260;
-        advanceMobileTooltipSequence();
-      }}
-      onTouchStart={(event) => {
-        touchStartYRef.current = event.touches[0]?.clientY ?? null;
-      }}
-      onTouchMove={(event) => {
-        if (!isScrollSequenceActive) return;
-        const startY = touchStartYRef.current;
-        const currentY = event.touches[0]?.clientY;
-        if (startY == null || currentY == null) return;
-        const delta = startY - currentY;
-        if (Math.abs(delta) < 10) return;
-        event.preventDefault();
-        const now = Date.now();
-        if (now < touchCooldownUntilRef.current) return;
-        touchCooldownUntilRef.current = now + 260;
-        touchStartYRef.current = currentY;
-        if (delta > 0) advanceMobileTooltipSequence();
-      }}
     >
       <div className="relative h-[324px] overflow-hidden rounded-[20px] bg-[#F2F2F2] pl-10 md:pl-0 lg:pl-10">
         <div className="absolute top-6 right-0 bottom-20 flex items-center">
@@ -657,7 +671,7 @@ function AboutToolsCard({
             <div className="absolute top-[39px] left-0 h-[85px] w-[880px] rounded-[20px] border border-[#484848] bg-[rgba(40,40,40,0.6)] shadow-[0_2px_2px_rgba(0,0,0,0.25)] backdrop-blur-[12px]" />
             <div className="absolute top-[48px] left-[6px] flex h-[66px] w-[868px] items-center gap-[5px] md:hidden">
               {dockApps.map((app, index) => {
-                const hoverable = index <= 3; // up to Github on mobile
+                const hoverable = index <= 2; // up to Affinity on mobile
                 return (
                   <div
                     key={`mobile-${app.name}`}
@@ -671,16 +685,23 @@ function AboutToolsCard({
                       width={66}
                       height={66}
                       className="h-[66px] w-[66px] shrink-0 object-cover"
-                      whileHover={hoverable ? { scale: 1.12, y: -4 } : undefined}
-                      transition={{ type: "spring", stiffness: 280, damping: 20 }}
+                      animate={
+                        hoverable && activeTooltipName === app.name
+                          ? { y: -4, scale: 1.08 }
+                          : { y: 0, scale: 1 }
+                      }
+                      transition={{ duration: 0.32, ease: PREMIUM_EASE }}
                     />
-                    {hoverable && activeTooltipName === app.name && (
+                    {hoverable && (
                       <motion.div
-                        initial={{ opacity: 0, y: 8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 6 }}
-                        transition={{ duration: 0.18, ease: "easeOut" }}
                         className="pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md bg-[#5A5A5A] px-3 py-1 text-sm text-white"
+                        initial={false}
+                        animate={
+                          activeTooltipName === app.name
+                            ? { opacity: 1, y: 0, visibility: "visible" as const }
+                            : { opacity: 0, y: 8, visibility: "hidden" as const }
+                        }
+                        transition={{ duration: 0.32, ease: PREMIUM_EASE }}
                       >
                         {app.name}
                       </motion.div>
