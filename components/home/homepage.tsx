@@ -168,6 +168,17 @@ const BPR_SCREEN_ASSETS = {
   sections: "/bpr-screen-sections-hq.png",
 } as const;
 
+const SFAST_MOCKUP_ASSETS = {
+  leftShell: "https://www.figma.com/api/mcp/asset/8fa4f215-88eb-4e13-a042-2d06ef0acacf",
+  rightShell: "https://www.figma.com/api/mcp/asset/414ac5c6-da91-482f-9679-9bfe79caf3cc",
+  leftScreenDefault: "https://www.figma.com/api/mcp/asset/5f1c6839-28bd-4868-bf64-54b49b29492c",
+  leftScreenHover: "https://www.figma.com/api/mcp/asset/16b32aec-013e-4f8e-8d96-cc0a083730ee",
+  rightScreenDefault: "https://www.figma.com/api/mcp/asset/e25185e5-b7c2-4623-a6c7-382c6285197d",
+  rightScreenHover: "https://www.figma.com/api/mcp/asset/cce268f6-1f04-4347-a0fd-67c61b8793ac",
+  lightScreenMask: "https://www.figma.com/api/mcp/asset/d195f289-22a9-4043-aec0-309ad6438e6f",
+  darkScreenMask: "https://www.figma.com/api/mcp/asset/158d416a-9138-447d-a11d-19b7d05ff4d8",
+} as const;
+
 const navItems = [
   { label: "Home", href: "#home" },
   { label: "About", href: "#about" },
@@ -1106,7 +1117,12 @@ function FeaturedDesignCard({
       }}
     >
       <div className="relative h-full w-full overflow-hidden rounded-[20px] bg-[#F2F2F2]">
-        <div className={cn("relative h-full w-full", card.id === "bpr" ? "px-0 py-0" : "px-10 py-6")}>
+        <div
+          className={cn(
+            "relative h-full w-full",
+            card.id === "bpr" || card.id === "sfast" ? "px-0 py-0" : "px-10 py-6",
+          )}
+        >
           {card.id === "bpr" && <BPRMockup hovered={isHoverState} />}
           {card.id === "sfast" && <SFASTMockup hovered={isHoverState} />}
           {card.id === "personal" && <PersonalMockup hovered={isHoverState} />}
@@ -1156,7 +1172,7 @@ function FeaturedDesignCard({
               animate={{ opacity: [0.35, 1, 0.35], scale: [0.92, 1.08, 0.92] }}
               transition={{ duration: 1.9, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
             />
-            Live Site
+            Live
           </span>
         </div>
         <p className="text-base leading-6 text-[#707070]">{card.subtitle}</p>
@@ -1165,11 +1181,15 @@ function FeaturedDesignCard({
   );
 }
 
-function BPRMockup({ hovered: _hovered }: { hovered: boolean }) {
+function BPRMockup({ hovered }: { hovered: boolean }) {
   return (
     <div className="relative h-full w-full">
-      <div
-        className="absolute left-[-22px] top-4 h-[412px] w-[692px] overflow-hidden"
+      <motion.div
+        className="absolute left-[-22px] top-4 h-[412px] w-[692px] overflow-hidden transition-transform duration-500 ease-out"
+        style={{
+          transform: hovered ? "scale(1.02)" : "scale(1)",
+          transformOrigin: "50% 50%",
+        }}
       >
         <Image
           src={FEATURED_ASSETS.bpr}
@@ -1201,28 +1221,85 @@ function BPRMockup({ hovered: _hovered }: { hovered: boolean }) {
             />
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
 
 function SFASTMockup({ hovered }: { hovered: boolean }) {
+  const darkPhoneTop = hovered ? 45.12 : 0;
+  const lightPhoneTop = hovered ? 0 : 45.12;
+  const lightScreenMaskStyle = {
+    WebkitMaskImage: `url(${SFAST_MOCKUP_ASSETS.lightScreenMask})`,
+    WebkitMaskRepeat: "no-repeat",
+    WebkitMaskPosition: "0.699px 1.93px",
+    WebkitMaskSize: "85.505px 273.219px",
+    maskImage: `url(${SFAST_MOCKUP_ASSETS.lightScreenMask})`,
+    maskRepeat: "no-repeat",
+    maskPosition: "0.699px 1.93px",
+    maskSize: "85.505px 273.219px",
+  } as const;
+  const darkScreenMaskStyle = {
+    WebkitMaskImage: `url(${SFAST_MOCKUP_ASSETS.darkScreenMask})`,
+    WebkitMaskRepeat: "no-repeat",
+    WebkitMaskPosition: "2.082px 1.379px",
+    WebkitMaskSize: "93.012px 269.067px",
+    maskImage: `url(${SFAST_MOCKUP_ASSETS.darkScreenMask})`,
+    maskRepeat: "no-repeat",
+    maskPosition: "2.082px 1.379px",
+    maskSize: "93.012px 269.067px",
+  } as const;
+
   return (
     <div className="relative h-full w-full">
-      <div
-        className={cn(
-          "absolute inset-0 transition-transform duration-500 ease-out",
-          hovered ? "scale-[1.04]" : "scale-100",
-        )}
-      >
-        <Image
-          src={FEATURED_ASSETS.sfast}
-          alt="SFAST Mobile App"
-          fill
-          unoptimized
-          className="object-contain object-center"
-          sizes="(min-width: 1024px) 312px, (min-width: 768px) 348px, 100vw"
-        />
+      <div className="absolute inset-0 p-10">
+        <div className="relative flex h-full w-full items-center justify-center rounded-[20px] bg-[#F2F2F2]">
+          <div className="relative h-[332px] w-[206px] shrink-0">
+            <div
+              className="absolute left-[94.55px] transition-[top] duration-500 ease-out"
+              style={{ top: `${darkPhoneTop}px` }}
+            >
+              <div className="relative h-[282.482px] w-[111.449px]">
+                <Image src={SFAST_MOCKUP_ASSETS.leftShell} alt="" fill unoptimized className="object-contain" sizes="111px" />
+                <div
+                  className="absolute left-[4.26px] top-[6.37px] h-[271.241px] w-[95.987px] overflow-hidden"
+                  style={darkScreenMaskStyle}
+                >
+                  <Image
+                    src={hovered ? SFAST_MOCKUP_ASSETS.leftScreenHover : SFAST_MOCKUP_ASSETS.leftScreenDefault}
+                    alt="SFAST dark mode"
+                    fill
+                    unoptimized
+                    className="object-cover"
+                    sizes="96px"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div
+              className="absolute left-0 transition-[top] duration-500 ease-out"
+              style={{ top: `${lightPhoneTop}px` }}
+            >
+              <div className="relative h-[286.877px] w-[104.416px]">
+                <Image src={SFAST_MOCKUP_ASSETS.rightShell} alt="" fill unoptimized className="object-contain" sizes="104px" />
+                <div
+                  className="absolute left-[15.01px] top-[6.66px] h-[276.031px] w-[86.62px] overflow-hidden"
+                  style={lightScreenMaskStyle}
+                >
+                  <Image
+                    src={hovered ? SFAST_MOCKUP_ASSETS.rightScreenHover : SFAST_MOCKUP_ASSETS.rightScreenDefault}
+                    alt="SFAST light mode"
+                    fill
+                    unoptimized
+                    className="object-cover"
+                    sizes="87px"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
