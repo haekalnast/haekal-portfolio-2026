@@ -28,11 +28,13 @@ type FeaturedCard = {
   href: string;
 };
 
+const FALLBACK_ERROR_ROUTE = "/not-found";
+
 const marqueeItems: MarqueeItem[] = [
   {
     key: "b2b-hero",
     title: "B2B Dashboard",
-    href: "https://www.behance.net/",
+    href: FALLBACK_ERROR_ROUTE,
     kind: "hero",
     defaultCardBg: "#240040",
     defaultTextColor: "#B48CFF",
@@ -43,7 +45,7 @@ const marqueeItems: MarqueeItem[] = [
     key: "b2b-mockup",
     title: "Dipay Disbursement",
     subtitle: "Web | B2B Dashboard",
-    href: "https://www.behance.net/",
+    href: FALLBACK_ERROR_ROUTE,
     kind: "mockup",
     defaultCardBg: "#B48CFF",
     defaultImageUrl: "https://www.figma.com/api/mcp/asset/2d44c91f-075a-46ae-88b3-4cc9d66abc94",
@@ -53,7 +55,7 @@ const marqueeItems: MarqueeItem[] = [
   {
     key: "compro-hero",
     title: "Company Profile",
-    href: "https://www.behance.net/",
+    href: FALLBACK_ERROR_ROUTE,
     kind: "hero",
     defaultCardBg: "#661A00",
     defaultTextColor: "#FF814D",
@@ -64,7 +66,7 @@ const marqueeItems: MarqueeItem[] = [
     key: "compro-mockup",
     title: "Surya Fajar Capital",
     subtitle: "Web | Fintech Company Profile",
-    href: "https://www.behance.net/",
+    href: FALLBACK_ERROR_ROUTE,
     kind: "mockup",
     defaultCardBg: "#FF814D",
     defaultImageUrl: "https://www.figma.com/api/mcp/asset/51a71833-419a-4070-b919-edc3fe0a9884",
@@ -74,7 +76,7 @@ const marqueeItems: MarqueeItem[] = [
   {
     key: "trading-hero",
     title: "Trading App",
-    href: "https://www.behance.net/",
+    href: FALLBACK_ERROR_ROUTE,
     kind: "hero",
     defaultCardBg: "#001A33",
     defaultTextColor: "#73B8FF",
@@ -85,7 +87,7 @@ const marqueeItems: MarqueeItem[] = [
     key: "trading-mockup",
     title: "SFAST Mobile App",
     subtitle: "Mobile | Trading App",
-    href: "https://www.behance.net/",
+    href: FALLBACK_ERROR_ROUTE,
     kind: "mockup",
     defaultCardBg: "#73B8FF",
     defaultImageUrl: "https://www.figma.com/api/mcp/asset/04b5daca-64b8-4b21-84ff-44be593cc8f2",
@@ -95,7 +97,7 @@ const marqueeItems: MarqueeItem[] = [
   {
     key: "merchant-hero",
     title: "Merchant App",
-    href: "https://www.behance.net/",
+    href: FALLBACK_ERROR_ROUTE,
     kind: "hero",
     defaultCardBg: "#330000",
     defaultTextColor: "#FF7878",
@@ -106,7 +108,7 @@ const marqueeItems: MarqueeItem[] = [
     key: "merchant-mockup",
     title: "OCTO Merchant",
     subtitle: "Mobile | Merchant App",
-    href: "https://www.behance.net/",
+    href: FALLBACK_ERROR_ROUTE,
     kind: "mockup",
     defaultCardBg: "#FF7878",
     defaultImageUrl: "https://www.figma.com/api/mcp/asset/887cfb82-fe15-469a-8872-350b9f376ecf",
@@ -116,7 +118,7 @@ const marqueeItems: MarqueeItem[] = [
   {
     key: "ewallet-hero",
     title: "E-Wallet App",
-    href: "https://www.behance.net/",
+    href: FALLBACK_ERROR_ROUTE,
     kind: "hero",
     defaultCardBg: "#322200",
     defaultTextColor: "#FEE97F",
@@ -127,7 +129,7 @@ const marqueeItems: MarqueeItem[] = [
     key: "ewallet-mockup",
     title: "Dipay Personal",
     subtitle: "Mobile | E-Wallet App",
-    href: "https://www.behance.net/",
+    href: FALLBACK_ERROR_ROUTE,
     kind: "mockup",
     defaultCardBg: "#FEE97F",
     defaultImageUrl: "https://www.figma.com/api/mcp/asset/6b25901b-42d5-4871-8e31-f5700949cc2f",
@@ -147,13 +149,13 @@ const featuredCards: FeaturedCard[] = [
     id: "sfast",
     title: "SFAST Mobile App",
     subtitle: "Mobile | Fintech",
-    href: "https://www.behance.net/",
+    href: FALLBACK_ERROR_ROUTE,
   },
   {
     id: "personal",
     title: "Dipay Personal",
     subtitle: "Mobile | E-Wallet",
-    href: "https://www.behance.net/",
+    href: FALLBACK_ERROR_ROUTE,
   },
 ];
 
@@ -810,6 +812,10 @@ function AboutToolsCard({
             setIsIconHovered(false);
             onArrowHoverEnd();
           }}
+          onClick={(event) => {
+            event.stopPropagation();
+            window.location.href = FALLBACK_ERROR_ROUTE;
+          }}
         >
           <span className="relative block h-5 w-5">
             <span
@@ -988,6 +994,14 @@ function MarqueeCard({
               setIsIconHovered(false);
               onIconHoverEnd();
             }}
+            onClick={(event) => {
+              event.stopPropagation();
+              if (item.href.startsWith("/")) {
+                window.location.href = item.href;
+                return;
+              }
+              window.open(item.href, "_blank", "noopener,noreferrer");
+            }}
             tabIndex={0}
           >
             <span className="relative block h-5 w-5">
@@ -1123,7 +1137,7 @@ function AboutSection({
           </p>
         </div>
         <Link
-          href="#"
+          href={FALLBACK_ERROR_ROUTE}
           className="inline-flex h-[46px] items-center rounded-[230px] bg-[#F2F2F2] px-6 text-base leading-[21px] text-[#707070] transition-colors hover:text-black"
         >
           About Me
@@ -1199,7 +1213,7 @@ function FeaturedDesignsSection({
           </p>
         </div>
         <Link
-          href="https://www.behance.net/"
+          href={FALLBACK_ERROR_ROUTE}
           target="_blank"
           className="hidden h-[46px] w-fit items-center rounded-[230px] bg-[#F2F2F2] px-6 text-base leading-[21px] text-[#707070] transition-colors hover:text-black lg:inline-flex"
         >
@@ -1243,7 +1257,7 @@ function FeaturedDesignsSection({
 
       <div className="mt-12 flex justify-center lg:hidden">
         <Link
-          href="https://www.behance.net/"
+          href={FALLBACK_ERROR_ROUTE}
           target="_blank"
           className="inline-flex h-[46px] w-fit items-center rounded-[230px] bg-[#F2F2F2] px-6 text-base leading-[21px] text-[#707070] transition-colors hover:text-black"
         >
