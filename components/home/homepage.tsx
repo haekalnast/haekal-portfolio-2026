@@ -536,6 +536,8 @@ function SmartUnderlineLink({
   children: string;
 }) {
   const [hovered, setHovered] = useState(false);
+  const isMobile = useIsMobileViewport();
+  const isUnderlineVisible = isMobile || hovered;
 
   return (
     <Link
@@ -549,7 +551,7 @@ function SmartUnderlineLink({
       <motion.span
         className="absolute right-0 bottom-0 left-0 h-px bg-[#707070]"
         initial={{ scaleX: 0 }}
-        animate={{ scaleX: hovered ? 1 : 0 }}
+        animate={{ scaleX: isUnderlineVisible ? 1 : 0 }}
         transition={{ duration: 0.22, ease: "easeOut" }}
         style={{ originX: 0 }}
       />
