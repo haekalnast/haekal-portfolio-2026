@@ -1135,7 +1135,7 @@ function FeaturedDesignCard({
           }}
           onClick={(event) => {
             event.stopPropagation();
-            setRevealedId(isRevealed ? null : card.id);
+            window.open(card.href, "_blank", "noopener,noreferrer");
           }}
         >
           <ArrowIcon hover={isRevealed} />
@@ -1156,10 +1156,7 @@ function FeaturedDesignCard({
               animate={{ opacity: [0.35, 1, 0.35], scale: [0.92, 1.08, 0.92] }}
               transition={{ duration: 1.9, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
             />
-            Live
-          </span>
-          <span className="inline-flex items-center rounded-[8px] border border-[#DEDEE0] bg-[#F2F2F2] px-3 py-[3px] text-base leading-6 text-black">
-            Case
+            Live Site
           </span>
         </div>
         <p className="text-base leading-6 text-[#707070]">{card.subtitle}</p>
@@ -1259,29 +1256,41 @@ function PersonalMockup({ hovered }: { hovered: boolean }) {
 function FooterSection() {
   return (
     <footer className="w-full bg-[#F2F2F2]">
-      <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-16 px-4 py-20 pb-[124px] sm:px-10 lg:px-[60px]">
-        <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
-          <LogoMark />
-          <nav className="flex flex-col gap-4 text-base leading-6 text-black sm:flex-row sm:gap-6">
-            <FooterLink href="https://example.com">Resume</FooterLink>
-            <FooterLink href="https://linkedin.com">Linkedin</FooterLink>
-            <FooterLink href="https://github.com">Github</FooterLink>
-          </nav>
+      <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-16 px-4 pb-[124px] sm:px-10 lg:px-[60px]">
+        <div className="flex flex-col gap-16 py-8 sm:py-20">
+          <div className="flex items-start justify-between gap-8 sm:gap-6">
+            <LogoMark />
+            <nav className="flex flex-col items-end gap-6 text-base leading-6 text-black sm:flex-row sm:items-center sm:gap-6">
+              <FooterLink href="https://docs.google.com/document/d/1rFAuSJrV4IpffI2PRfBmjHlHG5QDDF6L/edit?usp=sharing&ouid=107776713613949709441&rtpof=true&sd=true">
+                Resume
+              </FooterLink>
+              <FooterLink href="https://www.linkedin.com/in/haekalnast/">Linkedin</FooterLink>
+              <FooterLink href="https://github.com/haekalnast">Github</FooterLink>
+            </nav>
+          </div>
+          <p className="text-base leading-6 font-light text-[#707070]">
+            Copyright © 2026 Bagas Al Haekal Nasution
+            <br className="sm:hidden" />
+            <span className="hidden sm:inline"> </span>
+            All rights reserved
+          </p>
         </div>
-        <p className="text-base leading-6 font-light text-[#707070]">
-          Copyright © 2026 Bagas Al Haekal Nasution All rights reserved
-        </p>
       </div>
     </footer>
   );
 }
 
 function FooterLink({ href, children }: { href: string; children: string }) {
+  const [hovered, setHovered] = useState(false);
+
   return (
     <Link
       href={href}
       target="_blank"
-      className="inline-flex items-center gap-1 hover:underline"
+      rel="noreferrer noopener"
+      className="relative inline-flex items-center gap-1"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
     >
       {children}
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
@@ -1300,6 +1309,13 @@ function FooterLink({ href, children }: { href: string; children: string }) {
           strokeLinejoin="round"
         />
       </svg>
+      <motion.span
+        className="absolute right-0 bottom-0 left-0 h-px bg-[#141414]"
+        initial={{ scaleX: 0 }}
+        animate={{ scaleX: hovered ? 1 : 0 }}
+        transition={{ duration: 0.22, ease: "easeOut" }}
+        style={{ originX: 0 }}
+      />
     </Link>
   );
 }
