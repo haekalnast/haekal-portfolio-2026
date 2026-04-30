@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -25,6 +25,13 @@ const dockApps = [
   { name: "WhatsApp", icon: "https://www.figma.com/api/mcp/asset/15c7de87-fd3a-4e2f-9fc6-1110cf302c97" },
   { name: "Finder", icon: "https://www.figma.com/api/mcp/asset/c7b30e4e-76ac-4525-a021-05506e87a664" },
   { name: "Trash", icon: "https://www.figma.com/api/mcp/asset/5271f34d-aa24-47e4-9454-6abff83ccbf0" },
+] as const;
+
+const THIS_IS_HAEKAL_IMAGES = [
+  "/this-is-haekal-photo-01.png",
+  "/this-is-haekal-photo-02.png",
+  "/this-is-haekal-photo-03.png",
+  "/this-is-haekal-photo-04.png",
 ] as const;
 
 const experienceItems = [
@@ -302,7 +309,6 @@ function AboutToolsCard({
           }}
           onClick={(event) => {
             event.stopPropagation();
-            window.location.href = FALLBACK_ERROR_ROUTE;
           }}
         />
       </div>
@@ -350,6 +356,73 @@ function ResumeCard() {
         </Link>
       </div>
       <ArrowRevealText isActive={isTextHover} title="Resume" subtitle="See details" className="pointer-events-none absolute left-0 top-[218px] space-y-[6px]" />
+    </article>
+  );
+}
+
+function ThisIsHaekalCard() {
+  const [isCardHovered, setIsCardHovered] = useState(false);
+  const [isIconHovered, setIsIconHovered] = useState(false);
+  const [imageIndex, setImageIndex] = useState(0);
+  const { ref, isActive } = useScrollRevealActive<HTMLElement>(0.5);
+  const isRevealActive = isIconHovered || isActive;
+  const isImageLoopActive = isCardHovered;
+  const nextImage = () => setImageIndex((prev) => (prev + 1) % THIS_IS_HAEKAL_IMAGES.length);
+
+  useEffect(() => {
+    if (!isImageLoopActive) {
+      setImageIndex(0);
+      return;
+    }
+    const intervalId = window.setInterval(() => {
+      nextImage();
+    }, 1100);
+    return () => window.clearInterval(intervalId);
+  }, [isImageLoopActive]);
+
+  return (
+    <article
+      ref={ref}
+      className="relative h-[278px] w-full max-w-[358px] shrink-0 overflow-visible rounded-[20px] sm:max-w-none sm:w-[348px] lg:w-[312px]"
+      onMouseEnter={() => setIsCardHovered(true)}
+      onMouseLeave={() => {
+        setIsCardHovered(false);
+        setIsIconHovered(false);
+      }}
+    >
+      <div className="absolute inset-x-0 top-0 h-[210px] overflow-hidden rounded-[20px] bg-[#F2F2F2]">
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={THIS_IS_HAEKAL_IMAGES[imageIndex]}
+            className="absolute inset-0"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8, ease: ARROW_REVEAL_EASE }}
+          >
+            <Image
+              src={THIS_IS_HAEKAL_IMAGES[imageIndex]}
+              alt="This is Haekal"
+              fill
+              unoptimized
+              className="object-cover"
+              priority
+            />
+          </motion.div>
+        </AnimatePresence>
+        <ArrowRevealButton
+          isActive={isRevealActive}
+          ariaLabel="This is Haekal details"
+          className="absolute bottom-4 left-4 z-20 flex h-8 w-8 items-center justify-center rounded-[1000px] bg-[#FAFAFA] p-[6px] shadow-[0_0_0_1px_rgba(0,0,0,0.06)] transition-all duration-300"
+          onHoverStart={() => setIsIconHovered(true)}
+          onHoverEnd={() => setIsIconHovered(false)}
+          onClick={(event) => {
+            event.stopPropagation();
+            if (isRevealActive) nextImage();
+          }}
+        />
+      </div>
+      <ArrowRevealText isActive={isRevealActive} title="This is Haekal" subtitle="Get to know me" className="pointer-events-none absolute left-0 top-[218px] space-y-[6px]" />
     </article>
   );
 }
@@ -412,10 +485,7 @@ export default function AboutPage() {
               style={getGlobalFocusStyle(isGlobalFocus)}
             >
               <ResumeCard />
-              <article className="relative h-[210px] overflow-hidden rounded-[20px] bg-[#F2F2F2]">
-                <Image src="https://www.figma.com/api/mcp/asset/af83d8f4-84d1-4e27-987a-5a0aae600c38" alt="Portrait" fill unoptimized className="object-cover object-center" />
-                <Link href={FALLBACK_ERROR_ROUTE} className="absolute bottom-4 left-4"><ArrowButton /></Link>
-              </article>
+              <ThisIsHaekalCard />
             </div>
           </div>
         </section>
