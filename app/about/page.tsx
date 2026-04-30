@@ -1,7 +1,15 @@
+"use client";
+
+import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { cn } from "@/lib/cn";
 
 const FALLBACK_ERROR_ROUTE = "/not-found";
+const PREMIUM_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
+const PREMIUM_DURATION = 0.32;
+const PREMIUM_DELAY = 0.04;
 
 const dockApps = [
   { name: "Figma", icon: "https://www.figma.com/api/mcp/asset/3928281a-3d0f-4b48-b7b7-adc64467900d" },
@@ -64,7 +72,327 @@ function ArrowButton() {
   );
 }
 
+function ArrowIcon({ hover = false }: { hover?: boolean }) {
+  return (
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+      <path d="M14.3763 12.7083V5.625H7.29297" stroke={hover ? "#000000" : "#707070"} strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M14.1667 5.83203L5.625 14.3737" stroke={hover ? "#000000" : "#707070"} strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function useIsMobileViewport() {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 767px)");
+    const update = () => setIsMobile(mediaQuery.matches);
+    update();
+    mediaQuery.addEventListener("change", update);
+    return () => mediaQuery.removeEventListener("change", update);
+  }, []);
+  return isMobile;
+}
+
+function useScrollRevealActive<T extends HTMLElement>(threshold = 0.55) {
+  const ref = useRef<T | null>(null);
+  const isMobile = useIsMobileViewport();
+  const [isActive, setIsActive] = useState(false);
+
+  useEffect(() => {
+    if (!isMobile) return;
+    const node = ref.current;
+    if (!node) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsActive(entry.isIntersecting && entry.intersectionRatio >= threshold * 0.6),
+      { threshold: [0.15, threshold, 0.9] },
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [isMobile, threshold]);
+
+  return { ref, isActive: isMobile && isActive };
+}
+
+function AboutToolsCard({
+  isGlobalDimmed,
+  onArrowHoverStart,
+  onArrowHoverEnd,
+}: {
+  isGlobalDimmed: boolean;
+  onArrowHoverStart: () => void;
+  onArrowHoverEnd: () => void;
+}) {
+  const isMobile = useIsMobileViewport();
+  const cardRef = useRef<HTMLElement | null>(null);
+  const [hoveredApp, setHoveredApp] = useState<string | null>(null);
+  const [isIconHovered, setIsIconHovered] = useState(false);
+  const [mobileSequenceStep, setMobileSequenceStep] = useState(-1);
+  const [mobileSequenceDone, setMobileSequenceDone] = useState(false);
+  const [isCardCentered, setIsCardCentered] = useState(false);
+  const sequenceNames = useMemo(() => ["Figma", "Cursor", "Affinity"], []);
+  const wheelCooldownUntilRef = useRef(0);
+  const touchStartYRef = useRef<number | null>(null);
+  const touchCooldownUntilRef = useRef(0);
+  const lockScrollYRef = useRef(0);
+  const isScrollSequenceActive = isMobile && isCardCentered && !mobileSequenceDone;
+  const activeMobileTooltip = isScrollSequenceActive && mobileSequenceStep >= 0 && mobileSequenceStep < sequenceNames.length ? sequenceNames[mobileSequenceStep] : null;
+  const isDetailsActive = isMobile ? (mobileSequenceDone && activeMobileTooltip === null) : isIconHovered;
+  const activeTooltipName = isMobile ? (activeMobileTooltip ?? hoveredApp) : hoveredApp;
+
+  useEffect(() => {
+    if (!isMobile) return;
+    const updateCenteredState = () => {
+      const node = cardRef.current;
+      if (!node) return;
+      const rect = node.getBoundingClientRect();
+      const viewportCenterY = window.innerHeight / 2;
+      const cardCenterY = rect.top + rect.height / 2;
+      const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
+      const threshold = Math.min(96, rect.height * 0.22);
+      setIsCardCentered(isVisible && Math.abs(cardCenterY - viewportCenterY) <= threshold);
+    };
+    updateCenteredState();
+    window.addEventListener("scroll", updateCenteredState, { passive: true });
+    window.addEventListener("resize", updateCenteredState);
+    return () => {
+      window.removeEventListener("scroll", updateCenteredState);
+      window.removeEventListener("resize", updateCenteredState);
+    };
+  }, [isMobile]);
+
+  useEffect(() => {
+    if (!isScrollSequenceActive) return;
+    const body = document.body;
+    const html = document.documentElement;
+    lockScrollYRef.current = window.scrollY;
+    const prevBodyOverflow = body.style.overflow;
+    const prevBodyPosition = body.style.position;
+    const prevBodyTop = body.style.top;
+    const prevBodyWidth = body.style.width;
+    const prevHtmlOverflow = html.style.overflow;
+    body.style.overflow = "hidden";
+    html.style.overflow = "hidden";
+    body.style.position = "fixed";
+    body.style.top = `-${lockScrollYRef.current}px`;
+    body.style.width = "100%";
+    return () => {
+      body.style.overflow = prevBodyOverflow;
+      html.style.overflow = prevHtmlOverflow;
+      body.style.position = prevBodyPosition;
+      body.style.top = prevBodyTop;
+      body.style.width = prevBodyWidth;
+      window.scrollTo(0, lockScrollYRef.current);
+    };
+  }, [isScrollSequenceActive]);
+
+  useEffect(() => {
+    if (!isScrollSequenceActive) return;
+    const progress = () => {
+      setMobileSequenceStep((prev) => {
+        const next = Math.min(prev + 1, sequenceNames.length + 1);
+        if (next >= sequenceNames.length) {
+          window.setTimeout(() => {
+            setMobileSequenceStep(sequenceNames.length);
+            setMobileSequenceDone(true);
+          }, 320);
+        }
+        return next;
+      });
+    };
+    const onWheelLock = (event: WheelEvent) => {
+      if (event.deltaY <= 0 || Math.abs(event.deltaY) <= 2) return;
+      event.preventDefault();
+      const now = Date.now();
+      if (now < wheelCooldownUntilRef.current) return;
+      wheelCooldownUntilRef.current = now + 320;
+      progress();
+    };
+    const onTouchMoveLock = (event: TouchEvent) => {
+      const startY = touchStartYRef.current;
+      const currentY = event.touches[0]?.clientY;
+      if (startY == null || currentY == null) return;
+      const delta = startY - currentY;
+      if (delta <= 10) return;
+      event.preventDefault();
+      const now = Date.now();
+      if (now < touchCooldownUntilRef.current) return;
+      touchCooldownUntilRef.current = now + 320;
+      touchStartYRef.current = currentY;
+      progress();
+    };
+    const onTouchStartLock = (event: TouchEvent) => {
+      touchStartYRef.current = event.touches[0]?.clientY ?? null;
+    };
+    window.addEventListener("wheel", onWheelLock, { passive: false });
+    window.addEventListener("touchstart", onTouchStartLock, { passive: true });
+    window.addEventListener("touchmove", onTouchMoveLock, { passive: false });
+    return () => {
+      window.removeEventListener("wheel", onWheelLock);
+      window.removeEventListener("touchstart", onTouchStartLock);
+      window.removeEventListener("touchmove", onTouchMoveLock);
+    };
+  }, [isScrollSequenceActive, sequenceNames.length]);
+
+  return (
+    <article
+      ref={cardRef}
+      className={cn(
+        "relative z-20 mx-auto h-[324px] w-[358px] transition-all duration-300 md:w-full lg:w-[648px]",
+        isGlobalDimmed ? "opacity-15" : "opacity-100",
+      )}
+      style={{
+        transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)",
+        filter: isGlobalDimmed ? "blur(1px)" : "blur(0px)",
+        transform: isGlobalDimmed ? "scale(0.995)" : "scale(1)",
+        touchAction: isScrollSequenceActive ? "none" : "auto",
+      }}
+    >
+      <div className="relative h-[324px] overflow-hidden rounded-[20px] bg-[#F2F2F2] pl-10 md:pl-0 lg:pl-10">
+        <div className="absolute top-6 right-0 bottom-20 flex items-center">
+          <div className="relative h-[124px] w-[290px] overflow-hidden md:w-[530px]">
+            <div className="absolute top-[39px] left-0 h-[85px] w-[880px] rounded-[20px] border border-[#484848] bg-[rgba(40,40,40,0.6)] shadow-[0_2px_2px_rgba(0,0,0,0.25)] backdrop-blur-[12px]" />
+            <div className="absolute top-[48px] left-[6px] flex h-[66px] w-[868px] items-center gap-[5px] md:hidden">
+              {dockApps.map((app, index) => {
+                const hoverable = index <= 2;
+                return (
+                  <div key={`mobile-${app.name}`} className="relative" onMouseEnter={hoverable ? () => setHoveredApp(app.name) : undefined} onMouseLeave={hoverable ? () => setHoveredApp(null) : undefined}>
+                    <motion.img
+                      src={app.icon}
+                      alt={app.name}
+                      width={66}
+                      height={66}
+                      className="h-[66px] w-[66px] shrink-0 object-cover"
+                      animate={hoverable && activeTooltipName === app.name ? { y: -4, scale: 1.08 } : { y: 0, scale: 1 }}
+                      transition={{ duration: 0.32, ease: PREMIUM_EASE }}
+                    />
+                    {hoverable && (
+                      <motion.div
+                        className="pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md bg-[#5A5A5A] px-3 py-1 text-sm text-white"
+                        initial={false}
+                        animate={activeTooltipName === app.name ? { opacity: 1, y: 0, visibility: "visible" as const } : { opacity: 0, y: 8, visibility: "hidden" as const }}
+                        transition={{ duration: 0.32, ease: PREMIUM_EASE }}
+                      >
+                        {app.name}
+                      </motion.div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+            <div className="absolute top-[48px] left-[6px] hidden h-[66px] w-[868px] items-center gap-[5px] md:flex">
+              {dockApps.map((app, index) => {
+                const hoverable = index <= 6;
+                return (
+                  <div key={`desktop-${app.name}`} className="relative" onMouseEnter={hoverable ? () => setHoveredApp(app.name) : undefined} onMouseLeave={hoverable ? () => setHoveredApp(null) : undefined}>
+                    <motion.img src={app.icon} alt={app.name} width={66} height={66} className="h-[66px] w-[66px] shrink-0 object-cover" whileHover={hoverable ? { scale: 1.12, y: -4 } : undefined} transition={{ type: "spring", stiffness: 280, damping: 20 }} />
+                    {hoverable && activeTooltipName === app.name && (
+                      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.18, ease: "easeOut" }} className="pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md bg-[#5A5A5A] px-3 py-1 text-sm text-white">
+                        {app.name}
+                      </motion.div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+        <button
+          type="button"
+          aria-label="Tools details"
+          className="absolute bottom-4 left-4 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-[#FAFAFA] shadow-[0_0_0_1px_rgba(0,0,0,0.06)] transition-all duration-300"
+          style={{ transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)" }}
+          onMouseEnter={() => {
+            setIsIconHovered(true);
+            onArrowHoverStart();
+          }}
+          onMouseLeave={() => {
+            setIsIconHovered(false);
+            onArrowHoverEnd();
+          }}
+          onFocus={() => {
+            setIsIconHovered(true);
+            onArrowHoverStart();
+          }}
+          onBlur={() => {
+            setIsIconHovered(false);
+            onArrowHoverEnd();
+          }}
+          onClick={(event) => {
+            event.stopPropagation();
+            window.location.href = FALLBACK_ERROR_ROUTE;
+          }}
+        >
+          <span className="relative block h-5 w-5">
+            <span className={`absolute inset-0 transition-opacity duration-300 ${isDetailsActive ? "opacity-0" : "opacity-100"}`} style={{ transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)" }}><ArrowIcon /></span>
+            <span className={`absolute inset-0 transition-opacity duration-300 ${isDetailsActive ? "opacity-100" : "opacity-0"}`} style={{ transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)" }}><ArrowIcon hover /></span>
+          </span>
+        </button>
+      </div>
+      <motion.div
+        className="pt-2"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: isDetailsActive ? 1 : 0, y: isDetailsActive ? 0 : 8 }}
+        transition={{ duration: PREMIUM_DURATION, ease: PREMIUM_EASE, delay: isDetailsActive ? PREMIUM_DELAY : 0 }}
+      >
+        <p className="text-[20px] leading-[30px] tracking-[-1px] text-black">Tools I Use</p>
+        <p className="text-base leading-6 text-[#707070]">The stack behind my work</p>
+      </motion.div>
+    </article>
+  );
+}
+
+function ResumeCard() {
+  const [isCardHovered, setIsCardHovered] = useState(false);
+  const [isIconHovered, setIsIconHovered] = useState(false);
+  const { ref, isActive } = useScrollRevealActive<HTMLElement>(0.5);
+  const isMockupHover = isCardHovered || isActive;
+  const isTextHover = isIconHovered || isActive;
+
+  return (
+    <article
+      ref={ref}
+      className="relative h-[278px] w-full max-w-[358px] shrink-0 overflow-visible rounded-[20px] sm:max-w-none sm:w-[348px] lg:w-[312px]"
+      onMouseEnter={() => setIsCardHovered(true)}
+      onMouseLeave={() => {
+        setIsCardHovered(false);
+        setIsIconHovered(false);
+      }}
+    >
+      <div className="absolute inset-x-0 top-0 h-[210px] overflow-hidden rounded-[20px] bg-[#F2F2F2] px-[16px] py-[24px]">
+        <div className="relative flex h-full items-start justify-center overflow-hidden">
+          <motion.div
+            className="relative h-[396px] w-[280px] overflow-hidden rounded-[4px] shadow-[0_0_50px_rgba(0,0,0,0.06)]"
+            initial={false}
+            animate={{ rotate: isMockupHover ? 0 : -8, y: isMockupHover ? 0 : 8 }}
+            transition={{ duration: 0.44, ease: PREMIUM_EASE }}
+            style={{ transformOrigin: "50% 50%" }}
+          >
+            <Image src="/about-resume-sheet.png" alt="Resume preview" fill unoptimized className="object-cover" />
+          </motion.div>
+        </div>
+        <Link
+          href={FALLBACK_ERROR_ROUTE}
+          className={`absolute bottom-[84px] left-4 z-20 flex h-8 w-8 items-center justify-center rounded-[1000px] bg-[#FAFAFA] p-[6px] shadow-[0_0_0_1px_rgba(0,0,0,0.06)] ${isTextHover ? "shadow-[0_0_50px_rgba(0,0,0,0.1)]" : ""}`}
+          onMouseEnter={() => setIsIconHovered(true)}
+          onMouseLeave={() => setIsIconHovered(false)}
+        >
+          <ArrowIcon hover={isTextHover} />
+        </Link>
+      </div>
+      <motion.div initial={false} animate={{ opacity: isTextHover ? 1 : 0, y: isTextHover ? 0 : 8 }} transition={{ duration: PREMIUM_DURATION, ease: PREMIUM_EASE, delay: isTextHover ? PREMIUM_DELAY : 0 }} className="pointer-events-none absolute left-0 top-[218px] space-y-[6px]">
+        <p className="text-[20px] leading-[30px] tracking-[-1px] text-black">Resume</p>
+        <p className="text-base leading-6 text-[#707070]">See details</p>
+      </motion.div>
+    </article>
+  );
+}
+
 export default function AboutPage() {
+  const [activeArrowId, setActiveArrowId] = useState<string | null>(null);
+  const aboutArrowId = "about-tools";
+  const isGlobalFocus = activeArrowId !== null;
+  const isAboutFocused = activeArrowId === aboutArrowId;
+
   return (
     <div className="bg-[#FAFAFA] text-black">
       <header className="pointer-events-none fixed inset-x-0 top-6 z-40 hidden px-10 sm:block lg:px-[60px]">
@@ -88,7 +416,17 @@ export default function AboutPage() {
 
       <main className="mx-auto w-full max-w-[1440px] px-4 pt-[124px] sm:px-10 lg:px-[60px]">
         <section className="grid gap-10 py-10 lg:grid-cols-[1fr_648px] lg:py-14">
-          <div className="space-y-4">
+          <div
+            className={cn(
+              "space-y-4 transition-all duration-300",
+              isGlobalFocus ? "opacity-15" : "opacity-100",
+            )}
+            style={{
+              transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)",
+              filter: isGlobalFocus ? "blur(1px)" : "blur(0px)",
+              transform: isGlobalFocus ? "scale(0.995)" : "scale(1)",
+            }}
+          >
             <h1 className="text-[32px] leading-[40px] tracking-[-1px]">About Haekal</h1>
             <p className="max-w-[632px] text-base leading-6 text-[#707070]">I&apos;m Haekal, a product designer with 4+ years of experience building digital products across trading, payments, and B2B systems.</p>
             <p className="max-w-[632px] text-base leading-6 text-[#707070]">I work closely with product and engineering to simplify complex flows into clear and usable experiences.</p>
@@ -97,105 +435,112 @@ export default function AboutPage() {
           </div>
 
           <div className="space-y-6">
-            <article className="relative h-[324px] overflow-hidden rounded-[20px] bg-[#F2F2F2] pl-10 md:pl-0 lg:pl-10">
-              <div className="absolute top-6 right-0 bottom-20 flex items-center">
-                <div className="relative h-[124px] w-[290px] overflow-hidden md:w-[530px]">
-                  <div className="absolute top-[39px] left-0 h-[85px] w-[880px] rounded-[20px] border border-[#484848] bg-[rgba(40,40,40,0.6)] shadow-[0_2px_2px_rgba(0,0,0,0.25)] backdrop-blur-[12px]" />
-                  <div className="absolute top-[48px] left-[6px] flex h-[66px] w-[868px] items-center gap-[5px]">
-                    {dockApps.map((app) => (
-                      <div key={app.name} className="relative">
-                        <Image src={app.icon} alt={app.name} width={66} height={66} unoptimized className="h-[66px] w-[66px] shrink-0 object-cover" />
-                      </div>
-                    ))}
+            <AboutToolsCard
+              isGlobalDimmed={isGlobalFocus && !isAboutFocused}
+              onArrowHoverStart={() => setActiveArrowId(aboutArrowId)}
+              onArrowHoverEnd={() => setActiveArrowId((current) => (current === aboutArrowId ? null : current))}
+            />
+
+            <div
+              className={cn(
+                "relative z-10 grid gap-6 transition-all duration-300 sm:grid-cols-2",
+                isGlobalFocus ? "opacity-15" : "opacity-100",
+              )}
+              style={{
+                transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)",
+                filter: isGlobalFocus ? "blur(1px)" : "blur(0px)",
+                transform: isGlobalFocus ? "scale(0.995)" : "scale(1)",
+              }}
+            >
+              <ResumeCard />
+              <article className="relative h-[210px] overflow-hidden rounded-[20px] bg-[#F2F2F2]">
+                <Image src="https://www.figma.com/api/mcp/asset/af83d8f4-84d1-4e27-987a-5a0aae600c38" alt="Portrait" fill unoptimized className="object-cover object-center" />
+                <Link href={FALLBACK_ERROR_ROUTE} className="absolute bottom-4 left-4"><ArrowButton /></Link>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <div
+          className={cn(
+            "transition-all duration-300",
+            isGlobalFocus ? "opacity-15" : "opacity-100",
+          )}
+          style={{
+            transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)",
+            filter: isGlobalFocus ? "blur(1px)" : "blur(0px)",
+            transform: isGlobalFocus ? "scale(0.995)" : "scale(1)",
+          }}
+        >
+          <section className="py-[64px]">
+            <h2 className="text-[32px] leading-[40px] tracking-[-1px]">Experience</h2>
+            <p className="mt-2 mb-6 text-base leading-6 text-[#707070]">From communication and design to product and digital systems.</p>
+            <div className="grid gap-3 lg:grid-cols-3">
+              {experienceItems.map((item) => (
+                <article key={item.title} className="flex items-center gap-2 rounded-[16px] bg-[#F2F2F2] p-2">
+                  <div className="relative h-[50px] w-[50px] overflow-hidden rounded-[12px] bg-white">
+                    <Image src={item.logo} alt={item.company} fill unoptimized className="object-contain" />
                   </div>
-                </div>
+                  <div>
+                    <p className="text-base leading-6 text-black">{item.title}</p>
+                    <p className="text-[12px] leading-4 text-[#707070]">{item.company} | {item.date}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          <section className="py-[64px]">
+            <h2 className="text-[32px] leading-[40px] tracking-[-1px]">Learning &amp; Certifications</h2>
+            <p className="mt-2 mb-6 text-base leading-6 text-[#707070]">Covering design, frontend, communication, and security fundamentals.</p>
+            <div className="grid gap-3 lg:grid-cols-2">
+              {certificationItems.map((item) => (
+                <article key={item.title} className="flex items-center gap-2 rounded-[16px] bg-[#F2F2F2] p-2">
+                  <div className="relative h-[50px] w-[50px] overflow-hidden rounded-[12px] bg-white">
+                    <Image src={item.logo} alt={item.org} fill unoptimized className="object-contain" />
+                  </div>
+                  <div>
+                    <p className="text-base leading-6 text-black">{item.title}</p>
+                    <p className="text-[12px] leading-4 text-[#707070]">{item.org} | {item.date}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          <section className="py-[64px]">
+            <div className="mb-6 flex items-end justify-between gap-4">
+              <div>
+                <h2 className="text-[40px] leading-[56px] tracking-[-1px]">Creative Journal</h2>
+                <p className="text-base leading-6 text-[#707070]">Work from my early years in visual communication, branding, and marketing, shaping how I design today.</p>
               </div>
-              <Link href={FALLBACK_ERROR_ROUTE} className="absolute bottom-4 left-4 z-20">
-                <ArrowButton />
-              </Link>
-            </article>
+              <Link href={FALLBACK_ERROR_ROUTE} className="hidden rounded-[230px] bg-[#F2F2F2] px-6 py-3 text-base leading-[21px] text-[#707070] lg:inline-flex">Explore Journal</Link>
+            </div>
 
-            <div className="grid gap-6 sm:grid-cols-2">
-              <article className="relative h-[210px] overflow-hidden rounded-[20px] bg-[#F2F2F2]">
-                <Image src="https://www.figma.com/api/mcp/asset/b0429ba2-2061-4fed-bf2e-76d642d12d60" alt="Resume preview" fill unoptimized className="object-cover" />
+            <div className="grid gap-6 lg:grid-cols-3">
+              <article className="relative h-[210px] overflow-hidden rounded-[20px] bg-[#F2F2F2] lg:col-span-1">
+                <Image src="https://www.figma.com/api/mcp/asset/706e447e-7f5c-4b07-9c47-f0c39d1b1be0" alt="Campaign" fill unoptimized className="object-cover" />
                 <Link href={FALLBACK_ERROR_ROUTE} className="absolute bottom-4 left-4"><ArrowButton /></Link>
               </article>
               <article className="relative h-[210px] overflow-hidden rounded-[20px] bg-[#F2F2F2]">
-                <Image src="https://www.figma.com/api/mcp/asset/af83d8f4-84d1-4e27-987a-5a0aae600c38" alt="Portrait" fill unoptimized className="object-cover" />
+                <Image src="https://www.figma.com/api/mcp/asset/504366ec-43dd-43e3-9c68-e11105caa11a" alt="Shirt mockup" fill unoptimized className="object-cover" />
+                <Link href={FALLBACK_ERROR_ROUTE} className="absolute bottom-4 left-4"><ArrowButton /></Link>
+              </article>
+              <article className="relative h-[210px] overflow-hidden rounded-[20px] bg-[#F2F2F2]">
+                <Image src="https://www.figma.com/api/mcp/asset/1b6eeb35-5e3a-42cb-9544-e77a61d0a3d3" alt="Packaging" fill unoptimized className="object-cover" />
+                <Link href={FALLBACK_ERROR_ROUTE} className="absolute bottom-4 left-4"><ArrowButton /></Link>
+              </article>
+              <article className="relative h-[210px] overflow-hidden rounded-[20px] bg-[#F2F2F2] lg:col-span-2">
+                <Image src="https://www.figma.com/api/mcp/asset/88f76452-7cd9-4ebe-a233-54de61aaf2fb" alt="Event campaign" fill unoptimized className="object-cover" />
                 <Link href={FALLBACK_ERROR_ROUTE} className="absolute bottom-4 left-4"><ArrowButton /></Link>
               </article>
             </div>
-          </div>
-        </section>
 
-        <section className="py-[64px]">
-          <h2 className="text-[32px] leading-[40px] tracking-[-1px]">Experience</h2>
-          <p className="mt-2 mb-6 text-base leading-6 text-[#707070]">From communication and design to product and digital systems.</p>
-          <div className="grid gap-3 lg:grid-cols-3">
-            {experienceItems.map((item) => (
-              <article key={item.title} className="flex items-center gap-2 rounded-[16px] bg-[#F2F2F2] p-2">
-                <div className="relative h-[50px] w-[50px] overflow-hidden rounded-[12px] bg-white">
-                  <Image src={item.logo} alt={item.company} fill unoptimized className="object-contain" />
-                </div>
-                <div>
-                  <p className="text-base leading-6 text-black">{item.title}</p>
-                  <p className="text-[12px] leading-4 text-[#707070]">{item.company} | {item.date}</p>
-                </div>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className="py-[64px]">
-          <h2 className="text-[32px] leading-[40px] tracking-[-1px]">Learning &amp; Certifications</h2>
-          <p className="mt-2 mb-6 text-base leading-6 text-[#707070]">Covering design, frontend, communication, and security fundamentals.</p>
-          <div className="grid gap-3 lg:grid-cols-2">
-            {certificationItems.map((item) => (
-              <article key={item.title} className="flex items-center gap-2 rounded-[16px] bg-[#F2F2F2] p-2">
-                <div className="relative h-[50px] w-[50px] overflow-hidden rounded-[12px] bg-white">
-                  <Image src={item.logo} alt={item.org} fill unoptimized className="object-contain" />
-                </div>
-                <div>
-                  <p className="text-base leading-6 text-black">{item.title}</p>
-                  <p className="text-[12px] leading-4 text-[#707070]">{item.org} | {item.date}</p>
-                </div>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className="py-[64px]">
-          <div className="mb-6 flex items-end justify-between gap-4">
-            <div>
-              <h2 className="text-[40px] leading-[56px] tracking-[-1px]">Creative Journal</h2>
-              <p className="text-base leading-6 text-[#707070]">Work from my early years in visual communication, branding, and marketing, shaping how I design today.</p>
+            <div className="mt-6 flex justify-center lg:hidden">
+              <Link href={FALLBACK_ERROR_ROUTE} className="rounded-[230px] bg-[#F2F2F2] px-6 py-3 text-base leading-[21px] text-[#707070]">Explore Journal</Link>
             </div>
-            <Link href={FALLBACK_ERROR_ROUTE} className="hidden rounded-[230px] bg-[#F2F2F2] px-6 py-3 text-base leading-[21px] text-[#707070] lg:inline-flex">Explore Journal</Link>
-          </div>
-
-          <div className="grid gap-6 lg:grid-cols-3">
-            <article className="relative h-[210px] overflow-hidden rounded-[20px] bg-[#F2F2F2] lg:col-span-1">
-              <Image src="https://www.figma.com/api/mcp/asset/706e447e-7f5c-4b07-9c47-f0c39d1b1be0" alt="Campaign" fill unoptimized className="object-cover" />
-              <Link href={FALLBACK_ERROR_ROUTE} className="absolute bottom-4 left-4"><ArrowButton /></Link>
-            </article>
-            <article className="relative h-[210px] overflow-hidden rounded-[20px] bg-[#F2F2F2]">
-              <Image src="https://www.figma.com/api/mcp/asset/504366ec-43dd-43e3-9c68-e11105caa11a" alt="Shirt mockup" fill unoptimized className="object-cover" />
-              <Link href={FALLBACK_ERROR_ROUTE} className="absolute bottom-4 left-4"><ArrowButton /></Link>
-            </article>
-            <article className="relative h-[210px] overflow-hidden rounded-[20px] bg-[#F2F2F2]">
-              <Image src="https://www.figma.com/api/mcp/asset/1b6eeb35-5e3a-42cb-9544-e77a61d0a3d3" alt="Packaging" fill unoptimized className="object-cover" />
-              <Link href={FALLBACK_ERROR_ROUTE} className="absolute bottom-4 left-4"><ArrowButton /></Link>
-            </article>
-            <article className="relative h-[210px] overflow-hidden rounded-[20px] bg-[#F2F2F2] lg:col-span-2">
-              <Image src="https://www.figma.com/api/mcp/asset/88f76452-7cd9-4ebe-a233-54de61aaf2fb" alt="Event campaign" fill unoptimized className="object-cover" />
-              <Link href={FALLBACK_ERROR_ROUTE} className="absolute bottom-4 left-4"><ArrowButton /></Link>
-            </article>
-          </div>
-
-          <div className="mt-6 flex justify-center lg:hidden">
-            <Link href={FALLBACK_ERROR_ROUTE} className="rounded-[230px] bg-[#F2F2F2] px-6 py-3 text-base leading-[21px] text-[#707070]">Explore Journal</Link>
-          </div>
-        </section>
+          </section>
+        </div>
       </main>
 
       <footer className="w-full bg-[#F2F2F2]">
