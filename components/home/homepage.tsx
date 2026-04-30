@@ -5,6 +5,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
 import { cn } from "@/lib/cn";
+import {
+  ArrowIcon,
+  ArrowRevealButton,
+  ArrowRevealText,
+  getGlobalFocusStyle,
+} from "@/components/shared/arrow-reveal";
 
 type MarqueeItem = {
   key: string;
@@ -515,27 +521,6 @@ function MarqueeShowcase({
   );
 }
 
-function ArrowIcon({ hover = false }: { hover?: boolean }) {
-  return (
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-      <path
-        d="M14.3763 12.7083V5.625H7.29297"
-        stroke={hover ? "#000000" : "#707070"}
-        strokeWidth="1.25"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M14.1667 5.83203L5.625 14.3737"
-        stroke={hover ? "#000000" : "#707070"}
-        strokeWidth="1.25"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
 function SmartUnderlineLink({
   href,
   children,
@@ -703,9 +688,7 @@ function AboutToolsCard({
         isGlobalDimmed ? "opacity-15" : "opacity-100",
       )}
       style={{
-        transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)",
-        filter: isGlobalDimmed ? "blur(1px)" : "blur(0px)",
-        transform: isGlobalDimmed ? "scale(0.995)" : "scale(1)",
+        ...getGlobalFocusStyle(isGlobalDimmed),
         touchAction: isScrollSequenceActive ? "none" : "auto",
       }}
     >
@@ -791,24 +774,15 @@ function AboutToolsCard({
           </div>
         </div>
 
-        <button
-          type="button"
-          aria-label="Tools details"
+        <ArrowRevealButton
+          isActive={isDetailsActive}
+          ariaLabel="Tools details"
           className="absolute bottom-4 left-4 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-[#FAFAFA] shadow-[0_0_0_1px_rgba(0,0,0,0.06)] transition-all duration-300"
-          style={{ transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)" }}
-          onMouseEnter={() => {
+          onHoverStart={() => {
             setIsIconHovered(true);
             onArrowHoverStart();
           }}
-          onMouseLeave={() => {
-            setIsIconHovered(false);
-            onArrowHoverEnd();
-          }}
-          onFocus={() => {
-            setIsIconHovered(true);
-            onArrowHoverStart();
-          }}
-          onBlur={() => {
+          onHoverEnd={() => {
             setIsIconHovered(false);
             onArrowHoverEnd();
           }}
@@ -816,39 +790,10 @@ function AboutToolsCard({
             event.stopPropagation();
             window.location.href = FALLBACK_ERROR_ROUTE;
           }}
-        >
-          <span className="relative block h-5 w-5">
-            <span
-              className={cn(
-                "absolute inset-0 transition-opacity duration-300",
-                isDetailsActive ? "opacity-0" : "opacity-100",
-              )}
-              style={{ transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)" }}
-            >
-              <ArrowIcon />
-            </span>
-            <span
-              className={cn(
-                "absolute inset-0 transition-opacity duration-300",
-                isDetailsActive ? "opacity-100" : "opacity-0",
-              )}
-              style={{ transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)" }}
-            >
-              <ArrowIcon hover />
-            </span>
-          </span>
-        </button>
+        />
       </div>
 
-      <motion.div
-        className="pt-2"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: isDetailsActive ? 1 : 0, y: isDetailsActive ? 0 : 8 }}
-        transition={{ duration: PREMIUM_DURATION, ease: PREMIUM_EASE, delay: isDetailsActive ? PREMIUM_DELAY : 0 }}
-      >
-        <p className="text-[20px] leading-[30px] tracking-[-1px] text-black">Tools I Use</p>
-        <p className="text-base leading-6 text-[#707070]">The stack behind my work</p>
-      </motion.div>
+      <ArrowRevealText isActive={isDetailsActive} title="Tools I Use" subtitle="The stack behind my work" className="pt-2" />
     </article>
   );
 }
@@ -964,33 +909,22 @@ function MarqueeCard({
               </motion.div>
             )}
           </motion.div>
-          <motion.div
+          <ArrowRevealText
+            isActive={isIconHovered}
+            title={item.title}
+            subtitle={item.subtitle ?? ""}
             className="pointer-events-none absolute left-0 top-[218px]"
-            initial={false}
-            animate={{ opacity: isIconHovered ? 1 : 0, y: isIconHovered ? 0 : 8 }}
-            transition={{ duration: PREMIUM_DURATION, ease: PREMIUM_EASE, delay: isIconHovered ? PREMIUM_DELAY : 0 }}
-          >
-            <p className="text-[20px] leading-[30px] tracking-[-1px] text-black">{item.title}</p>
-            <p className="text-base leading-6 text-[#707070]">{item.subtitle}</p>
-          </motion.div>
-          <button
-            type="button"
-            aria-label={`${item.title} details`}
+            delay={PREMIUM_DELAY}
+          />
+          <ArrowRevealButton
+            isActive={isIconHovered}
+            ariaLabel={`${item.title} details`}
             className="absolute bottom-[84px] left-4 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-[#FAFAFA] shadow-[0_0_0_1px_rgba(0,0,0,0.06)] transition-all duration-300"
-            style={{ transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)" }}
-            onMouseEnter={() => {
+            onHoverStart={() => {
               setIsIconHovered(true);
               onIconHoverStart();
             }}
-            onMouseLeave={() => {
-              setIsIconHovered(false);
-              onIconHoverEnd();
-            }}
-            onFocus={() => {
-              setIsIconHovered(true);
-              onIconHoverStart();
-            }}
-            onBlur={() => {
+            onHoverEnd={() => {
               setIsIconHovered(false);
               onIconHoverEnd();
             }}
@@ -1002,29 +936,7 @@ function MarqueeCard({
               }
               window.open(item.href, "_blank", "noopener,noreferrer");
             }}
-            tabIndex={0}
-          >
-            <span className="relative block h-5 w-5">
-              <span
-                className={cn(
-                  "absolute inset-0 transition-opacity duration-300",
-                  isIconHovered ? "opacity-0" : "opacity-100",
-                )}
-                style={{ transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)" }}
-              >
-                <ArrowIcon />
-              </span>
-              <span
-                className={cn(
-                  "absolute inset-0 transition-opacity duration-300",
-                  isIconHovered ? "opacity-100" : "opacity-0",
-                )}
-                style={{ transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)" }}
-              >
-                <ArrowIcon hover />
-              </span>
-            </span>
-          </button>
+          />
         </div>
       ) : (
         <motion.div

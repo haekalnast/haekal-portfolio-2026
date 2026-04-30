@@ -5,12 +5,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
+import {
+  ARROW_REVEAL_EASE,
+  ArrowIcon,
+  ArrowRevealButton,
+  ArrowRevealText,
+  getGlobalFocusStyle,
+} from "@/components/shared/arrow-reveal";
 
 const FALLBACK_ERROR_ROUTE = "/not-found";
-const PREMIUM_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
-const PREMIUM_DURATION = 0.32;
-const PREMIUM_DELAY = 0.04;
-
 const dockApps = [
   { name: "Figma", icon: "https://www.figma.com/api/mcp/asset/3928281a-3d0f-4b48-b7b7-adc64467900d" },
   { name: "Cursor", icon: "https://www.figma.com/api/mcp/asset/c4008ecb-0f80-475f-8f10-1e21da0f250c" },
@@ -69,15 +72,6 @@ function ArrowButton() {
         <path d="M14.1667 5.83203L5.625 14.3737" stroke="#707070" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     </div>
-  );
-}
-
-function ArrowIcon({ hover = false }: { hover?: boolean }) {
-  return (
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-      <path d="M14.3763 12.7083V5.625H7.29297" stroke={hover ? "#000000" : "#707070"} strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M14.1667 5.83203L5.625 14.3737" stroke={hover ? "#000000" : "#707070"} strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
   );
 }
 
@@ -241,9 +235,7 @@ function AboutToolsCard({
         isGlobalDimmed ? "opacity-15" : "opacity-100",
       )}
       style={{
-        transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)",
-        filter: isGlobalDimmed ? "blur(1px)" : "blur(0px)",
-        transform: isGlobalDimmed ? "scale(0.995)" : "scale(1)",
+        ...getGlobalFocusStyle(isGlobalDimmed),
         touchAction: isScrollSequenceActive ? "none" : "auto",
       }}
     >
@@ -263,14 +255,14 @@ function AboutToolsCard({
                       height={66}
                       className="h-[66px] w-[66px] shrink-0 object-cover"
                       animate={hoverable && activeTooltipName === app.name ? { y: -4, scale: 1.08 } : { y: 0, scale: 1 }}
-                      transition={{ duration: 0.32, ease: PREMIUM_EASE }}
+                      transition={{ duration: 0.32, ease: ARROW_REVEAL_EASE }}
                     />
                     {hoverable && (
                       <motion.div
                         className="pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md bg-[#5A5A5A] px-3 py-1 text-sm text-white"
                         initial={false}
                         animate={activeTooltipName === app.name ? { opacity: 1, y: 0, visibility: "visible" as const } : { opacity: 0, y: 8, visibility: "hidden" as const }}
-                        transition={{ duration: 0.32, ease: PREMIUM_EASE }}
+                        transition={{ duration: 0.32, ease: ARROW_REVEAL_EASE }}
                       >
                         {app.name}
                       </motion.div>
@@ -296,24 +288,15 @@ function AboutToolsCard({
             </div>
           </div>
         </div>
-        <button
-          type="button"
-          aria-label="Tools details"
+        <ArrowRevealButton
+          isActive={isDetailsActive}
+          ariaLabel="Tools details"
           className="absolute bottom-4 left-4 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-[#FAFAFA] shadow-[0_0_0_1px_rgba(0,0,0,0.06)] transition-all duration-300"
-          style={{ transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)" }}
-          onMouseEnter={() => {
+          onHoverStart={() => {
             setIsIconHovered(true);
             onArrowHoverStart();
           }}
-          onMouseLeave={() => {
-            setIsIconHovered(false);
-            onArrowHoverEnd();
-          }}
-          onFocus={() => {
-            setIsIconHovered(true);
-            onArrowHoverStart();
-          }}
-          onBlur={() => {
+          onHoverEnd={() => {
             setIsIconHovered(false);
             onArrowHoverEnd();
           }}
@@ -321,22 +304,9 @@ function AboutToolsCard({
             event.stopPropagation();
             window.location.href = FALLBACK_ERROR_ROUTE;
           }}
-        >
-          <span className="relative block h-5 w-5">
-            <span className={`absolute inset-0 transition-opacity duration-300 ${isDetailsActive ? "opacity-0" : "opacity-100"}`} style={{ transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)" }}><ArrowIcon /></span>
-            <span className={`absolute inset-0 transition-opacity duration-300 ${isDetailsActive ? "opacity-100" : "opacity-0"}`} style={{ transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)" }}><ArrowIcon hover /></span>
-          </span>
-        </button>
+        />
       </div>
-      <motion.div
-        className="pt-2"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: isDetailsActive ? 1 : 0, y: isDetailsActive ? 0 : 8 }}
-        transition={{ duration: PREMIUM_DURATION, ease: PREMIUM_EASE, delay: isDetailsActive ? PREMIUM_DELAY : 0 }}
-      >
-        <p className="text-[20px] leading-[30px] tracking-[-1px] text-black">Tools I Use</p>
-        <p className="text-base leading-6 text-[#707070]">The stack behind my work</p>
-      </motion.div>
+      <ArrowRevealText isActive={isDetailsActive} title="Tools I Use" subtitle="The stack behind my work" className="pt-2" />
     </article>
   );
 }
@@ -364,7 +334,7 @@ function ResumeCard() {
             className="relative h-[396px] w-[280px] overflow-hidden rounded-[4px] shadow-[0_0_50px_rgba(0,0,0,0.06)]"
             initial={false}
             animate={{ rotate: isMockupHover ? 0 : -8, y: isMockupHover ? 0 : 8 }}
-            transition={{ duration: 0.44, ease: PREMIUM_EASE }}
+            transition={{ duration: 0.44, ease: ARROW_REVEAL_EASE }}
             style={{ transformOrigin: "50% 50%" }}
           >
             <Image src="/about-resume-sheet.png" alt="Resume preview" fill unoptimized className="object-cover" />
@@ -379,10 +349,7 @@ function ResumeCard() {
           <ArrowIcon hover={isTextHover} />
         </Link>
       </div>
-      <motion.div initial={false} animate={{ opacity: isTextHover ? 1 : 0, y: isTextHover ? 0 : 8 }} transition={{ duration: PREMIUM_DURATION, ease: PREMIUM_EASE, delay: isTextHover ? PREMIUM_DELAY : 0 }} className="pointer-events-none absolute left-0 top-[218px] space-y-[6px]">
-        <p className="text-[20px] leading-[30px] tracking-[-1px] text-black">Resume</p>
-        <p className="text-base leading-6 text-[#707070]">See details</p>
-      </motion.div>
+      <ArrowRevealText isActive={isTextHover} title="Resume" subtitle="See details" className="pointer-events-none absolute left-0 top-[218px] space-y-[6px]" />
     </article>
   );
 }
@@ -421,11 +388,7 @@ export default function AboutPage() {
               "space-y-4 transition-all duration-300",
               isGlobalFocus ? "opacity-15" : "opacity-100",
             )}
-            style={{
-              transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)",
-              filter: isGlobalFocus ? "blur(1px)" : "blur(0px)",
-              transform: isGlobalFocus ? "scale(0.995)" : "scale(1)",
-            }}
+            style={getGlobalFocusStyle(isGlobalFocus)}
           >
             <h1 className="text-[32px] leading-[40px] tracking-[-1px]">About Haekal</h1>
             <p className="max-w-[632px] text-base leading-6 text-[#707070]">I&apos;m Haekal, a product designer with 4+ years of experience building digital products across trading, payments, and B2B systems.</p>
@@ -446,11 +409,7 @@ export default function AboutPage() {
                 "relative z-10 grid gap-6 transition-all duration-300 sm:grid-cols-2",
                 isGlobalFocus ? "opacity-15" : "opacity-100",
               )}
-              style={{
-                transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)",
-                filter: isGlobalFocus ? "blur(1px)" : "blur(0px)",
-                transform: isGlobalFocus ? "scale(0.995)" : "scale(1)",
-              }}
+              style={getGlobalFocusStyle(isGlobalFocus)}
             >
               <ResumeCard />
               <article className="relative h-[210px] overflow-hidden rounded-[20px] bg-[#F2F2F2]">
@@ -466,11 +425,7 @@ export default function AboutPage() {
             "transition-all duration-300",
             isGlobalFocus ? "opacity-15" : "opacity-100",
           )}
-          style={{
-            transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)",
-            filter: isGlobalFocus ? "blur(1px)" : "blur(0px)",
-            transform: isGlobalFocus ? "scale(0.995)" : "scale(1)",
-          }}
+          style={getGlobalFocusStyle(isGlobalFocus)}
         >
           <section className="py-[64px]">
             <h2 className="text-[32px] leading-[40px] tracking-[-1px]">Experience</h2>
