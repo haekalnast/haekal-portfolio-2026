@@ -99,7 +99,7 @@ export default function NotFound() {
             <Link href="/" className="flex h-[46px] w-[84px] items-center justify-center rounded-[230px] text-center text-base leading-[21px] text-[#707070] transition-colors hover:bg-[#F2F2F2] hover:text-[#707070]">
               Home
             </Link>
-            <Link href="/#about" className="flex h-[46px] w-[84px] items-center justify-center rounded-[230px] text-center text-base leading-[21px] text-[#707070] transition-colors hover:bg-[#F2F2F2] hover:text-[#707070]">
+            <Link href="/about" className="flex h-[46px] w-[84px] items-center justify-center rounded-[230px] text-center text-base leading-[21px] text-[#707070] transition-colors hover:bg-[#F2F2F2] hover:text-[#707070]">
               About
             </Link>
             <Link href="/#designs" className="flex h-[46px] w-[84px] items-center justify-center rounded-[230px] text-center text-base leading-[21px] text-[#707070] transition-colors hover:bg-[#F2F2F2] hover:text-[#707070]">
@@ -162,7 +162,7 @@ export default function NotFound() {
           <Link href="/" className="flex h-[46px] w-[84px] items-center justify-center rounded-[230px] text-center text-base leading-[21px] text-[#707070] transition-colors hover:bg-[#F2F2F2] hover:text-[#707070]">
             Home
           </Link>
-          <Link href="/#about" className="flex h-[46px] w-[84px] items-center justify-center rounded-[230px] text-center text-base leading-[21px] text-[#707070] transition-colors hover:bg-[#F2F2F2] hover:text-[#707070]">
+          <Link href="/about" className="flex h-[46px] w-[84px] items-center justify-center rounded-[230px] text-center text-base leading-[21px] text-[#707070] transition-colors hover:bg-[#F2F2F2] hover:text-[#707070]">
             About
           </Link>
           <Link href="/#designs" className="flex h-[46px] w-[84px] items-center justify-center rounded-[230px] text-center text-base leading-[21px] text-[#707070] transition-colors hover:bg-[#F2F2F2] hover:text-[#707070]">

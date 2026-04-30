@@ -188,8 +188,8 @@ const SFAST_MOCKUP_ASSETS = {
 } as const;
 
 const navItems = [
-  { label: "Home", href: "#home" },
-  { label: "About", href: "#about" },
+  { label: "Home", href: "/" },
+  { label: "About", href: "/about" },
   { label: "Designs", href: "#designs" },
 ];
 
