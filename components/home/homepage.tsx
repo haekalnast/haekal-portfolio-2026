@@ -577,7 +577,7 @@ function AboutToolsCard({
   const activeMobileTooltip = isScrollSequenceActive && mobileSequenceStep >= 0 && mobileSequenceStep < sequenceNames.length
     ? sequenceNames[mobileSequenceStep]
     : null;
-  const isDetailsActive = isMobile ? (mobileSequenceDone && activeMobileTooltip === null) : isIconHovered;
+  const isDetailsActive = isMobile || isIconHovered;
   const activeTooltipName = isMobile ? (activeMobileTooltip ?? hoveredApp) : hoveredApp;
 
   useEffect(() => {

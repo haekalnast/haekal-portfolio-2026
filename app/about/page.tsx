@@ -137,7 +137,7 @@ function AboutToolsCard({
   const lockScrollYRef = useRef(0);
   const isScrollSequenceActive = isMobile && isCardCentered && !mobileSequenceDone;
   const activeMobileTooltip = isScrollSequenceActive && mobileSequenceStep >= 0 && mobileSequenceStep < sequenceNames.length ? sequenceNames[mobileSequenceStep] : null;
-  const isDetailsActive = isMobile ? (mobileSequenceDone && activeMobileTooltip === null) : isIconHovered;
+  const isDetailsActive = isMobile || isIconHovered;
   const activeTooltipName = isMobile ? (activeMobileTooltip ?? hoveredApp) : hoveredApp;
 
   useEffect(() => {
@@ -238,7 +238,7 @@ function AboutToolsCard({
     <article
       ref={cardRef}
       className={cn(
-        "relative z-20 mx-auto h-[324px] w-[358px] transition-all duration-300 md:w-full lg:w-[648px]",
+        "relative mx-auto h-[324px] w-[358px] transition-all duration-300 md:w-full lg:w-[648px]",
         isGlobalDimmed ? "opacity-15" : "opacity-100",
       )}
       style={{
@@ -248,7 +248,7 @@ function AboutToolsCard({
     >
       <div className="relative h-[324px] overflow-hidden rounded-[20px] bg-[#F2F2F2] pl-10 md:pl-0 lg:pl-10">
         <div className="absolute top-6 right-0 bottom-20 flex items-center">
-          <div className="relative h-[124px] w-[290px] overflow-hidden md:w-[530px]">
+          <div className="relative h-[124px] w-[290px] overflow-hidden md:w-[530px] lg:w-[530px]">
             <div className="absolute top-[39px] left-0 h-[85px] w-[880px] rounded-[20px] border border-[#484848] bg-[rgba(40,40,40,0.6)] shadow-[0_2px_2px_rgba(0,0,0,0.25)] backdrop-blur-[12px]" />
             <div className="absolute top-[48px] left-[6px] flex h-[66px] w-[868px] items-center gap-[5px] md:hidden">
               {dockApps.map((app, index) => {
@@ -312,7 +312,7 @@ function AboutToolsCard({
           }}
         />
       </div>
-      <ArrowRevealText isActive={isDetailsActive} title="Tools I Use" subtitle="The stack behind my work" className="pt-2" />
+      <ArrowRevealText isActive={isDetailsActive} title="Tools I Use" subtitle="The stack behind my work" className="pointer-events-none absolute left-0 top-[332px] z-30 w-full bg-[#FAFAFA]" />
     </article>
   );
 }
@@ -360,25 +360,38 @@ function ResumeCard() {
   );
 }
 
-function ThisIsHaekalCard() {
+function ThisIsHaekalCard({
+  onArrowHoverStart,
+  onArrowHoverEnd,
+}: {
+  onArrowHoverStart: () => void;
+  onArrowHoverEnd: () => void;
+}) {
   const [isCardHovered, setIsCardHovered] = useState(false);
   const [isIconHovered, setIsIconHovered] = useState(false);
   const [imageIndex, setImageIndex] = useState(0);
+  const [isClickScaling, setIsClickScaling] = useState(false);
+  const clickScaleTimeoutRef = useRef<number | null>(null);
   const { ref, isActive } = useScrollRevealActive<HTMLElement>(0.5);
   const isRevealActive = isIconHovered || isActive;
-  const isImageLoopActive = isCardHovered;
+  const isImageLoopActive = isCardHovered && !isIconHovered;
   const nextImage = () => setImageIndex((prev) => (prev + 1) % THIS_IS_HAEKAL_IMAGES.length);
 
   useEffect(() => {
-    if (!isImageLoopActive) {
-      setImageIndex(0);
-      return;
-    }
+    if (!isImageLoopActive) return;
     const intervalId = window.setInterval(() => {
       nextImage();
-    }, 1100);
+    }, 1800);
     return () => window.clearInterval(intervalId);
   }, [isImageLoopActive]);
+
+  useEffect(() => {
+    return () => {
+      if (clickScaleTimeoutRef.current !== null) {
+        window.clearTimeout(clickScaleTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <article
@@ -391,34 +404,55 @@ function ThisIsHaekalCard() {
       }}
     >
       <div className="absolute inset-x-0 top-0 h-[210px] overflow-hidden rounded-[20px] bg-[#F2F2F2]">
-        <AnimatePresence mode="wait" initial={false}>
-          <motion.div
-            key={THIS_IS_HAEKAL_IMAGES[imageIndex]}
-            className="absolute inset-0"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.8, ease: ARROW_REVEAL_EASE }}
-          >
-            <Image
-              src={THIS_IS_HAEKAL_IMAGES[imageIndex]}
-              alt="This is Haekal"
-              fill
-              unoptimized
-              className="object-cover"
-              priority
-            />
-          </motion.div>
-        </AnimatePresence>
+        <motion.div
+          className="absolute inset-0"
+          animate={{ scale: isCardHovered || isClickScaling ? 1.03 : 1 }}
+          transition={{ duration: 0.34, ease: ARROW_REVEAL_EASE }}
+        >
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={THIS_IS_HAEKAL_IMAGES[imageIndex]}
+              className="absolute inset-0"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.6, ease: ARROW_REVEAL_EASE }}
+            >
+              <Image
+                src={THIS_IS_HAEKAL_IMAGES[imageIndex]}
+                alt="This is Haekal"
+                fill
+                unoptimized
+                className="object-cover"
+                priority
+              />
+            </motion.div>
+          </AnimatePresence>
+        </motion.div>
         <ArrowRevealButton
           isActive={isRevealActive}
           ariaLabel="This is Haekal details"
           className="absolute bottom-4 left-4 z-20 flex h-8 w-8 items-center justify-center rounded-[1000px] bg-[#FAFAFA] p-[6px] shadow-[0_0_0_1px_rgba(0,0,0,0.06)] transition-all duration-300"
-          onHoverStart={() => setIsIconHovered(true)}
-          onHoverEnd={() => setIsIconHovered(false)}
+          onHoverStart={() => {
+            setIsIconHovered(true);
+            onArrowHoverStart();
+          }}
+          onHoverEnd={() => {
+            setIsIconHovered(false);
+            onArrowHoverEnd();
+          }}
           onClick={(event) => {
             event.stopPropagation();
-            if (isRevealActive) nextImage();
+            if (isRevealActive) {
+              nextImage();
+              setIsClickScaling(true);
+              if (clickScaleTimeoutRef.current !== null) {
+                window.clearTimeout(clickScaleTimeoutRef.current);
+              }
+              clickScaleTimeoutRef.current = window.setTimeout(() => {
+                setIsClickScaling(false);
+              }, 220);
+            }
           }}
         />
       </div>
@@ -430,8 +464,12 @@ function ThisIsHaekalCard() {
 export default function AboutPage() {
   const [activeArrowId, setActiveArrowId] = useState<string | null>(null);
   const aboutArrowId = "about-tools";
+  const thisIsHaekalArrowId = "about-this-is-haekal";
   const isGlobalFocus = activeArrowId !== null;
   const isAboutFocused = activeArrowId === aboutArrowId;
+  const isThisIsHaekalFocused = activeArrowId === thisIsHaekalArrowId;
+  const isResumeDimmed = isGlobalFocus;
+  const isThisIsHaekalDimmed = isGlobalFocus && !isThisIsHaekalFocused;
 
   return (
     <div className="bg-[#FAFAFA] text-black">
@@ -448,7 +486,7 @@ export default function AboutPage() {
       </header>
 
       <header className="pointer-events-none fixed inset-x-0 top-6 z-40 px-4 sm:hidden">
-        <div className="pointer-events-auto mx-auto flex h-[46px] w-full max-w-[358px] items-center justify-between">
+        <div className="pointer-events-auto mx-auto flex h-[46px] w-full items-center justify-between">
           <LogoMark />
           <Link href="mailto:alhaekalnast@gmail.com" className="rounded-[230px] bg-[#F2F2F2] px-6 py-3 text-base leading-[21px] text-[#707070]">Let&apos;s Talk</Link>
         </div>
@@ -477,15 +515,28 @@ export default function AboutPage() {
               onArrowHoverEnd={() => setActiveArrowId((current) => (current === aboutArrowId ? null : current))}
             />
 
-            <div
-              className={cn(
-                "relative z-10 grid gap-6 transition-all duration-300 sm:grid-cols-2",
-                isGlobalFocus ? "opacity-15" : "opacity-100",
-              )}
-              style={getGlobalFocusStyle(isGlobalFocus)}
-            >
-              <ResumeCard />
-              <ThisIsHaekalCard />
+            <div className="relative z-10 grid gap-6 sm:grid-cols-2">
+              <div
+                className={cn(
+                  "transition-all duration-300",
+                  isResumeDimmed ? "opacity-15" : "opacity-100",
+                )}
+                style={getGlobalFocusStyle(isResumeDimmed)}
+              >
+                <ResumeCard />
+              </div>
+              <div
+                className={cn(
+                  "relative z-20 transition-all duration-300",
+                  isThisIsHaekalDimmed ? "opacity-15" : "opacity-100",
+                )}
+                style={getGlobalFocusStyle(isThisIsHaekalDimmed)}
+              >
+                <ThisIsHaekalCard
+                  onArrowHoverStart={() => setActiveArrowId(thisIsHaekalArrowId)}
+                  onArrowHoverEnd={() => setActiveArrowId((current) => (current === thisIsHaekalArrowId ? null : current))}
+                />
+              </div>
             </div>
           </div>
         </section>
