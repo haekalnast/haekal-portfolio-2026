@@ -319,7 +319,7 @@ function AboutToolsCard({
 function ResumeCard() {
   const [isCardHovered, setIsCardHovered] = useState(false);
   const [isIconHovered, setIsIconHovered] = useState(false);
-  const { ref, isActive } = useScrollRevealActive<HTMLElement>(0.5);
+  const { ref, isActive } = useScrollRevealActive<HTMLElement>(0.45);
   const isMockupHover = isCardHovered || isActive;
   const isTextHover = isIconHovered || isActive;
 
@@ -336,9 +336,9 @@ function ResumeCard() {
       <div className="absolute inset-x-0 top-0 h-[210px] overflow-hidden rounded-[20px] bg-[#F2F2F2]">
         <div className="relative h-full overflow-hidden">
           <motion.div
-            className="absolute left-[48px] top-[42px] h-[396px] w-[280px] overflow-hidden rounded-[4px] shadow-[0_0_50px_rgba(0,0,0,0.06)]"
+            className="absolute left-1/2 top-[42px] h-[396px] w-[280px] -translate-x-1/2 overflow-hidden rounded-[4px] shadow-[0_0_50px_rgba(0,0,0,0.06)]"
             initial={false}
-            animate={{ rotate: isMockupHover ? -3 : -8, y: isMockupHover ? -6 : 2 }}
+            animate={{ rotate: isMockupHover ? 0 : -8, x: isMockupHover ? 0 : 9, y: isMockupHover ? -6 : 2 }}
             transition={{ duration: 0.44, ease: ARROW_REVEAL_EASE }}
             style={{ transformOrigin: "50% 0%" }}
           >
@@ -374,9 +374,10 @@ function ThisIsHaekalCard({
   const [imageIndex, setImageIndex] = useState(0);
   const [isClickScaling, setIsClickScaling] = useState(false);
   const clickScaleTimeoutRef = useRef<number | null>(null);
-  const { ref, isActive } = useScrollRevealActive<HTMLElement>(0.5);
+  const { ref, isActive } = useScrollRevealActive<HTMLElement>(0.45);
   const isRevealActive = isIconHovered || isActive;
   const isImageLoopActive = isCardHovered && !isIconHovered;
+  const isMockupHover = isCardHovered || isActive || isClickScaling;
   const nextImage = () => setImageIndex((prev) => (prev + 1) % THIS_IS_HAEKAL_IMAGES.length);
 
   useEffect(() => {
@@ -408,7 +409,7 @@ function ThisIsHaekalCard({
       <div className="absolute inset-x-0 top-0 h-[210px] overflow-hidden rounded-[20px] bg-[#F2F2F2]">
         <motion.div
           className="absolute inset-0"
-          animate={{ scale: isCardHovered || isClickScaling ? 1.03 : 1 }}
+          animate={{ scale: isMockupHover ? 1.03 : 1 }}
           transition={{ duration: 0.34, ease: ARROW_REVEAL_EASE }}
         >
           <AnimatePresence mode="wait" initial={false}>
@@ -464,14 +465,18 @@ function ThisIsHaekalCard({
 }
 
 export default function AboutPage() {
+  const isMobile = useIsMobileViewport();
   const [activeArrowId, setActiveArrowId] = useState<string | null>(null);
   const aboutArrowId = "about-tools";
   const thisIsHaekalArrowId = "about-this-is-haekal";
   const isGlobalFocus = activeArrowId !== null;
   const isAboutFocused = activeArrowId === aboutArrowId;
   const isThisIsHaekalFocused = activeArrowId === thisIsHaekalArrowId;
-  const isResumeDimmed = isGlobalFocus;
-  const isThisIsHaekalDimmed = isGlobalFocus && !isThisIsHaekalFocused;
+  const isMobileNoDim = isMobile;
+  const isTextDimmed = !isMobileNoDim && isGlobalFocus;
+  const isAboutDimmed = !isMobileNoDim && isGlobalFocus && !isAboutFocused;
+  const isResumeDimmed = !isMobileNoDim && isGlobalFocus;
+  const isThisIsHaekalDimmed = !isMobileNoDim && isGlobalFocus && !isThisIsHaekalFocused;
 
   return (
     <div className="bg-[#FAFAFA] text-black">
@@ -499,9 +504,9 @@ export default function AboutPage() {
           <div
             className={cn(
               "space-y-4 transition-all duration-300",
-              isGlobalFocus ? "opacity-15" : "opacity-100",
+              isTextDimmed ? "opacity-15" : "opacity-100",
             )}
-            style={getGlobalFocusStyle(isGlobalFocus)}
+            style={getGlobalFocusStyle(isTextDimmed)}
           >
             <h1 className="text-[32px] leading-[40px] tracking-[-1px]">About Haekal</h1>
             <p className="max-w-[632px] text-base leading-6 text-[#707070]">I&apos;m Haekal, a product designer with 4+ years of experience building digital products across trading, payments, and B2B systems.</p>
@@ -512,7 +517,7 @@ export default function AboutPage() {
 
           <div className="space-y-6">
             <AboutToolsCard
-              isGlobalDimmed={isGlobalFocus && !isAboutFocused}
+              isGlobalDimmed={isAboutDimmed}
               onArrowHoverStart={() => setActiveArrowId(aboutArrowId)}
               onArrowHoverEnd={() => setActiveArrowId((current) => (current === aboutArrowId ? null : current))}
             />
@@ -546,9 +551,9 @@ export default function AboutPage() {
         <div
           className={cn(
             "transition-all duration-300",
-            isGlobalFocus ? "opacity-15" : "opacity-100",
+            isTextDimmed ? "opacity-15" : "opacity-100",
           )}
-          style={getGlobalFocusStyle(isGlobalFocus)}
+          style={getGlobalFocusStyle(isTextDimmed)}
         >
           <section className="py-[64px]">
             <h2 className="text-[32px] leading-[40px] tracking-[-1px]">Experience</h2>
