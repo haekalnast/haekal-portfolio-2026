@@ -49,6 +49,28 @@ const certificationItems = [
   { logo: "https://www.figma.com/api/mcp/asset/81d63956-c47f-41f8-b548-829cdd0d7f3b", title: "Enterprise Design Thinking Practitioner", org: "IBM", date: "Aug 2022", href: "https://www.credly.com/badges/02ff6615-201b-4e4c-9e80-94758a0e681e/linked_in_profile", fullWidth: true },
 ] as const;
 
+const JOURNAL_ASSETS = {
+  publicationBooks: [
+    "https://www.figma.com/api/mcp/asset/df2c1eae-2864-41e0-9f6e-f5bc5d499ad5",
+    "https://www.figma.com/api/mcp/asset/e875485b-7581-4441-a8f6-f678b5ab7d15",
+    "https://www.figma.com/api/mcp/asset/cf08aad1-502f-40a8-9fc6-b2bba73ae5f1",
+  ],
+  collateral: {
+    front: "https://www.figma.com/api/mcp/asset/e309acf4-7bbe-4555-bfaf-e31ec308de0b",
+    back: "https://www.figma.com/api/mcp/asset/b4b9b545-3613-455f-9bff-9fbfa836c347",
+  },
+  packaging: {
+    front: "https://www.figma.com/api/mcp/asset/d1e2c955-47f5-4b96-86c0-470219e586c8",
+    back: "https://www.figma.com/api/mcp/asset/f14948b4-8666-403a-b900-ab0832906797",
+  },
+  campaign: [
+    "https://www.figma.com/api/mcp/asset/83cb3d0d-a0e8-4d17-a732-cf5186b49be1",
+    "https://www.figma.com/api/mcp/asset/f5ded663-5359-408d-ad33-3ea027c7f4ad",
+    "https://www.figma.com/api/mcp/asset/5bdb534b-d008-4a39-b6bf-86797e893b4a",
+    "https://www.figma.com/api/mcp/asset/e8a140c3-b6ac-45d2-b5e4-56e5b55cd5d3",
+  ],
+} as const;
+
 function LogoMark() {
   return (
     <Link href="/" aria-label="Go to home" className="group relative block h-[27px] w-[124px]">
@@ -484,12 +506,171 @@ function ThisIsHaekalCard({
   );
 }
 
+function PublicationJournalCard({
+  isDimmed,
+  onArrowHoverStart,
+  onArrowHoverEnd,
+}: {
+  isDimmed: boolean;
+  onArrowHoverStart: () => void;
+  onArrowHoverEnd: () => void;
+}) {
+  const [isIconHovered, setIsIconHovered] = useState(false);
+  const [hoveredBook, setHoveredBook] = useState<number | null>(null);
+  const { ref, isActive } = useScrollRevealActive<HTMLElement>(0.45);
+  const isRevealActive = isIconHovered || isActive;
+
+  return (
+    <article
+      ref={ref}
+      className={cn("relative h-[444px] w-full overflow-visible transition-all duration-300 lg:w-[648px]", isDimmed ? "opacity-15" : "opacity-100")}
+      style={getGlobalFocusStyle(isDimmed)}
+    >
+      <div className="relative h-[444px] overflow-hidden rounded-[20px] bg-[#F2F2F2] px-6 lg:px-10">
+        <div className="flex h-full items-start justify-center gap-4 pt-6">
+          {JOURNAL_ASSETS.publicationBooks.map((src, index) => (
+            <motion.div
+              key={src}
+              className="relative mt-2 h-[252px] w-[148px] cursor-pointer overflow-hidden rounded-[10px] shadow-[0_4px_4px_rgba(0,0,0,0.25)]"
+              animate={{
+                y: hoveredBook === index ? -8 : 0,
+                scale: hoveredBook === index ? 1.035 : 1,
+                rotate: hoveredBook === index ? 0 : index === 0 ? -3 : index === 2 ? 3 : 0,
+              }}
+              transition={{ type: "spring", stiffness: 340, damping: 24, mass: 0.7 }}
+              onMouseEnter={() => setHoveredBook(index)}
+              onMouseLeave={() => setHoveredBook(null)}
+            >
+              <Image src={src} alt={`Publication mockup ${index + 1}`} fill unoptimized className="object-cover" />
+            </motion.div>
+          ))}
+        </div>
+        <motion.div
+          className="absolute bottom-4 left-4 z-20"
+          animate={{ y: isRevealActive ? -1 : 0, scale: isRevealActive ? 1.05 : 1 }}
+          transition={{ type: "spring", stiffness: 320, damping: 24, mass: 0.7 }}
+        >
+          <ArrowRevealButton
+            isActive={isRevealActive}
+            ariaLabel="Publication details"
+            className="flex h-8 w-8 items-center justify-center rounded-[1000px] bg-[#FAFAFA] p-[6px] shadow-[0_0_0_1px_rgba(0,0,0,0.06)] transition-all duration-300"
+            onHoverStart={() => {
+              setIsIconHovered(true);
+              onArrowHoverStart();
+            }}
+            onHoverEnd={() => {
+              setIsIconHovered(false);
+              onArrowHoverEnd();
+            }}
+            onClick={(event) => event.stopPropagation()}
+          />
+        </motion.div>
+      </div>
+      <ArrowRevealText isActive={isRevealActive} title="Publication Design" subtitle="Editorial and publication visuals" className="pointer-events-none absolute left-0 top-[452px]" />
+    </article>
+  );
+}
+
+function VisualJournalCard({
+  title,
+  subtitle,
+  defaultSrc,
+  hoverSrc,
+  isDimmed,
+  onArrowHoverStart,
+  onArrowHoverEnd,
+  isTall = false,
+  campaignSources,
+}: {
+  title: string;
+  subtitle: string;
+  defaultSrc: string;
+  hoverSrc: string;
+  isDimmed: boolean;
+  onArrowHoverStart: () => void;
+  onArrowHoverEnd: () => void;
+  isTall?: boolean;
+  campaignSources?: readonly string[];
+}) {
+  const [isCardHovered, setIsCardHovered] = useState(false);
+  const [isIconHovered, setIsIconHovered] = useState(false);
+  const [campaignIndex, setCampaignIndex] = useState(0);
+  const { ref, isActive } = useScrollRevealActive<HTMLElement>(0.45);
+  const isMockupHover = isCardHovered || isActive;
+  const isRevealActive = isIconHovered || isActive;
+  const baseHeightPx = isTall ? 444 : 210;
+  const expandedHeightPx = baseHeightPx + 58;
+  const visualSrc = campaignSources
+    ? (isMockupHover ? campaignSources[campaignIndex] ?? campaignSources[0] : campaignSources[0])
+    : (isMockupHover ? hoverSrc : defaultSrc);
+
+  useEffect(() => {
+    if (!campaignSources || campaignSources.length <= 1) return;
+    if (!isCardHovered) {
+      setCampaignIndex(0);
+      return;
+    }
+    const intervalId = window.setInterval(() => {
+      setCampaignIndex((prev) => (prev + 1) % campaignSources.length);
+    }, 650);
+    return () => window.clearInterval(intervalId);
+  }, [campaignSources, isCardHovered]);
+
+  return (
+    <article
+      ref={ref}
+      className={cn("relative w-full overflow-visible transition-all duration-300", isDimmed ? "opacity-15" : "opacity-100")}
+      style={{ ...getGlobalFocusStyle(isDimmed), height: isRevealActive ? expandedHeightPx : baseHeightPx }}
+      onMouseEnter={() => setIsCardHovered(true)}
+      onMouseLeave={() => {
+        setIsCardHovered(false);
+        setIsIconHovered(false);
+      }}
+    >
+      <div className="relative overflow-hidden rounded-[20px] bg-[#F2F2F2]" style={{ height: baseHeightPx }}>
+        <motion.div
+          className="absolute inset-0"
+          animate={{ scale: isMockupHover ? (isTall ? 1.02 : 1.025) : 1 }}
+          transition={{ type: "spring", stiffness: 300, damping: 26, mass: 0.75 }}
+        >
+          <Image src={visualSrc} alt={title} fill unoptimized className="object-cover" />
+        </motion.div>
+        <motion.div
+          className="absolute bottom-4 left-4 z-20"
+          animate={{ y: isRevealActive ? -1 : 0, scale: isRevealActive ? 1.05 : 1 }}
+          transition={{ type: "spring", stiffness: 320, damping: 24, mass: 0.7 }}
+        >
+          <ArrowRevealButton
+            isActive={isRevealActive}
+            ariaLabel={`${title} details`}
+            className="flex h-8 w-8 items-center justify-center rounded-[1000px] bg-[#FAFAFA] p-[6px] shadow-[0_0_0_1px_rgba(0,0,0,0.06)] transition-all duration-300"
+            onHoverStart={() => {
+              setIsIconHovered(true);
+              onArrowHoverStart();
+            }}
+            onHoverEnd={() => {
+              setIsIconHovered(false);
+              onArrowHoverEnd();
+            }}
+            onClick={(event) => event.stopPropagation()}
+          />
+        </motion.div>
+      </div>
+      <ArrowRevealText isActive={isRevealActive} title={title} subtitle={subtitle} className={cn("pointer-events-none absolute left-0", isTall ? "top-[452px]" : "top-[218px]")} />
+    </article>
+  );
+}
+
 export default function AboutPage() {
   const isMobile = useIsMobileViewport();
   const [activeArrowId, setActiveArrowId] = useState<string | null>(null);
   const aboutArrowId = "about-tools";
   const resumeArrowId = "about-resume";
   const thisIsHaekalArrowId = "about-this-is-haekal";
+  const publicationArrowId = "journal-publication";
+  const collateralArrowId = "journal-collateral";
+  const packagingArrowId = "journal-packaging";
+  const campaignArrowId = "journal-campaign";
   const isGlobalFocus = activeArrowId !== null;
   const isAboutFocused = activeArrowId === aboutArrowId;
   const isResumeFocused = activeArrowId === resumeArrowId;
@@ -573,13 +754,7 @@ export default function AboutPage() {
           </div>
         </section>
 
-        <div
-          className={cn(
-            "transition-all duration-300",
-            isTextDimmed ? "opacity-15" : "opacity-100",
-          )}
-          style={getGlobalFocusStyle(isTextDimmed)}
-        >
+        <div className="transition-all duration-300">
           <div className="flex flex-col gap-12 py-[64px]">
             <section className="flex flex-col gap-10 lg:gap-12">
               <div className="space-y-4">
@@ -640,23 +815,120 @@ export default function AboutPage() {
               <Link href={FALLBACK_ERROR_ROUTE} className="hidden rounded-[230px] bg-[#F2F2F2] px-6 py-3 text-base leading-[21px] text-[#707070] lg:inline-flex">Explore Journal</Link>
             </div>
 
-            <div className="grid gap-6 lg:grid-cols-3">
-              <article className="relative h-[210px] overflow-hidden rounded-[20px] bg-[#F2F2F2] lg:col-span-1">
-                <Image src="https://www.figma.com/api/mcp/asset/706e447e-7f5c-4b07-9c47-f0c39d1b1be0" alt="Campaign" fill unoptimized className="object-cover" />
-                <Link href={FALLBACK_ERROR_ROUTE} className="absolute bottom-4 left-4"><ArrowButton /></Link>
-              </article>
-              <article className="relative h-[210px] overflow-hidden rounded-[20px] bg-[#F2F2F2]">
-                <Image src="https://www.figma.com/api/mcp/asset/504366ec-43dd-43e3-9c68-e11105caa11a" alt="Shirt mockup" fill unoptimized className="object-cover" />
-                <Link href={FALLBACK_ERROR_ROUTE} className="absolute bottom-4 left-4"><ArrowButton /></Link>
-              </article>
-              <article className="relative h-[210px] overflow-hidden rounded-[20px] bg-[#F2F2F2]">
-                <Image src="https://www.figma.com/api/mcp/asset/1b6eeb35-5e3a-42cb-9544-e77a61d0a3d3" alt="Packaging" fill unoptimized className="object-cover" />
-                <Link href={FALLBACK_ERROR_ROUTE} className="absolute bottom-4 left-4"><ArrowButton /></Link>
-              </article>
-              <article className="relative h-[210px] overflow-hidden rounded-[20px] bg-[#F2F2F2] lg:col-span-2">
-                <Image src="https://www.figma.com/api/mcp/asset/88f76452-7cd9-4ebe-a233-54de61aaf2fb" alt="Event campaign" fill unoptimized className="object-cover" />
-                <Link href={FALLBACK_ERROR_ROUTE} className="absolute bottom-4 left-4"><ArrowButton /></Link>
-              </article>
+            <div className="hidden gap-6 lg:grid lg:grid-cols-[648px_648px]">
+              <PublicationJournalCard
+                isDimmed={!isMobile && isGlobalFocus && activeArrowId !== publicationArrowId}
+                onArrowHoverStart={() => setActiveArrowId(publicationArrowId)}
+                onArrowHoverEnd={() => setActiveArrowId((current) => (current === publicationArrowId ? null : current))}
+              />
+              <div className="flex flex-col gap-6">
+                <div className="grid grid-cols-2 gap-6">
+                  <VisualJournalCard
+                    title="Collateral Design"
+                    subtitle="Promotional and supporting materials"
+                    defaultSrc={JOURNAL_ASSETS.collateral.front}
+                    hoverSrc={JOURNAL_ASSETS.collateral.back}
+                    isDimmed={!isMobile && isGlobalFocus && activeArrowId !== collateralArrowId}
+                    onArrowHoverStart={() => setActiveArrowId(collateralArrowId)}
+                    onArrowHoverEnd={() => setActiveArrowId((current) => (current === collateralArrowId ? null : current))}
+                  />
+                  <VisualJournalCard
+                    title="Packaging Design"
+                    subtitle="Product and brand packaging"
+                    defaultSrc={JOURNAL_ASSETS.packaging.front}
+                    hoverSrc={JOURNAL_ASSETS.packaging.back}
+                    isDimmed={!isMobile && isGlobalFocus && activeArrowId !== packagingArrowId}
+                    onArrowHoverStart={() => setActiveArrowId(packagingArrowId)}
+                    onArrowHoverEnd={() => setActiveArrowId((current) => (current === packagingArrowId ? null : current))}
+                  />
+                </div>
+                <VisualJournalCard
+                  title="Campaign Design"
+                  subtitle="Marketing and communication visuals"
+                  defaultSrc={JOURNAL_ASSETS.campaign[0]}
+                  hoverSrc={JOURNAL_ASSETS.campaign[1]}
+                  campaignSources={JOURNAL_ASSETS.campaign}
+                  isDimmed={!isMobile && isGlobalFocus && activeArrowId !== campaignArrowId}
+                  onArrowHoverStart={() => setActiveArrowId(campaignArrowId)}
+                  onArrowHoverEnd={() => setActiveArrowId((current) => (current === campaignArrowId ? null : current))}
+                />
+              </div>
+            </div>
+
+            <div className="hidden gap-6 md:grid lg:hidden">
+              <PublicationJournalCard
+                isDimmed={!isMobile && isGlobalFocus && activeArrowId !== publicationArrowId}
+                onArrowHoverStart={() => setActiveArrowId(publicationArrowId)}
+                onArrowHoverEnd={() => setActiveArrowId((current) => (current === publicationArrowId ? null : current))}
+              />
+              <div className="grid grid-cols-2 gap-6">
+                <VisualJournalCard
+                  title="Collateral Design"
+                  subtitle="Promotional and supporting materials"
+                  defaultSrc={JOURNAL_ASSETS.collateral.front}
+                  hoverSrc={JOURNAL_ASSETS.collateral.back}
+                  isDimmed={!isMobile && isGlobalFocus && activeArrowId !== collateralArrowId}
+                  onArrowHoverStart={() => setActiveArrowId(collateralArrowId)}
+                  onArrowHoverEnd={() => setActiveArrowId((current) => (current === collateralArrowId ? null : current))}
+                />
+                <VisualJournalCard
+                  title="Packaging Design"
+                  subtitle="Product and brand packaging"
+                  defaultSrc={JOURNAL_ASSETS.packaging.front}
+                  hoverSrc={JOURNAL_ASSETS.packaging.back}
+                  isDimmed={!isMobile && isGlobalFocus && activeArrowId !== packagingArrowId}
+                  onArrowHoverStart={() => setActiveArrowId(packagingArrowId)}
+                  onArrowHoverEnd={() => setActiveArrowId((current) => (current === packagingArrowId ? null : current))}
+                />
+              </div>
+              <VisualJournalCard
+                title="Campaign Design"
+                subtitle="Marketing and communication visuals"
+                defaultSrc={JOURNAL_ASSETS.campaign[0]}
+                hoverSrc={JOURNAL_ASSETS.campaign[1]}
+                campaignSources={JOURNAL_ASSETS.campaign}
+                isDimmed={!isMobile && isGlobalFocus && activeArrowId !== campaignArrowId}
+                onArrowHoverStart={() => setActiveArrowId(campaignArrowId)}
+                onArrowHoverEnd={() => setActiveArrowId((current) => (current === campaignArrowId ? null : current))}
+                isTall
+              />
+            </div>
+
+            <div className="grid gap-6 md:hidden">
+              <PublicationJournalCard
+                isDimmed={false}
+                onArrowHoverStart={() => setActiveArrowId(publicationArrowId)}
+                onArrowHoverEnd={() => setActiveArrowId((current) => (current === publicationArrowId ? null : current))}
+              />
+              <VisualJournalCard
+                title="Collateral Design"
+                subtitle="Promotional and supporting materials"
+                defaultSrc={JOURNAL_ASSETS.collateral.front}
+                hoverSrc={JOURNAL_ASSETS.collateral.back}
+                isDimmed={false}
+                onArrowHoverStart={() => setActiveArrowId(collateralArrowId)}
+                onArrowHoverEnd={() => setActiveArrowId((current) => (current === collateralArrowId ? null : current))}
+              />
+              <VisualJournalCard
+                title="Packaging Design"
+                subtitle="Product and brand packaging"
+                defaultSrc={JOURNAL_ASSETS.packaging.front}
+                hoverSrc={JOURNAL_ASSETS.packaging.back}
+                isDimmed={false}
+                onArrowHoverStart={() => setActiveArrowId(packagingArrowId)}
+                onArrowHoverEnd={() => setActiveArrowId((current) => (current === packagingArrowId ? null : current))}
+              />
+              <VisualJournalCard
+                title="Campaign Design"
+                subtitle="Marketing and communication visuals"
+                defaultSrc={JOURNAL_ASSETS.campaign[0]}
+                hoverSrc={JOURNAL_ASSETS.campaign[1]}
+                campaignSources={JOURNAL_ASSETS.campaign}
+                isDimmed={false}
+                onArrowHoverStart={() => setActiveArrowId(campaignArrowId)}
+                onArrowHoverEnd={() => setActiveArrowId((current) => (current === campaignArrowId ? null : current))}
+                isTall
+              />
             </div>
 
             <div className="mt-6 flex justify-center lg:hidden">
