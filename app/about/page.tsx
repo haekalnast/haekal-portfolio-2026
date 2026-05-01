@@ -316,7 +316,13 @@ function AboutToolsCard({
   );
 }
 
-function ResumeCard() {
+function ResumeCard({
+  onArrowHoverStart,
+  onArrowHoverEnd,
+}: {
+  onArrowHoverStart: () => void;
+  onArrowHoverEnd: () => void;
+}) {
   const [isCardHovered, setIsCardHovered] = useState(false);
   const [isIconHovered, setIsIconHovered] = useState(false);
   const { ref, isActive } = useScrollRevealActive<HTMLElement>(0.45);
@@ -338,8 +344,16 @@ function ResumeCard() {
           <motion.div
             className="absolute left-1/2 top-[42px] h-[396px] w-[280px] -translate-x-1/2 overflow-hidden rounded-[4px] shadow-[0_0_50px_rgba(0,0,0,0.06)]"
             initial={false}
-            animate={{ rotate: isMockupHover ? 0 : -8, x: isMockupHover ? 0 : 9, y: isMockupHover ? -6 : 2 }}
-            transition={{ duration: 0.44, ease: ARROW_REVEAL_EASE }}
+            animate={{ rotate: isMockupHover ? 0 : -8, scale: isMockupHover ? 1.06 : 1, x: isMockupHover ? 0 : 9, y: isMockupHover ? -6 : 2 }}
+            transition={{
+              duration: 0.44,
+              ease: ARROW_REVEAL_EASE,
+              scale: {
+                duration: 0.34,
+                ease: ARROW_REVEAL_EASE,
+                delay: isMockupHover ? 0.14 : 0,
+              },
+            }}
             style={{ transformOrigin: "50% 0%" }}
           >
             <Image src="/about-resume-sheet.png" alt="Resume preview" fill unoptimized className="object-cover" />
@@ -348,16 +362,22 @@ function ResumeCard() {
         <ArrowRevealButton
           isActive={isTextHover}
           ariaLabel="Resume details"
-          className={`absolute bottom-4 left-4 z-20 flex h-8 w-8 items-center justify-center rounded-[1000px] bg-[#FAFAFA] p-[6px] shadow-[0_0_0_1px_rgba(0,0,0,0.06)] transition-all duration-300 ${isTextHover ? "shadow-[0_0_50px_rgba(0,0,0,0.1)]" : ""}`}
-          onHoverStart={() => setIsIconHovered(true)}
-          onHoverEnd={() => setIsIconHovered(false)}
+          className={`absolute bottom-4 left-4 z-20 flex h-8 w-8 items-center justify-center rounded-[1000px] bg-[#FAFAFA] p-[6px] shadow-[0_0_0_1px_rgba(0,0,0,0.06)] transition-all duration-300 ${isTextHover ? "scale-105 bg-white shadow-[0_0_0_1px_rgba(0,0,0,0.06),0_0_50px_rgba(0,0,0,0.12)]" : ""}`}
+          onHoverStart={() => {
+            setIsIconHovered(true);
+            onArrowHoverStart();
+          }}
+          onHoverEnd={() => {
+            setIsIconHovered(false);
+            onArrowHoverEnd();
+          }}
           onClick={(event) => {
             event.stopPropagation();
             window.location.href = FALLBACK_ERROR_ROUTE;
           }}
         />
       </div>
-      <ArrowRevealText isActive={isTextHover} title="Resume" subtitle="See details" className="pointer-events-none absolute left-0 top-[218px] space-y-[6px]" />
+      <ArrowRevealText isActive={isTextHover} title="Resume" subtitle="See details" className="pointer-events-none absolute left-0 top-[218px]" />
     </article>
   );
 }
@@ -459,7 +479,7 @@ function ThisIsHaekalCard({
           }}
         />
       </div>
-      <ArrowRevealText isActive={isRevealActive} title="This is Haekal" subtitle="Get to know me" className="pointer-events-none absolute left-0 top-[218px] space-y-[6px]" />
+      <ArrowRevealText isActive={isRevealActive} title="This is Haekal" subtitle="Get to know me" className="pointer-events-none absolute left-0 top-[218px]" />
     </article>
   );
 }
@@ -468,14 +488,16 @@ export default function AboutPage() {
   const isMobile = useIsMobileViewport();
   const [activeArrowId, setActiveArrowId] = useState<string | null>(null);
   const aboutArrowId = "about-tools";
+  const resumeArrowId = "about-resume";
   const thisIsHaekalArrowId = "about-this-is-haekal";
   const isGlobalFocus = activeArrowId !== null;
   const isAboutFocused = activeArrowId === aboutArrowId;
+  const isResumeFocused = activeArrowId === resumeArrowId;
   const isThisIsHaekalFocused = activeArrowId === thisIsHaekalArrowId;
   const isMobileNoDim = isMobile;
   const isTextDimmed = !isMobileNoDim && isGlobalFocus;
   const isAboutDimmed = !isMobileNoDim && isGlobalFocus && !isAboutFocused;
-  const isResumeDimmed = !isMobileNoDim && isGlobalFocus;
+  const isResumeDimmed = !isMobileNoDim && isGlobalFocus && !isResumeFocused;
   const isThisIsHaekalDimmed = !isMobileNoDim && isGlobalFocus && !isThisIsHaekalFocused;
 
   return (
@@ -530,7 +552,10 @@ export default function AboutPage() {
                 )}
                 style={getGlobalFocusStyle(isResumeDimmed)}
               >
-                <ResumeCard />
+                <ResumeCard
+                  onArrowHoverStart={() => setActiveArrowId(resumeArrowId)}
+                  onArrowHoverEnd={() => setActiveArrowId((current) => (current === resumeArrowId ? null : current))}
+                />
               </div>
               <div
                 className={cn(
