@@ -7,7 +7,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
 import {
   ARROW_REVEAL_EASE,
-  ArrowIcon,
   ArrowRevealButton,
   ArrowRevealText,
   getGlobalFocusStyle,
@@ -238,7 +237,7 @@ function AboutToolsCard({
     <article
       ref={cardRef}
       className={cn(
-        "relative mx-auto h-[324px] w-[358px] transition-all duration-300 md:w-full lg:w-[648px]",
+        "relative h-[398px] w-full transition-all duration-300 lg:h-[324px] lg:w-[648px]",
         isGlobalDimmed ? "opacity-15" : "opacity-100",
       )}
       style={{
@@ -327,33 +326,36 @@ function ResumeCard() {
   return (
     <article
       ref={ref}
-      className="relative h-[278px] w-full max-w-[358px] shrink-0 overflow-visible rounded-[20px] sm:max-w-none sm:w-[348px] lg:w-[312px]"
+      className="relative h-[278px] w-full shrink-0 overflow-visible rounded-[20px] sm:w-[348px] lg:w-[312px]"
       onMouseEnter={() => setIsCardHovered(true)}
       onMouseLeave={() => {
         setIsCardHovered(false);
         setIsIconHovered(false);
       }}
     >
-      <div className="absolute inset-x-0 top-0 h-[210px] overflow-hidden rounded-[20px] bg-[#F2F2F2] px-[16px] py-[24px]">
-        <div className="relative flex h-full items-start justify-center overflow-hidden">
+      <div className="absolute inset-x-0 top-0 h-[210px] overflow-hidden rounded-[20px] bg-[#F2F2F2]">
+        <div className="relative h-full overflow-hidden">
           <motion.div
-            className="relative h-[396px] w-[280px] overflow-hidden rounded-[4px] shadow-[0_0_50px_rgba(0,0,0,0.06)]"
+            className="absolute left-[48px] top-[42px] h-[396px] w-[280px] overflow-hidden rounded-[4px] shadow-[0_0_50px_rgba(0,0,0,0.06)]"
             initial={false}
-            animate={{ rotate: isMockupHover ? 0 : -8, y: isMockupHover ? 0 : 8 }}
+            animate={{ rotate: isMockupHover ? -3 : -8, y: isMockupHover ? -6 : 2 }}
             transition={{ duration: 0.44, ease: ARROW_REVEAL_EASE }}
-            style={{ transformOrigin: "50% 50%" }}
+            style={{ transformOrigin: "50% 0%" }}
           >
             <Image src="/about-resume-sheet.png" alt="Resume preview" fill unoptimized className="object-cover" />
           </motion.div>
         </div>
-        <Link
-          href={FALLBACK_ERROR_ROUTE}
-          className={`absolute bottom-[84px] left-4 z-20 flex h-8 w-8 items-center justify-center rounded-[1000px] bg-[#FAFAFA] p-[6px] shadow-[0_0_0_1px_rgba(0,0,0,0.06)] ${isTextHover ? "shadow-[0_0_50px_rgba(0,0,0,0.1)]" : ""}`}
-          onMouseEnter={() => setIsIconHovered(true)}
-          onMouseLeave={() => setIsIconHovered(false)}
-        >
-          <ArrowIcon hover={isTextHover} />
-        </Link>
+        <ArrowRevealButton
+          isActive={isTextHover}
+          ariaLabel="Resume details"
+          className={`absolute bottom-4 left-4 z-20 flex h-8 w-8 items-center justify-center rounded-[1000px] bg-[#FAFAFA] p-[6px] shadow-[0_0_0_1px_rgba(0,0,0,0.06)] transition-all duration-300 ${isTextHover ? "shadow-[0_0_50px_rgba(0,0,0,0.1)]" : ""}`}
+          onHoverStart={() => setIsIconHovered(true)}
+          onHoverEnd={() => setIsIconHovered(false)}
+          onClick={(event) => {
+            event.stopPropagation();
+            window.location.href = FALLBACK_ERROR_ROUTE;
+          }}
+        />
       </div>
       <ArrowRevealText isActive={isTextHover} title="Resume" subtitle="See details" className="pointer-events-none absolute left-0 top-[218px] space-y-[6px]" />
     </article>
@@ -396,7 +398,7 @@ function ThisIsHaekalCard({
   return (
     <article
       ref={ref}
-      className="relative h-[278px] w-full max-w-[358px] shrink-0 overflow-visible rounded-[20px] sm:max-w-none sm:w-[348px] lg:w-[312px]"
+      className="relative h-[278px] w-full shrink-0 overflow-visible rounded-[20px] sm:w-[348px] lg:w-[312px]"
       onMouseEnter={() => setIsCardHovered(true)}
       onMouseLeave={() => {
         setIsCardHovered(false);
@@ -518,7 +520,7 @@ export default function AboutPage() {
             <div className="relative z-10 grid gap-6 sm:grid-cols-2">
               <div
                 className={cn(
-                  "transition-all duration-300",
+                  "order-2 transition-all duration-300 sm:order-1",
                   isResumeDimmed ? "opacity-15" : "opacity-100",
                 )}
                 style={getGlobalFocusStyle(isResumeDimmed)}
@@ -527,7 +529,7 @@ export default function AboutPage() {
               </div>
               <div
                 className={cn(
-                  "relative z-20 transition-all duration-300",
+                  "order-1 relative z-20 transition-all duration-300 sm:order-2",
                   isThisIsHaekalDimmed ? "opacity-15" : "opacity-100",
                 )}
                 style={getGlobalFocusStyle(isThisIsHaekalDimmed)}
