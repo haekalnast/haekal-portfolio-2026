@@ -34,9 +34,9 @@ const THIS_IS_HAEKAL_IMAGES = [
 ] as const;
 
 const experienceItems = [
-  { logo: "https://www.figma.com/api/mcp/asset/50d1c82a-d05c-4f80-a163-0e1c00ba3c90", title: "Product Designer", company: "SF Sekuritas", date: "Dec 2021 - Present" },
-  { logo: "https://www.figma.com/api/mcp/asset/59273ef0-1816-43f7-a41f-863d190682e6", title: "Product Specialist", company: "CIMB Niaga", date: "Mar 2020 - Dec 2021" },
-  { logo: "https://www.figma.com/api/mcp/asset/680de076-0449-4758-9635-c27db1c4b250", title: "Graphic Designer", company: "Ristek-BRIN", date: "Apr 2018 - Mar 2020" },
+  { logo: "https://www.figma.com/api/mcp/asset/50d1c82a-d05c-4f80-a163-0e1c00ba3c90", title: "Product Designer", company: "SF Sekuritas", date: "Dec 2021 - Present", href: "https://www.instagram.com/sfast.official/" },
+  { logo: "https://www.figma.com/api/mcp/asset/59273ef0-1816-43f7-a41f-863d190682e6", title: "Product Specialist", company: "CIMB Niaga", date: "Mar 2020 - Dec 2021", href: "https://www.instagram.com/cimb_niaga/" },
+  { logo: "https://www.figma.com/api/mcp/asset/680de076-0449-4758-9635-c27db1c4b250", title: "Graphic Designer", company: "Ristek-BRIN", date: "Apr 2018 - Mar 2020", href: "https://www.instagram.com/brin_indonesia/" },
 ] as const;
 
 const certificationItems = [
@@ -46,7 +46,7 @@ const certificationItems = [
   { logo: "https://www.figma.com/api/mcp/asset/4c174135-2b11-4241-b413-358822deca9f", title: "Training Awareness Based on ISO27001:2022", org: "ISO", date: "Jul 2023" },
   { logo: "https://www.figma.com/api/mcp/asset/3aaaa0bb-3254-45c5-b67e-c1236d0b9b84", title: "101 Crash Course", org: "Protopie", date: "Apr 2023" },
   { logo: "https://www.figma.com/api/mcp/asset/81d63956-c47f-41f8-b548-829cdd0d7f3b", title: "Enterprise Design Thinking Co-Creator", org: "IBM", date: "Sep 2022" },
-  { logo: "https://www.figma.com/api/mcp/asset/81d63956-c47f-41f8-b548-829cdd0d7f3b", title: "Enterprise Design Thinking Practitioner", org: "IBM", date: "Aug 2022" },
+  { logo: "https://www.figma.com/api/mcp/asset/81d63956-c47f-41f8-b548-829cdd0d7f3b", title: "Enterprise Design Thinking Practitioner", org: "IBM", date: "Aug 2022", fullWidth: true },
 ] as const;
 
 function LogoMark() {
@@ -580,41 +580,56 @@ export default function AboutPage() {
           )}
           style={getGlobalFocusStyle(isTextDimmed)}
         >
-          <section className="py-[64px]">
-            <h2 className="text-[32px] leading-[40px] tracking-[-1px]">Experience</h2>
-            <p className="mt-2 mb-6 text-base leading-6 text-[#707070]">From communication and design to product and digital systems.</p>
-            <div className="grid gap-3 lg:grid-cols-3">
-              {experienceItems.map((item) => (
-                <article key={item.title} className="flex items-center gap-2 rounded-[16px] bg-[#F2F2F2] p-2">
-                  <div className="relative h-[50px] w-[50px] overflow-hidden rounded-[12px] bg-white">
-                    <Image src={item.logo} alt={item.company} fill unoptimized className="object-contain" />
-                  </div>
-                  <div>
-                    <p className="text-base leading-6 text-black">{item.title}</p>
-                    <p className="text-[12px] leading-4 text-[#707070]">{item.company} | {item.date}</p>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </section>
+          <div className="flex flex-col gap-12 py-[64px]">
+            <section className="flex flex-col gap-10 lg:gap-12">
+              <div className="space-y-4">
+                <h2 className="text-[26px] leading-[32px] tracking-[-1px] lg:text-[32px] lg:leading-[40px]">Experience</h2>
+                <p className="text-base leading-6 text-[#707070]">From communication and design to product and digital systems.</p>
+              </div>
+              <div className="grid gap-6 lg:grid-cols-3">
+                {experienceItems.map((item) => (
+                  <article key={item.title} className="group relative flex items-center gap-2 rounded-[16px] bg-[#F2F2F2] p-2 transition-[background-color,transform] duration-[320ms] ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform hover:-translate-y-[1px] hover:scale-[1.01] hover:bg-white active:translate-y-0 active:scale-[0.995]">
+                    <span className="pointer-events-none absolute inset-0 rounded-[16px] opacity-0 shadow-[0_0_0_1px_rgba(0,0,0,0.04),0_6px_16px_rgba(0,0,0,0.06)] transition-opacity duration-[240ms] delay-[60ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:opacity-100" />
+                    <div className="relative h-[50px] w-[50px] overflow-hidden rounded-[12px] bg-white transition-[background-color] duration-[260ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:bg-[#FAFAFA]">
+                      <Image src={item.logo} alt={item.company} fill unoptimized className="object-contain" />
+                    </div>
+                    <div>
+                      <p className="text-[20px] leading-[30px] tracking-[-1px] text-black lg:text-[22px] lg:leading-[30px]">{item.title}</p>
+                      <p className="text-[12px] leading-4 text-[#707070]">{item.company} | {item.date}</p>
+                    </div>
+                    <Link href={item.href} target="_blank" rel="noreferrer noopener" className="absolute inset-0 z-10 rounded-[16px]" aria-label={`${item.title} details`} />
+                  </article>
+                ))}
+              </div>
+            </section>
 
-          <section className="py-[64px]">
-            <h2 className="text-[32px] leading-[40px] tracking-[-1px]">Learning &amp; Certifications</h2>
-            <p className="mt-2 mb-6 text-base leading-6 text-[#707070]">Covering design, frontend, communication, and security fundamentals.</p>
-            <div className="grid gap-3 lg:grid-cols-2">
-              {certificationItems.map((item) => (
-                <article key={item.title} className="flex items-center gap-2 rounded-[16px] bg-[#F2F2F2] p-2">
-                  <div className="relative h-[50px] w-[50px] overflow-hidden rounded-[12px] bg-white">
-                    <Image src={item.logo} alt={item.org} fill unoptimized className="object-contain" />
-                  </div>
-                  <div>
-                    <p className="text-base leading-6 text-black">{item.title}</p>
-                    <p className="text-[12px] leading-4 text-[#707070]">{item.org} | {item.date}</p>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </section>
+            <div className="h-px w-full bg-[#DEDEE0]" aria-hidden />
+
+            <section className="flex flex-col gap-10 lg:gap-12">
+              <div className="space-y-4">
+                <h2 className="text-[26px] leading-[32px] tracking-[-1px] lg:text-[32px] lg:leading-[40px]">Learning &amp; Certifications</h2>
+                <p className="text-base leading-6 text-[#707070]">Covering design, frontend, communication, and security fundamentals.</p>
+              </div>
+              <div className="grid gap-6 lg:grid-cols-2">
+                {certificationItems.map((item) => (
+                  <article key={item.title} className={cn(
+                    "group relative flex items-center gap-2 rounded-[16px] bg-[#F2F2F2] p-2 transition-[background-color,transform] duration-[320ms] ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform hover:-translate-y-[1px] hover:scale-[1.01] hover:bg-white active:translate-y-0 active:scale-[0.995]",
+                    item.fullWidth ? "lg:col-span-2" : "",
+                  )}>
+                    <span className="pointer-events-none absolute inset-0 rounded-[16px] opacity-0 shadow-[0_0_0_1px_rgba(0,0,0,0.04),0_6px_16px_rgba(0,0,0,0.06)] transition-opacity duration-[240ms] delay-[60ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:opacity-100" />
+                    <div className="relative h-[50px] w-[50px] overflow-hidden rounded-[12px] bg-white transition-[background-color] duration-[260ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:bg-[#FAFAFA]">
+                      <Image src={item.logo} alt={item.org} fill unoptimized className="object-contain" />
+                    </div>
+                    <div>
+                      <p className="text-[20px] leading-[30px] tracking-[-1px] text-black lg:text-[22px] lg:leading-[30px]">{item.title}</p>
+                      <p className="text-[12px] leading-4 text-[#707070]">{item.org} | {item.date}</p>
+                    </div>
+                    <Link href={FALLBACK_ERROR_ROUTE} className="absolute inset-0 z-10 rounded-[16px]" aria-label={`${item.title} details`} />
+                  </article>
+                ))}
+              </div>
+            </section>
+          </div>
 
           <section className="py-[64px]">
             <div className="mb-6 flex items-end justify-between gap-4">
