@@ -40,13 +40,13 @@ const experienceItems = [
 ] as const;
 
 const certificationItems = [
-  { logo: "https://www.figma.com/api/mcp/asset/3dca2474-52eb-49c4-bcac-87eead56e79c", title: "Responsive Web Design", org: "freeCodeCamp", date: "Oct 2025" },
-  { logo: "https://www.figma.com/api/mcp/asset/c9973cc3-6979-46ee-ba11-582a15f12af7", title: "HTML & CSS", org: "Progate", date: "Jan 2024" },
-  { logo: "https://www.figma.com/api/mcp/asset/b4777a9f-fdbf-4823-996a-e4003e6a8b49", title: "English Certificate (C1 Advanced)", org: "EF SET", date: "Jul 2023" },
-  { logo: "https://www.figma.com/api/mcp/asset/4c174135-2b11-4241-b413-358822deca9f", title: "Training Awareness Based on ISO27001:2022", org: "ISO", date: "Jul 2023" },
-  { logo: "https://www.figma.com/api/mcp/asset/3aaaa0bb-3254-45c5-b67e-c1236d0b9b84", title: "101 Crash Course", org: "Protopie", date: "Apr 2023" },
-  { logo: "https://www.figma.com/api/mcp/asset/81d63956-c47f-41f8-b548-829cdd0d7f3b", title: "Enterprise Design Thinking Co-Creator", org: "IBM", date: "Sep 2022" },
-  { logo: "https://www.figma.com/api/mcp/asset/81d63956-c47f-41f8-b548-829cdd0d7f3b", title: "Enterprise Design Thinking Practitioner", org: "IBM", date: "Aug 2022", fullWidth: true },
+  { logo: "https://www.figma.com/api/mcp/asset/3dca2474-52eb-49c4-bcac-87eead56e79c", title: "Legacy Responsive Web Design V8", org: "freeCodeCamp", date: "Oct 2025", href: "https://freecodecamp.org/certification/haekalnast/responsive-web-design" },
+  { logo: "https://www.figma.com/api/mcp/asset/c9973cc3-6979-46ee-ba11-582a15f12af7", title: "HTML & CSS", org: "Progate", date: "Jan 2024", href: "https://progate.com/course_certificate/a0856e8as6ubxv" },
+  { logo: "https://www.figma.com/api/mcp/asset/b4777a9f-fdbf-4823-996a-e4003e6a8b49", title: "English Certificate (C1 Advanced)", org: "EF SET", date: "Jul 2023", href: "https://www.efset.org/cert/WnJ5op" },
+  { logo: "https://www.figma.com/api/mcp/asset/4c174135-2b11-4241-b413-358822deca9f", title: "Training Awareness Based on ISO27001:2022", org: "ISO", date: "Jul 2023", href: "https://madhava.id/verifikasi-sertifikat/" },
+  { logo: "https://www.figma.com/api/mcp/asset/3aaaa0bb-3254-45c5-b67e-c1236d0b9b84", title: "101 Crash Course", org: "Protopie", date: "Apr 2023", href: "https://docs.google.com/gview?embedded=1&url=https%3A%2F%2Fmycourse.app%2FWkgsKhjJXoBgn5rL8" },
+  { logo: "https://www.figma.com/api/mcp/asset/81d63956-c47f-41f8-b548-829cdd0d7f3b", title: "Enterprise Design Thinking Co-Creator", org: "IBM", date: "Sep 2022", href: "https://www.credly.com/badges/83d95043-8a50-4be8-a05c-a282399c0d38/linked_in_profile" },
+  { logo: "https://www.figma.com/api/mcp/asset/81d63956-c47f-41f8-b548-829cdd0d7f3b", title: "Enterprise Design Thinking Practitioner", org: "IBM", date: "Aug 2022", href: "https://www.credly.com/badges/02ff6615-201b-4e4c-9e80-94758a0e681e/linked_in_profile", fullWidth: true },
 ] as const;
 
 function LogoMark() {
@@ -584,7 +584,7 @@ export default function AboutPage() {
             <section className="flex flex-col gap-10 lg:gap-12">
               <div className="space-y-4">
                 <h2 className="text-[26px] leading-[32px] tracking-[-1px] lg:text-[32px] lg:leading-[40px]">Experience</h2>
-                <p className="text-base leading-6 text-[#707070]">From communication and design to product and digital systems.</p>
+                <p className="text-base leading-6 tracking-[0px] text-[#666666]">From communication and design to product and digital systems.</p>
               </div>
               <div className="grid gap-6 lg:grid-cols-3">
                 {experienceItems.map((item) => (
@@ -594,8 +594,8 @@ export default function AboutPage() {
                       <Image src={item.logo} alt={item.company} fill unoptimized className="object-contain" />
                     </div>
                     <div>
-                      <p className="text-[20px] leading-[30px] tracking-[-1px] text-black lg:text-[22px] lg:leading-[30px]">{item.title}</p>
-                      <p className="text-[12px] leading-4 text-[#707070]">{item.company} | {item.date}</p>
+                      <p className="text-[18px] leading-[20px] tracking-[-1px] text-black lg:text-[20px] lg:leading-[24px]">{item.title}</p>
+                      <p className="text-base leading-6 tracking-[0px] text-[#666666]">{item.company} | {item.date}</p>
                     </div>
                     <Link href={item.href} target="_blank" rel="noreferrer noopener" className="absolute inset-0 z-10 rounded-[16px]" aria-label={`${item.title} details`} />
                   </article>
@@ -608,7 +608,7 @@ export default function AboutPage() {
             <section className="flex flex-col gap-10 lg:gap-12">
               <div className="space-y-4">
                 <h2 className="text-[26px] leading-[32px] tracking-[-1px] lg:text-[32px] lg:leading-[40px]">Learning &amp; Certifications</h2>
-                <p className="text-base leading-6 text-[#707070]">Covering design, frontend, communication, and security fundamentals.</p>
+                <p className="text-base leading-6 tracking-[0px] text-[#666666]">Covering design, frontend, communication, and security fundamentals.</p>
               </div>
               <div className="grid gap-6 lg:grid-cols-2">
                 {certificationItems.map((item) => (
@@ -621,10 +621,10 @@ export default function AboutPage() {
                       <Image src={item.logo} alt={item.org} fill unoptimized className="object-contain" />
                     </div>
                     <div>
-                      <p className="text-[20px] leading-[30px] tracking-[-1px] text-black lg:text-[22px] lg:leading-[30px]">{item.title}</p>
-                      <p className="text-[12px] leading-4 text-[#707070]">{item.org} | {item.date}</p>
+                      <p className="text-[18px] leading-[20px] tracking-[-1px] text-black lg:text-[20px] lg:leading-[24px]">{item.title}</p>
+                      <p className="text-base leading-6 tracking-[0px] text-[#666666]">{item.org} | {item.date}</p>
                     </div>
-                    <Link href={FALLBACK_ERROR_ROUTE} className="absolute inset-0 z-10 rounded-[16px]" aria-label={`${item.title} details`} />
+                    <Link href={item.href} target="_blank" rel="noreferrer noopener" className="absolute inset-0 z-10 rounded-[16px]" aria-label={`${item.title} details`} />
                   </article>
                 ))}
               </div>
