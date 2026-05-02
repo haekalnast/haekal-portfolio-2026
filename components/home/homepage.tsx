@@ -11,6 +11,12 @@ import {
   ArrowRevealText,
   getGlobalFocusStyle,
 } from "@/components/shared/arrow-reveal";
+import {
+  SectionFeatureHeaderDesktopCta,
+  SectionFeatureHeaderMobileCta,
+  SectionFeatureHeaderMotionRow,
+  SectionFeatureHeaderTitleBlock,
+} from "@/components/shared/section-feature-header";
 
 type MarqueeItem = {
   key: string;
@@ -1106,32 +1112,15 @@ function FeaturedDesignsSection({
       id="designs"
       className="mx-auto w-full max-w-[1440px] bg-[#FAFAFA] px-4 py-20 sm:px-10 sm:py-[108px] lg:px-[60px] lg:py-[124px]"
     >
-      <motion.div
-        className="mb-12 flex flex-col gap-6 lg:mb-12 lg:flex-row lg:items-start lg:justify-between"
-        initial={false}
-        animate={{
-          opacity: isGlobalFocus ? 0.14 : 1,
-          filter: isGlobalFocus ? "blur(1px)" : "blur(0px)",
-          scale: isGlobalFocus ? 0.995 : 1,
-        }}
-        transition={{ duration: PREMIUM_DURATION, ease: PREMIUM_EASE }}
-      >
-        <div className="space-y-2">
-          <h2 className="text-[32px] leading-[40px] tracking-[-1px] text-black lg:text-[40px] lg:leading-[56px]">
-            Featured Designs
-          </h2>
-          <p className="max-w-[640px] text-base leading-6 text-[#707070]">
-            Selected products I&apos;ve designed, from launched platforms to ongoing builds.
-          </p>
-        </div>
-        <Link
-          href={FALLBACK_ERROR_ROUTE}
-          target="_blank"
-          className="hidden h-[46px] w-fit items-center rounded-[230px] bg-[#F2F2F2] px-6 text-base leading-[21px] text-[#707070] transition-colors hover:text-black lg:inline-flex"
-        >
+      <SectionFeatureHeaderMotionRow isDimmed={isGlobalFocus}>
+        <SectionFeatureHeaderTitleBlock
+          title="Featured Designs"
+          description="Selected products I've designed, from launched platforms to ongoing builds."
+        />
+        <SectionFeatureHeaderDesktopCta href={FALLBACK_ERROR_ROUTE} target="_blank">
           See All Designs
-        </Link>
-      </motion.div>
+        </SectionFeatureHeaderDesktopCta>
+      </SectionFeatureHeaderMotionRow>
 
       <div className="relative">
         <motion.div
@@ -1167,15 +1156,9 @@ function FeaturedDesignsSection({
         </div>
       </div>
 
-      <div className="mt-12 flex justify-center lg:hidden">
-        <Link
-          href={FALLBACK_ERROR_ROUTE}
-          target="_blank"
-          className="inline-flex h-[46px] w-fit items-center rounded-[230px] bg-[#F2F2F2] px-6 text-base leading-[21px] text-[#707070] transition-colors hover:text-black"
-        >
-          See All Designs
-        </Link>
-      </div>
+      <SectionFeatureHeaderMobileCta href={FALLBACK_ERROR_ROUTE} target="_blank">
+        See All Designs
+      </SectionFeatureHeaderMobileCta>
     </section>
   );
 }
