@@ -17,7 +17,7 @@ import { useScrollRevealActive } from "@/lib/use-scroll-reveal-active";
 /**
  * Gallery cards that advance images only via arrow (desktop) or tapping the mockup (mobile).
  * Hover scales the mockup only — no auto-rotation. Pair with assets such as
- * `/creative-journal/campaign-01.png` … or `/about/this-is-haekal/photo-01.png` … — see `lib/public-assets.ts`.
+ * Creative Journal + About gallery cards — paths in `lib/public-assets.ts` (`PUBLIC_CREATIVE_JOURNAL`, `PUBLIC_ABOUT`).
  */
 export type ArrowAdvanceGalleryLayout = "haekal" | "journal-short" | "journal-tall";
 
@@ -32,6 +32,14 @@ type ArrowAdvanceGalleryCardProps = {
   onArrowHoverEnd: () => void;
   isDimmed?: boolean;
   priority?: boolean;
+  /** Merged onto layout article classes (e.g. `lg:w-[648px]`). */
+  articleClassName?: string;
+  /** Wrapper around image frame inside scaled area (e.g. `absolute inset-0 flex items-center justify-center px-10 py-6`). */
+  imageStageClassName?: string;
+  /** The direct frame that receives `Image fill` (must be positioned). */
+  imageFrameClassName?: string;
+  /** Object fit/class for image. */
+  imageClassName?: string;
 };
 
 const LAYOUT = {
@@ -95,6 +103,10 @@ export function ArrowAdvanceGalleryCard({
   onArrowHoverEnd,
   isDimmed = false,
   priority = false,
+  articleClassName,
+  imageStageClassName,
+  imageFrameClassName,
+  imageClassName,
 }: ArrowAdvanceGalleryCardProps) {
   const [imageIndex, setImageIndex] = useState(0);
   const [isCardHovered, setIsCardHovered] = useState(false);
@@ -104,6 +116,9 @@ export function ArrowAdvanceGalleryCard({
   const isRevealActive = isIconHovered || isActive;
   const scaleUp = !isMobile && isCardHovered;
   const cfg = LAYOUT[layout];
+  const resolvedImageStageClassName = imageStageClassName ?? "absolute inset-0";
+  const resolvedImageFrameClassName = imageFrameClassName ?? "absolute inset-0";
+  const resolvedImageClassName = imageClassName ?? "object-cover";
 
   const nextImage = useCallback(() => {
     setImageIndex((prev) => (prev + 1) % images.length);
@@ -147,7 +162,7 @@ export function ArrowAdvanceGalleryCard({
   return (
     <article
       ref={ref}
-      className={cfg.article}
+      className={cn(cfg.article, articleClassName)}
       style={articleStyle}
       onMouseEnter={() => setIsCardHovered(true)}
       onMouseLeave={() => {
@@ -163,20 +178,22 @@ export function ArrowAdvanceGalleryCard({
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
               key={images[imageIndex]}
-              className="absolute inset-0"
+              className={resolvedImageStageClassName}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.36, ease: ARROW_REVEAL_EASE }}
             >
-              <Image
-                src={images[imageIndex]}
-                alt={imageAlt}
-                fill
-                unoptimized
-                className="object-cover"
-                priority={priority && imageIndex === 0}
-              />
+              <div className={resolvedImageFrameClassName}>
+                <Image
+                  src={images[imageIndex]}
+                  alt={imageAlt}
+                  fill
+                  unoptimized
+                  className={resolvedImageClassName}
+                  priority={priority && imageIndex === 0}
+                />
+              </div>
             </motion.div>
           </AnimatePresence>
         </ScaledMockup>
