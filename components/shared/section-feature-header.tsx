@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/cn";
-import { getGlobalFocusStyle } from "@/components/shared/arrow-reveal";
+import { getGlobalFocusMotionAnimate, getGlobalFocusStyle } from "@/components/shared/arrow-reveal";
 
 const PREMIUM_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 const PREMIUM_DURATION = 0.32;
@@ -55,11 +55,7 @@ export function SectionFeatureHeaderMotionRow({
     <motion.div
       className={SECTION_FEATURE_HEADER_ROW_CLASS}
       initial={false}
-      animate={{
-        opacity: isDimmed ? 0.14 : 1,
-        filter: isDimmed ? "blur(1px)" : "blur(0px)",
-        scale: isDimmed ? 0.995 : 1,
-      }}
+      animate={getGlobalFocusMotionAnimate(isDimmed)}
       transition={{ duration: PREMIUM_DURATION, ease: PREMIUM_EASE }}
     >
       {children}
@@ -71,11 +67,7 @@ export function SectionFeatureHeaderMotionRow({
 export function SectionFeatureHeaderStaticRow({ dimmed, children }: { dimmed: boolean; children: ReactNode }) {
   return (
     <div
-      className={cn(
-        SECTION_FEATURE_HEADER_ROW_CLASS,
-        "transition-all duration-300",
-        dimmed ? "opacity-15" : "opacity-100",
-      )}
+      className={cn(SECTION_FEATURE_HEADER_ROW_CLASS, "transition-all duration-300")}
       style={getGlobalFocusStyle(dimmed)}
     >
       {children}

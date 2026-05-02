@@ -274,10 +274,7 @@ function AboutToolsCard({
   return (
     <article
       ref={cardRef}
-      className={cn(
-        "relative h-[398px] w-full transition-all duration-300 lg:h-[324px] lg:w-[648px]",
-        isGlobalDimmed ? "opacity-15" : "opacity-100",
-      )}
+      className="relative h-[398px] w-full transition-all duration-300 lg:h-[324px] lg:w-[648px]"
       style={{
         ...getGlobalFocusStyle(isGlobalDimmed),
         touchAction: isScrollSequenceActive ? "none" : "auto",
@@ -539,7 +536,7 @@ function PublicationJournalCard({
   return (
     <article
       ref={ref}
-      className={cn("relative h-[444px] w-full overflow-visible transition-all duration-300 lg:w-[648px]", isDimmed ? "opacity-15" : "opacity-100")}
+      className="relative h-[444px] w-full overflow-visible transition-all duration-300 lg:w-[648px]"
       style={getGlobalFocusStyle(isDimmed)}
     >
       <div className="relative h-[444px] overflow-hidden rounded-[20px] bg-[#F2F2F2] px-6 lg:px-10">
@@ -636,11 +633,7 @@ function VisualJournalCard({
   return (
     <article
       ref={ref}
-      className={cn(
-        "relative w-full overflow-visible transition-all duration-300",
-        articleHeightClass,
-        isDimmed ? "opacity-15" : "opacity-100",
-      )}
+      className={cn("relative w-full overflow-visible transition-all duration-300", articleHeightClass)}
       style={getGlobalFocusStyle(isDimmed)}
       onMouseEnter={() => setIsCardHovered(true)}
       onMouseLeave={() => {
@@ -728,13 +721,7 @@ export default function AboutPage() {
 
       <main className="mx-auto w-full max-w-[1440px] px-4 pt-[124px] sm:px-10 lg:px-[60px]">
         <section className="grid gap-10 py-10 lg:grid-cols-[1fr_648px] lg:py-14">
-          <div
-            className={cn(
-              "space-y-4 transition-all duration-300",
-              isTextDimmed ? "opacity-15" : "opacity-100",
-            )}
-            style={getGlobalFocusStyle(isTextDimmed)}
-          >
+          <div className="space-y-4 transition-all duration-300" style={getGlobalFocusStyle(isTextDimmed)}>
             <h1 className="text-[26px] leading-[32px] tracking-[-1px] text-black lg:text-[40px] lg:leading-[56px]">
               About Haekal
             </h1>
@@ -752,23 +739,14 @@ export default function AboutPage() {
             />
 
             <div className="relative z-10 grid gap-6 sm:grid-cols-2">
-              <div
-                className={cn(
-                  "order-2 transition-all duration-300 sm:order-1",
-                  isResumeDimmed ? "opacity-15" : "opacity-100",
-                )}
-                style={getGlobalFocusStyle(isResumeDimmed)}
-              >
+              <div className="order-2 transition-all duration-300 sm:order-1" style={getGlobalFocusStyle(isResumeDimmed)}>
                 <ResumeCard
                   onArrowHoverStart={() => setActiveArrowId(resumeArrowId)}
                   onArrowHoverEnd={() => setActiveArrowId((current) => (current === resumeArrowId ? null : current))}
                 />
               </div>
               <div
-                className={cn(
-                  "order-1 relative z-20 transition-all duration-300 sm:order-2",
-                  isThisIsHaekalDimmed ? "opacity-15" : "opacity-100",
-                )}
+                className="relative z-20 order-1 transition-all duration-300 sm:order-2"
                 style={getGlobalFocusStyle(isThisIsHaekalDimmed)}
               >
                 <ThisIsHaekalCard
@@ -781,13 +759,7 @@ export default function AboutPage() {
         </section>
 
         <div className="transition-all duration-300">
-          <div
-            className={cn(
-              "flex flex-col gap-12 py-[64px] transition-all duration-300",
-              isRestOfPageDimmed ? "opacity-15" : "opacity-100",
-            )}
-            style={getGlobalFocusStyle(isRestOfPageDimmed)}
-          >
+          <div className="flex flex-col gap-12 py-[64px] transition-all duration-300" style={getGlobalFocusStyle(isRestOfPageDimmed)}>
             <section className="flex flex-col gap-10 lg:gap-12">
               <div className="space-y-4">
                 <h2 className="text-[26px] leading-[32px] tracking-[-1px] lg:text-[32px] lg:leading-[40px]">Experience</h2>
@@ -976,13 +948,7 @@ export default function AboutPage() {
         </div>
       </main>
 
-      <footer
-        className={cn(
-          "w-full bg-[#F2F2F2] transition-all duration-300",
-          isRestOfPageDimmed ? "opacity-15" : "opacity-100",
-        )}
-        style={getGlobalFocusStyle(isRestOfPageDimmed)}
-      >
+      <footer className="w-full bg-[#F2F2F2] transition-all duration-300" style={getGlobalFocusStyle(isRestOfPageDimmed)}>
         <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-16 px-4 pb-[124px] sm:px-10 lg:px-[60px]">
           <div className="flex flex-col gap-16 py-8 sm:py-20">
             <div className="flex items-start justify-between gap-8 sm:gap-6">

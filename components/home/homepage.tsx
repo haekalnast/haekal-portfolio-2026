@@ -9,6 +9,7 @@ import {
   ArrowIcon,
   ArrowRevealButton,
   ArrowRevealText,
+  getGlobalFocusMotionAnimate,
   getGlobalFocusStyle,
 } from "@/components/shared/arrow-reveal";
 import {
@@ -385,11 +386,7 @@ function HeroSection({
       <motion.div
         className="py-6 sm:py-10 lg:py-14"
         initial={false}
-        animate={{
-          opacity: isGlobalFocus ? 0.14 : 1,
-          filter: isGlobalFocus ? "blur(1px)" : "blur(0px)",
-          scale: isGlobalFocus ? 0.995 : 1,
-        }}
+        animate={getGlobalFocusMotionAnimate(isGlobalFocus)}
         transition={{ duration: PREMIUM_DURATION, ease: PREMIUM_EASE }}
       >
         <div className="max-w-[800px] space-y-10">
@@ -689,10 +686,7 @@ function AboutToolsCard({
   return (
     <article
       ref={cardRef}
-      className={cn(
-        "relative mx-auto w-[358px] transition-all duration-300 md:w-full lg:w-[648px]",
-        isGlobalDimmed ? "opacity-15" : "opacity-100",
-      )}
+      className="relative mx-auto w-[358px] transition-all duration-300 md:w-full lg:w-[648px]"
       style={{
         ...getGlobalFocusStyle(isGlobalDimmed),
         touchAction: isScrollSequenceActive ? "none" : "auto",
@@ -843,14 +837,9 @@ function MarqueeCard({
     <article
       className={cn(
         "group relative w-[312px] shrink-0 overflow-visible rounded-[20px] transition-all duration-300",
-        isGlobalDimmed ? "opacity-15" : "opacity-100",
         isMockup ? "h-[278px]" : "h-[210px]",
       )}
-      style={{
-        transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)",
-        filter: isGlobalDimmed ? "blur(1px)" : "blur(0px)",
-        transform: isGlobalDimmed ? "scale(0.995)" : "scale(1)",
-      }}
+      style={getGlobalFocusStyle(isGlobalDimmed)}
       onMouseEnter={(event) => {
         setIsCardHovered(true);
         updateCursorFill(event);
@@ -1009,17 +998,7 @@ function AboutSection({
       id="about"
       className="mx-auto flex w-full max-w-[1440px] flex-col gap-10 bg-[#FAFAFA] px-4 py-20 sm:px-10 sm:py-[108px] lg:flex-row lg:gap-10 lg:px-[60px] lg:py-[124px]"
     >
-      <div
-        className={cn(
-          "w-full flex-1 space-y-10 transition-all duration-300",
-          isGlobalFocus ? "opacity-15" : "opacity-100",
-        )}
-        style={{
-          transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)",
-          filter: isGlobalFocus ? "blur(1px)" : "blur(0px)",
-          transform: isGlobalFocus ? "scale(0.995)" : "scale(1)",
-        }}
-      >
+      <div className="w-full flex-1 space-y-10 transition-all duration-300" style={getGlobalFocusStyle(isGlobalFocus)}>
         <div className="space-y-4">
           <h2 className="w-full text-[26px] leading-8 tracking-[-1px] text-black lg:max-w-[632px] lg:text-[32px] lg:leading-[40px]">
             Product designer working on financial platforms.
@@ -1198,11 +1177,7 @@ function FeaturedDesignCard({
         isRevealState ? "h-[512px]" : "h-[444px]",
       )}
       initial={false}
-      animate={{
-        opacity: isGlobalDimmed ? 0.14 : 1,
-        scale: isGlobalDimmed ? 0.995 : 1,
-        filter: isGlobalDimmed ? "blur(1px)" : "blur(0px)",
-      }}
+      animate={getGlobalFocusMotionAnimate(isGlobalDimmed)}
       transition={{ duration: PREMIUM_DURATION, ease: PREMIUM_EASE }}
       style={{ zIndex: isRevealState ? 30 : 20 }}
       onMouseEnter={() => setHoveredCardId(card.id)}
@@ -1567,11 +1542,7 @@ export function Homepage() {
       </main>
       <motion.div
         initial={false}
-        animate={{
-          opacity: isGlobalArrowFocus ? 0.14 : 1,
-          filter: isGlobalArrowFocus ? "blur(1px)" : "blur(0px)",
-          scale: isGlobalArrowFocus ? 0.995 : 1,
-        }}
+        animate={getGlobalFocusMotionAnimate(isGlobalArrowFocus)}
         transition={{ duration: PREMIUM_DURATION, ease: PREMIUM_EASE }}
       >
         <FooterSection />

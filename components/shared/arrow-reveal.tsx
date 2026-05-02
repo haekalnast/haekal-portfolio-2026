@@ -8,6 +8,9 @@ export const ARROW_REVEAL_DURATION = 0.32;
 export const ARROW_REVEAL_DELAY = 0.04;
 export const ARROW_REVEAL_TIMING = "cubic-bezier(0.22, 1, 0.36, 1)";
 
+/** Non-focused UI during arrow hover/focus — single source of truth (About + Home + section headers). Lower = dimmer. */
+export const GLOBAL_FOCUS_DIMMED_OPACITY = 0.08;
+
 export function ArrowIcon({ hover = false }: { hover?: boolean }) {
   return (
     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
@@ -111,7 +114,17 @@ export function ArrowRevealText({
 export function getGlobalFocusStyle(isDimmed: boolean): CSSProperties {
   return {
     transitionTimingFunction: ARROW_REVEAL_TIMING,
+    opacity: isDimmed ? GLOBAL_FOCUS_DIMMED_OPACITY : 1,
     filter: isDimmed ? "blur(1px)" : "blur(0px)",
     transform: isDimmed ? "scale(0.995)" : "scale(1)",
+  };
+}
+
+/** Framer Motion `animate` values — keeps blur/scale in sync with `getGlobalFocusStyle`. */
+export function getGlobalFocusMotionAnimate(isDimmed: boolean) {
+  return {
+    opacity: isDimmed ? GLOBAL_FOCUS_DIMMED_OPACITY : 1,
+    filter: isDimmed ? "blur(1px)" : "blur(0px)",
+    scale: isDimmed ? 0.995 : 1,
   };
 }
