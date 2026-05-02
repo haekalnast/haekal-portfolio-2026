@@ -61,21 +61,15 @@ const certificationItems: CertificationItem[] = [
   { logo: "https://www.figma.com/api/mcp/asset/81d63956-c47f-41f8-b548-829cdd0d7f3b", title: "Enterprise Design Thinking Practitioner", org: "IBM", date: "Aug 2022", href: "https://www.credly.com/badges/02ff6615-201b-4e4c-9e80-94758a0e681e/linked_in_profile", fullWidth: true },
 ];
 
-/** Remote assets until exported; `campaign` uses `public/creative-journal/` (see `lib/public-assets.ts`). */
+/** Publication books still remote; campaign / collateral / packaging use `public/creative-journal/` (`lib/public-assets.ts`). */
 const JOURNAL_ASSETS = {
   publicationBooks: [
     "https://www.figma.com/api/mcp/asset/df2c1eae-2864-41e0-9f6e-f5bc5d499ad5",
     "https://www.figma.com/api/mcp/asset/e875485b-7581-4441-a8f6-f678b5ab7d15",
     "https://www.figma.com/api/mcp/asset/cf08aad1-502f-40a8-9fc6-b2bba73ae5f1",
   ],
-  collateral: {
-    front: "https://www.figma.com/api/mcp/asset/e309acf4-7bbe-4555-bfaf-e31ec308de0b",
-    back: "https://www.figma.com/api/mcp/asset/b4b9b545-3613-455f-9bff-9fbfa836c347",
-  },
-  packaging: {
-    front: "https://www.figma.com/api/mcp/asset/d1e2c955-47f5-4b96-86c0-470219e586c8",
-    back: "https://www.figma.com/api/mcp/asset/f14948b4-8666-403a-b900-ab0832906797",
-  },
+  collateral: PUBLIC_CREATIVE_JOURNAL.collateral,
+  packaging: PUBLIC_CREATIVE_JOURNAL.packaging,
   campaign: PUBLIC_CREATIVE_JOURNAL.campaign,
 } as const;
 

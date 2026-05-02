@@ -4,7 +4,9 @@
  */
 export const CREATIVE_JOURNAL_PNG_NAMES = {
   publicationBooks: ["publication-book-01.png", "publication-book-02.png", "publication-book-03.png"],
+  /** Collateral card — default / hover swap: front = resting mockup, back = alternate side or hover state */
   collateral: { front: "collateral-front.png", back: "collateral-back.png" },
+  /** Packaging card — same pattern */
   packaging: { front: "packaging-front.png", back: "packaging-back.png" },
   /** Campaign Design mockups — matches Figma `CampaignCard` variants (`imgVariant1` … `imgVariant4`). Node ref: 40568:38445 */
   campaign: ["campaign-01.png", "campaign-02.png", "campaign-03.png", "campaign-04.png"],

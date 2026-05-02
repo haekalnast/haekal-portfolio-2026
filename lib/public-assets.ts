@@ -36,4 +36,12 @@ export const PUBLIC_HOME_FEATURED = {
 /** Creative Journal raster paths under `public/creative-journal/` (filenames from `creative-journal-png-names.ts`). */
 export const PUBLIC_CREATIVE_JOURNAL = {
   campaign: CREATIVE_JOURNAL_PNG_NAMES.campaign.map((name) => `/creative-journal/${name}`),
+  collateral: {
+    front: `/creative-journal/${CREATIVE_JOURNAL_PNG_NAMES.collateral.front}`,
+    back: `/creative-journal/${CREATIVE_JOURNAL_PNG_NAMES.collateral.back}`,
+  },
+  packaging: {
+    front: `/creative-journal/${CREATIVE_JOURNAL_PNG_NAMES.packaging.front}`,
+    back: `/creative-journal/${CREATIVE_JOURNAL_PNG_NAMES.packaging.back}`,
+  },
 } as const;
