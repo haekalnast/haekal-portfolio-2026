@@ -19,8 +19,6 @@ type PublicationHoverGalleryCardProps = {
   articleClassName?: string;
 };
 
-const BASE_ROTATION = [-3, 0, 3] as const;
-
 export function PublicationHoverGalleryCard({
   images,
   isDimmed,
@@ -28,29 +26,38 @@ export function PublicationHoverGalleryCard({
   onArrowHoverEnd,
   articleClassName,
 }: PublicationHoverGalleryCardProps) {
+  const [isCardHovered, setIsCardHovered] = useState(false);
   const [isIconHovered, setIsIconHovered] = useState(false);
   const [hoveredBook, setHoveredBook] = useState<number | null>(null);
   const { ref, isActive } = useScrollRevealActive<HTMLElement>(0.45);
   const isRevealActive = isIconHovered || isActive;
-
   return (
     <article
       ref={ref}
       className={cn("relative h-[444px] w-full overflow-visible transition-all duration-300", articleClassName)}
       style={getGlobalFocusStyle(isDimmed)}
+      onMouseEnter={() => setIsCardHovered(true)}
+      onMouseLeave={() => {
+        setIsCardHovered(false);
+        setHoveredBook(null);
+        setIsIconHovered(false);
+      }}
     >
       <div className="relative h-[444px] overflow-hidden rounded-[20px] bg-[#F2F2F2] px-10 py-6">
-        <div className="flex h-full items-start justify-center gap-4">
+        <motion.div
+          className="flex h-full items-center justify-center -space-x-8"
+          animate={{ scale: isCardHovered ? 1.01 : 1 }}
+          transition={{ type: "spring", stiffness: 300, damping: 24, mass: 0.75 }}
+        >
           {images.map((src, index) => (
             <motion.div
               key={src}
-              className="relative mt-2 h-[252px] w-[148px] overflow-hidden rounded-[10px] shadow-[0_4px_4px_rgba(0,0,0,0.25)]"
+              className="relative h-[271px] w-[156px] overflow-hidden"
               animate={{
-                y: hoveredBook === index ? -8 : 0,
-                scale: hoveredBook === index ? 1.035 : 1,
-                rotate: hoveredBook === index ? 0 : BASE_ROTATION[index] ?? 0,
+                y: hoveredBook === index ? -14 : 0,
+                scale: hoveredBook === index ? 1.025 : 1,
               }}
-              transition={{ type: "spring", stiffness: 340, damping: 24, mass: 0.7 }}
+              transition={{ type: "spring", stiffness: 300, damping: 24, mass: 0.72 }}
               onMouseEnter={() => setHoveredBook(index)}
               onMouseLeave={() => setHoveredBook(null)}
             >
@@ -63,7 +70,7 @@ export function PublicationHoverGalleryCard({
               />
             </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         <motion.div
           className="absolute bottom-4 left-4 z-20"
