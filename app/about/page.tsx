@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -11,12 +11,16 @@ import {
   ArrowRevealText,
   getGlobalFocusStyle,
 } from "@/components/shared/arrow-reveal";
+import { ArrowAdvanceGalleryCard } from "@/components/shared/arrow-advance-gallery-card";
 import {
   SectionFeatureHeaderDesktopCta,
   SectionFeatureHeaderMobileCta,
   SectionFeatureHeaderStaticRow,
   SectionFeatureHeaderTitleBlock,
 } from "@/components/shared/section-feature-header";
+import { PUBLIC_ABOUT, PUBLIC_BRAND, PUBLIC_CREATIVE_JOURNAL } from "@/lib/public-assets";
+import { useIsMobileViewport } from "@/lib/use-is-mobile-viewport";
+import { useScrollRevealActive } from "@/lib/use-scroll-reveal-active";
 
 const FALLBACK_ERROR_ROUTE = "/not-found";
 const dockApps = [
@@ -30,13 +34,6 @@ const dockApps = [
   { name: "WhatsApp", icon: "https://www.figma.com/api/mcp/asset/15c7de87-fd3a-4e2f-9fc6-1110cf302c97" },
   { name: "Finder", icon: "https://www.figma.com/api/mcp/asset/c7b30e4e-76ac-4525-a021-05506e87a664" },
   { name: "Trash", icon: "https://www.figma.com/api/mcp/asset/5271f34d-aa24-47e4-9454-6abff83ccbf0" },
-] as const;
-
-const THIS_IS_HAEKAL_IMAGES = [
-  "/this-is-haekal-photo-01.png",
-  "/this-is-haekal-photo-02.png",
-  "/this-is-haekal-photo-03.png",
-  "/this-is-haekal-photo-04.png",
 ] as const;
 
 const experienceItems = [
@@ -64,7 +61,7 @@ const certificationItems: CertificationItem[] = [
   { logo: "https://www.figma.com/api/mcp/asset/81d63956-c47f-41f8-b548-829cdd0d7f3b", title: "Enterprise Design Thinking Practitioner", org: "IBM", date: "Aug 2022", href: "https://www.credly.com/badges/02ff6615-201b-4e4c-9e80-94758a0e681e/linked_in_profile", fullWidth: true },
 ];
 
-/** Raster URLs — swap to `/creative-journal/…` when PNGs exist (see `lib/creative-journal-png-names.ts`). */
+/** Remote assets until exported; `campaign` uses `public/creative-journal/` (see `lib/public-assets.ts`). */
 const JOURNAL_ASSETS = {
   publicationBooks: [
     "https://www.figma.com/api/mcp/asset/df2c1eae-2864-41e0-9f6e-f5bc5d499ad5",
@@ -79,19 +76,14 @@ const JOURNAL_ASSETS = {
     front: "https://www.figma.com/api/mcp/asset/d1e2c955-47f5-4b96-86c0-470219e586c8",
     back: "https://www.figma.com/api/mcp/asset/f14948b4-8666-403a-b900-ab0832906797",
   },
-  campaign: [
-    "https://www.figma.com/api/mcp/asset/83cb3d0d-a0e8-4d17-a732-cf5186b49be1",
-    "https://www.figma.com/api/mcp/asset/f5ded663-5359-408d-ad33-3ea027c7f4ad",
-    "https://www.figma.com/api/mcp/asset/5bdb534b-d008-4a39-b6bf-86797e893b4a",
-    "https://www.figma.com/api/mcp/asset/e8a140c3-b6ac-45d2-b5e4-56e5b55cd5d3",
-  ],
+  campaign: PUBLIC_CREATIVE_JOURNAL.campaign,
 } as const;
 
 function LogoMark() {
   return (
     <Link href="/" aria-label="Go to home" className="group relative block h-[27px] w-[124px]">
-      <Image src="/logo-haekal-default.svg" alt="Haekal" width={124} height={27} unoptimized className="absolute inset-0 h-full w-full opacity-100 transition-opacity duration-200 group-hover:opacity-0" />
-      <Image src="/logo-haekal-hover.svg" alt="Haekal" width={124} height={27} unoptimized className="absolute inset-0 h-full w-full opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
+      <Image src={PUBLIC_BRAND.logoDefault} alt="Haekal" width={124} height={27} unoptimized className="absolute inset-0 h-full w-full opacity-100 transition-opacity duration-200 group-hover:opacity-0" />
+      <Image src={PUBLIC_BRAND.logoHover} alt="Haekal" width={124} height={27} unoptimized className="absolute inset-0 h-full w-full opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
     </Link>
   );
 }
@@ -117,38 +109,6 @@ function ArrowButton() {
       </svg>
     </div>
   );
-}
-
-function useIsMobileViewport() {
-  const [isMobile, setIsMobile] = useState(false);
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(max-width: 767px)");
-    const update = () => setIsMobile(mediaQuery.matches);
-    update();
-    mediaQuery.addEventListener("change", update);
-    return () => mediaQuery.removeEventListener("change", update);
-  }, []);
-  return isMobile;
-}
-
-function useScrollRevealActive<T extends HTMLElement>(threshold = 0.55) {
-  const ref = useRef<T | null>(null);
-  const isMobile = useIsMobileViewport();
-  const [isActive, setIsActive] = useState(false);
-
-  useEffect(() => {
-    if (!isMobile) return;
-    const node = ref.current;
-    if (!node) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => setIsActive(entry.isIntersecting && entry.intersectionRatio >= threshold * 0.6),
-      { threshold: [0.15, threshold, 0.9] },
-    );
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, [isMobile, threshold]);
-
-  return { ref, isActive: isMobile && isActive };
 }
 
 function AboutToolsCard({
@@ -391,7 +351,7 @@ function ResumeCard({
             }}
             style={{ transformOrigin: "50% 0%" }}
           >
-            <Image src="/about-resume-sheet.png" alt="Resume preview" fill unoptimized className="object-cover" />
+            <Image src={PUBLIC_ABOUT.resumeSheet} alt="Resume preview" fill unoptimized className="object-cover" />
           </motion.div>
         </div>
         <ArrowRevealButton
@@ -424,98 +384,18 @@ function ThisIsHaekalCard({
   onArrowHoverStart: () => void;
   onArrowHoverEnd: () => void;
 }) {
-  const [isCardHovered, setIsCardHovered] = useState(false);
-  const [isIconHovered, setIsIconHovered] = useState(false);
-  const [imageIndex, setImageIndex] = useState(0);
-  const [isClickScaling, setIsClickScaling] = useState(false);
-  const clickScaleTimeoutRef = useRef<number | null>(null);
-  const { ref, isActive } = useScrollRevealActive<HTMLElement>(0.45);
-  const isRevealActive = isIconHovered || isActive;
-  const isImageLoopActive = isCardHovered && !isIconHovered;
-  const isMockupHover = isCardHovered || isActive || isClickScaling;
-  const nextImage = () => setImageIndex((prev) => (prev + 1) % THIS_IS_HAEKAL_IMAGES.length);
-
-  useEffect(() => {
-    if (!isImageLoopActive) return;
-    const intervalId = window.setInterval(() => {
-      nextImage();
-    }, 1800);
-    return () => window.clearInterval(intervalId);
-  }, [isImageLoopActive]);
-
-  useEffect(() => {
-    return () => {
-      if (clickScaleTimeoutRef.current !== null) {
-        window.clearTimeout(clickScaleTimeoutRef.current);
-      }
-    };
-  }, []);
-
   return (
-    <article
-      ref={ref}
-      className="relative h-[278px] w-full shrink-0 overflow-visible rounded-[20px] sm:w-[348px] lg:w-[312px]"
-      onMouseEnter={() => setIsCardHovered(true)}
-      onMouseLeave={() => {
-        setIsCardHovered(false);
-        setIsIconHovered(false);
-      }}
-    >
-      <div className="absolute inset-x-0 top-0 h-[210px] overflow-hidden rounded-[20px] bg-[#F2F2F2]">
-        <motion.div
-          className="absolute inset-0"
-          animate={{ scale: isMockupHover ? 1.03 : 1 }}
-          transition={{ duration: 0.34, ease: ARROW_REVEAL_EASE }}
-        >
-          <AnimatePresence mode="wait" initial={false}>
-            <motion.div
-              key={THIS_IS_HAEKAL_IMAGES[imageIndex]}
-              className="absolute inset-0"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.6, ease: ARROW_REVEAL_EASE }}
-            >
-              <Image
-                src={THIS_IS_HAEKAL_IMAGES[imageIndex]}
-                alt="This is Haekal"
-                fill
-                unoptimized
-                className="object-cover"
-                priority
-              />
-            </motion.div>
-          </AnimatePresence>
-        </motion.div>
-        <ArrowRevealButton
-          isActive={isRevealActive}
-          ariaLabel="This is Haekal details"
-          className="absolute bottom-4 left-4 z-20 flex h-8 w-8 items-center justify-center rounded-[1000px] bg-[#FAFAFA] p-[6px] shadow-[0_0_0_1px_rgba(0,0,0,0.06)] transition-all duration-300"
-          onHoverStart={() => {
-            setIsIconHovered(true);
-            onArrowHoverStart();
-          }}
-          onHoverEnd={() => {
-            setIsIconHovered(false);
-            onArrowHoverEnd();
-          }}
-          onClick={(event) => {
-            event.stopPropagation();
-            if (isRevealActive) {
-              nextImage();
-              setIsClickScaling(true);
-              if (clickScaleTimeoutRef.current !== null) {
-                window.clearTimeout(clickScaleTimeoutRef.current);
-              }
-              clickScaleTimeoutRef.current = window.setTimeout(() => {
-                setIsClickScaling(false);
-              }, 220);
-            }
-          }}
-        />
-      </div>
-      <ArrowRevealText isActive={isRevealActive} title="This is Haekal" subtitle="Get to know me" className="pointer-events-none absolute left-0 top-[218px]" />
-    </article>
+    <ArrowAdvanceGalleryCard
+      images={PUBLIC_ABOUT.thisIsHaekalPhotos}
+      title="This is Haekal"
+      subtitle="Get to know me"
+      imageAlt="This is Haekal"
+      arrowAriaLabel="This is Haekal details"
+      layout="haekal"
+      priority
+      onArrowHoverStart={onArrowHoverStart}
+      onArrowHoverEnd={onArrowHoverEnd}
+    />
   );
 }
 
@@ -593,7 +473,6 @@ function VisualJournalCard({
   onArrowHoverStart,
   onArrowHoverEnd,
   isTall = false,
-  campaignSources,
 }: {
   title: string;
   subtitle: string;
@@ -603,32 +482,16 @@ function VisualJournalCard({
   onArrowHoverStart: () => void;
   onArrowHoverEnd: () => void;
   isTall?: boolean;
-  campaignSources?: readonly string[];
 }) {
   const [isCardHovered, setIsCardHovered] = useState(false);
   const [isIconHovered, setIsIconHovered] = useState(false);
-  const [campaignIndex, setCampaignIndex] = useState(0);
   const { ref, isActive } = useScrollRevealActive<HTMLElement>(0.45);
   const isMockupHover = isCardHovered || isActive;
   const isRevealActive = isIconHovered || isActive;
   const baseHeightPx = isTall ? 444 : 210;
   /** Short cards: article height = mockup height so parent `gap-6` matches visual 24px between grey surfaces (About Tools pattern). Reveal text is out-of-flow (`absolute`). */
   const articleHeightClass = isTall ? "h-[444px]" : "h-[210px]";
-  const visualSrc = campaignSources
-    ? (isMockupHover ? campaignSources[campaignIndex] ?? campaignSources[0] : campaignSources[0])
-    : (isMockupHover ? hoverSrc : defaultSrc);
-
-  useEffect(() => {
-    if (!campaignSources || campaignSources.length <= 1) return;
-    if (!isCardHovered) {
-      setCampaignIndex(0);
-      return;
-    }
-    const intervalId = window.setInterval(() => {
-      setCampaignIndex((prev) => (prev + 1) % campaignSources.length);
-    }, 650);
-    return () => window.clearInterval(intervalId);
-  }, [campaignSources, isCardHovered]);
+  const visualSrc = isMockupHover ? hoverSrc : defaultSrc;
 
   return (
     <article
@@ -849,12 +712,13 @@ export default function AboutPage() {
                       onArrowHoverEnd={() => setActiveArrowId((current) => (current === packagingArrowId ? null : current))}
                     />
                   </div>
-                  <VisualJournalCard
+                  <ArrowAdvanceGalleryCard
+                    images={JOURNAL_ASSETS.campaign}
                     title="Campaign Design"
                     subtitle="Marketing and communication visuals"
-                    defaultSrc={JOURNAL_ASSETS.campaign[0]}
-                    hoverSrc={JOURNAL_ASSETS.campaign[1]}
-                    campaignSources={JOURNAL_ASSETS.campaign}
+                    imageAlt="Campaign Design"
+                    arrowAriaLabel="Campaign Design details"
+                    layout="journal-short"
                     isDimmed={!isMobile && isGlobalFocus && activeArrowId !== campaignArrowId}
                     onArrowHoverStart={() => setActiveArrowId(campaignArrowId)}
                     onArrowHoverEnd={() => setActiveArrowId((current) => (current === campaignArrowId ? null : current))}
@@ -889,16 +753,16 @@ export default function AboutPage() {
                       onArrowHoverEnd={() => setActiveArrowId((current) => (current === packagingArrowId ? null : current))}
                     />
                   </div>
-                  <VisualJournalCard
+                  <ArrowAdvanceGalleryCard
+                    images={JOURNAL_ASSETS.campaign}
                     title="Campaign Design"
                     subtitle="Marketing and communication visuals"
-                    defaultSrc={JOURNAL_ASSETS.campaign[0]}
-                    hoverSrc={JOURNAL_ASSETS.campaign[1]}
-                    campaignSources={JOURNAL_ASSETS.campaign}
+                    imageAlt="Campaign Design"
+                    arrowAriaLabel="Campaign Design details"
+                    layout="journal-tall"
                     isDimmed={!isMobile && isGlobalFocus && activeArrowId !== campaignArrowId}
                     onArrowHoverStart={() => setActiveArrowId(campaignArrowId)}
                     onArrowHoverEnd={() => setActiveArrowId((current) => (current === campaignArrowId ? null : current))}
-                    isTall
                   />
                 </div>
               </div>
@@ -929,16 +793,16 @@ export default function AboutPage() {
                     onArrowHoverEnd={() => setActiveArrowId((current) => (current === packagingArrowId ? null : current))}
                   />
                 </div>
-                <VisualJournalCard
+                <ArrowAdvanceGalleryCard
+                  images={JOURNAL_ASSETS.campaign}
                   title="Campaign Design"
                   subtitle="Marketing and communication visuals"
-                  defaultSrc={JOURNAL_ASSETS.campaign[0]}
-                  hoverSrc={JOURNAL_ASSETS.campaign[1]}
-                  campaignSources={JOURNAL_ASSETS.campaign}
+                  imageAlt="Campaign Design"
+                  arrowAriaLabel="Campaign Design details"
+                  layout="journal-tall"
                   isDimmed={false}
                   onArrowHoverStart={() => setActiveArrowId(campaignArrowId)}
                   onArrowHoverEnd={() => setActiveArrowId((current) => (current === campaignArrowId ? null : current))}
-                  isTall
                 />
               </div>
             </div>

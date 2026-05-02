@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
 import { cn } from "@/lib/cn";
+import { PUBLIC_BRAND, PUBLIC_HOME_FEATURED } from "@/lib/public-assets";
 import {
   ArrowIcon,
   ArrowRevealButton,
@@ -179,14 +180,14 @@ const FEATURED_ASSETS = {
 } as const;
 
 const BPR_SCREEN_ASSETS = {
-  navbar: "/bpr-screen-navbar-hq.png",
-  sections: "/bpr-screen-sections-hq.png",
+  navbar: PUBLIC_HOME_FEATURED.bpr.navbarHq,
+  sections: PUBLIC_HOME_FEATURED.bpr.sectionsHq,
 } as const;
 
 const PERSONAL_SCREEN_ASSETS = {
-  topbar: "/personal-screen-topbar.png",
-  content: "/personal-screen-content.png",
-  bottombar: "/personal-screen-bottombar.png",
+  topbar: PUBLIC_HOME_FEATURED.personal.topbar,
+  content: PUBLIC_HOME_FEATURED.personal.content,
+  bottombar: PUBLIC_HOME_FEATURED.personal.bottombar,
 } as const;
 
 const SFAST_MOCKUP_ASSETS = {
@@ -277,7 +278,7 @@ function LogoMark() {
       className="group relative block h-[27px] w-[124px]"
     >
       <Image
-        src="/logo-haekal-default.svg"
+        src={PUBLIC_BRAND.logoDefault}
         alt="Haekal"
         width={124}
         height={27}
@@ -285,7 +286,7 @@ function LogoMark() {
         className="absolute inset-0 h-full w-full opacity-100 transition-opacity duration-200 group-hover:opacity-0"
       />
       <Image
-        src="/logo-haekal-hover.svg"
+        src={PUBLIC_BRAND.logoHover}
         alt="Haekal"
         width={124}
         height={27}

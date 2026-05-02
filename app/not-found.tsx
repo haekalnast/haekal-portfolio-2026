@@ -3,12 +3,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { PUBLIC_BRAND } from "@/lib/public-assets";
 
 function LogoMark() {
   return (
     <Link href="/" aria-label="Go to home" className="group relative block h-[27px] w-[124px]">
       <Image
-        src="/logo-haekal-default.svg"
+        src={PUBLIC_BRAND.logoDefault}
         alt="Haekal"
         width={124}
         height={27}
@@ -16,7 +17,7 @@ function LogoMark() {
         className="absolute inset-0 h-full w-full opacity-100 transition-opacity duration-200 group-hover:opacity-0"
       />
       <Image
-        src="/logo-haekal-hover.svg"
+        src={PUBLIC_BRAND.logoHover}
         alt="Haekal"
         width={124}
         height={27}
