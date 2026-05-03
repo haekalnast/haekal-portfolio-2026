@@ -61,32 +61,13 @@ const LAYOUT = {
   },
 } as const;
 
-function ScaledMockup({
-  layout,
-  scaleUp,
-  children,
-}: {
-  layout: ArrowAdvanceGalleryLayout;
-  scaleUp: boolean;
-  children: ReactNode;
-}) {
-  if (layout === "haekal") {
-    return (
-      <motion.div
-        className="absolute inset-0"
-        animate={{ scale: scaleUp ? 1.03 : 1 }}
-        transition={{ duration: 0.34, ease: ARROW_REVEAL_EASE }}
-      >
-        {children}
-      </motion.div>
-    );
-  }
-  const scale = layout === "journal-tall" ? 1.02 : 1.025;
+/** Haekal layout only — journal layouts use Featured-style `motion` on the mockup wrapper instead. */
+function ScaledMockup({ scaleUp, children }: { scaleUp: boolean; children: ReactNode }) {
   return (
     <motion.div
       className="absolute inset-0"
-      animate={{ scale: scaleUp ? scale : 1 }}
-      transition={{ type: "spring", stiffness: 300, damping: 26, mass: 0.75 }}
+      animate={{ scale: scaleUp ? 1.03 : 1 }}
+      transition={{ duration: 0.34, ease: ARROW_REVEAL_EASE }}
     >
       {children}
     </motion.div>
@@ -177,29 +158,63 @@ export function ArrowAdvanceGalleryCard({
         className={cn(cfg.mockup, isMobile && images.length > 1 && "cursor-pointer")}
         onClick={handleMockupClick}
       >
-        <ScaledMockup layout={layout} scaleUp={scaleUp}>
-          <AnimatePresence mode="wait" initial={false}>
-            <motion.div
-              key={images[imageIndex]}
-              className={resolvedImageStageClassName}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.36, ease: ARROW_REVEAL_EASE }}
-            >
-              <div className={resolvedImageFrameClassName}>
-                <Image
-                  src={images[imageIndex]}
-                  alt={imageAlt}
-                  fill
-                  unoptimized
-                  className={resolvedImageClassName}
-                  priority={priority && imageIndex === 0}
-                />
-              </div>
-            </motion.div>
-          </AnimatePresence>
-        </ScaledMockup>
+        {layout === "haekal" ? (
+          <ScaledMockup scaleUp={scaleUp}>
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.div
+                key={images[imageIndex]}
+                className={resolvedImageStageClassName}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.36, ease: ARROW_REVEAL_EASE }}
+              >
+                <div className={resolvedImageFrameClassName}>
+                  <Image
+                    src={images[imageIndex]}
+                    alt={imageAlt}
+                    fill
+                    unoptimized
+                    className={resolvedImageClassName}
+                    priority={priority && imageIndex === 0}
+                  />
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </ScaledMockup>
+        ) : (
+          <motion.div
+            className="absolute inset-0"
+            initial={false}
+            animate={{
+              scale: isHoverState ? 1.012 : 1,
+              y: isHoverState ? -2 : 0,
+            }}
+            transition={{ duration: 0.44, ease: ARROW_REVEAL_EASE }}
+          >
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.div
+                key={images[imageIndex]}
+                className={resolvedImageStageClassName}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.36, ease: ARROW_REVEAL_EASE }}
+              >
+                <div className={resolvedImageFrameClassName}>
+                  <Image
+                    src={images[imageIndex]}
+                    alt={imageAlt}
+                    fill
+                    unoptimized
+                    className={resolvedImageClassName}
+                    priority={priority && imageIndex === 0}
+                  />
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </motion.div>
+        )}
 
         {layout === "haekal" ? (
           <div className="absolute bottom-4 left-4 z-20">{arrowButton}</div>
