@@ -14,10 +14,14 @@ import { useScrollRevealActive } from "@/lib/use-scroll-reveal-active";
 
 /**
  * Publication row — same fixed pixel geometry as desktop (`156×271` × 3, `-space-x-8`).
- * Layout mirrors `BPRMockup` + `FeaturedDesignCard`: absolute artboard, card `overflow-hidden` crops sides on narrow viewports; outer + inner scale on hover / scroll-reveal like BPR.
+ * Layout mirrors `BPRMockup` + `FeaturedDesignCard`: absolute artboard; artboard + book wrappers stay `overflow-visible` so hover lift is not clipped. Card shell keeps `overflow-hidden` for rounded crop.
  */
 const PUBLICATION_ARTBOARD_W = 404;
 const PUBLICATION_ARTBOARD_H = 271;
+/** Extra space below the card’s top clip so lift + scale stay inside the rounded shell. */
+const PUBLICATION_MOCKUP_TOP_INSET = 22;
+/** Lift on per-book hover; artboard + book wrappers use visible overflow; shell still clips. */
+const PUBLICATION_BOOK_HOVER_Y = -20;
 
 type PublicationHoverGalleryCardProps = {
   images: readonly string[];
@@ -36,6 +40,7 @@ export function PublicationHoverGalleryCard({
 }: PublicationHoverGalleryCardProps) {
   const [isCardHovered, setIsCardHovered] = useState(false);
   const [isIconHovered, setIsIconHovered] = useState(false);
+  const [hoveredBook, setHoveredBook] = useState<number | null>(null);
   const { ref, isActive } = useScrollRevealActive<HTMLElement>(0.45);
   const isRevealActive = isIconHovered || isActive;
   /** Same as FeaturedDesignCard + BPR: pointer hover OR mobile scroll-reveal. */
@@ -50,6 +55,7 @@ export function PublicationHoverGalleryCard({
       onMouseLeave={() => {
         setIsCardHovered(false);
         setIsIconHovered(false);
+        setHoveredBook(null);
       }}
     >
       <div className="relative h-[444px] w-full touch-manipulation overflow-hidden rounded-[20px] bg-[#F2F2F2]">
@@ -57,28 +63,38 @@ export function PublicationHoverGalleryCard({
           className="relative h-full w-full px-0 py-0"
           initial={false}
           animate={{
-            scale: isHoverState ? 1.012 : 1,
+            scale: isHoverState ? 1.01 : 1,
             y: isHoverState ? -2 : 0,
           }}
           transition={{ duration: 0.44, ease: ARROW_REVEAL_EASE }}
         >
           <div className="relative h-full w-full">
-            <motion.div
-              className="absolute overflow-hidden"
+            <div
+              className="absolute overflow-visible"
               style={{
                 width: PUBLICATION_ARTBOARD_W,
                 height: PUBLICATION_ARTBOARD_H,
                 left: `calc(50% - ${PUBLICATION_ARTBOARD_W / 2}px)`,
-                top: `calc(50% - ${PUBLICATION_ARTBOARD_H / 2}px)`,
+                top: `calc(${PUBLICATION_MOCKUP_TOP_INSET}px + (100% - ${PUBLICATION_MOCKUP_TOP_INSET}px - ${PUBLICATION_ARTBOARD_H}px) / 2)`,
                 transformOrigin: "50% 50%",
               }}
-              initial={false}
-              animate={{ scale: isHoverState ? 1.02 : 1 }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
             >
-              <div className="flex h-full w-full items-center justify-center -space-x-8">
+              <div
+                className="flex h-full w-full items-center justify-center -space-x-8"
+                onMouseLeave={() => setHoveredBook(null)}
+              >
                 {images.map((src, index) => (
-                  <div key={src} className="relative h-[271px] w-[156px] shrink-0 overflow-hidden">
+                  <motion.div
+                    key={src}
+                    className="relative h-[271px] w-[156px] shrink-0 overflow-visible"
+                    style={{ zIndex: index + 1 }}
+                    initial={false}
+                    animate={{
+                      y: hoveredBook === index ? PUBLICATION_BOOK_HOVER_Y : 0,
+                    }}
+                    transition={{ type: "spring", stiffness: 320, damping: 26, mass: 0.72 }}
+                    onMouseEnter={() => setHoveredBook(index)}
+                  >
                     <Image
                       src={src}
                       alt={`Publication mockup ${index + 1}`}
@@ -86,10 +102,10 @@ export function PublicationHoverGalleryCard({
                       unoptimized
                       className="object-contain"
                     />
-                  </div>
+                  </motion.div>
                 ))}
               </div>
-            </motion.div>
+            </div>
           </div>
         </motion.div>
 

@@ -551,7 +551,7 @@ export default function AboutPage() {
             </div>
 
             <div className="relative z-0">
-              <div className="hidden gap-[24px] lg:grid lg:grid-cols-2">
+              <div className="hidden gap-[24px] lg:grid lg:grid-cols-2 lg:items-start">
                 <PublicationHoverGalleryCard
                   images={JOURNAL_ASSETS.publication}
                   articleClassName="lg:w-[648px]"
@@ -559,8 +559,8 @@ export default function AboutPage() {
                   onArrowHoverStart={() => setActiveArrowId(publicationArrowId)}
                   onArrowHoverEnd={() => setActiveArrowId((current) => (current === publicationArrowId ? null : current))}
                 />
-                <div className="flex w-full flex-col gap-6">
-                  <div className="grid grid-cols-2 gap-6">
+                <div className="flex w-full flex-col gap-[24px]">
+                  <div className="grid grid-cols-2 gap-6 lg:relative lg:z-[1]">
                     <ArrowAdvanceGalleryCard
                       images={JOURNAL_ASSETS.collateralSlides}
                       title="Collateral Design"
@@ -568,6 +568,7 @@ export default function AboutPage() {
                       imageAlt="Collateral Design"
                       arrowAriaLabel="Collateral Design details"
                       layout="journal-short"
+                      articleClassName="lg:relative lg:z-[2]"
                       isDimmed={!isMobile && isGlobalFocus && activeArrowId !== collateralArrowId}
                       onArrowHoverStart={() => setActiveArrowId(collateralArrowId)}
                       onArrowHoverEnd={() => setActiveArrowId((current) => (current === collateralArrowId ? null : current))}
@@ -582,6 +583,7 @@ export default function AboutPage() {
                       imageAlt="Packaging Design"
                       arrowAriaLabel="Packaging Design details"
                       layout="journal-short"
+                      articleClassName="lg:relative lg:z-[2]"
                       isDimmed={!isMobile && isGlobalFocus && activeArrowId !== packagingArrowId}
                       onArrowHoverStart={() => setActiveArrowId(packagingArrowId)}
                       onArrowHoverEnd={() => setActiveArrowId((current) => (current === packagingArrowId ? null : current))}
@@ -597,6 +599,7 @@ export default function AboutPage() {
                     imageAlt="Campaign Design"
                     arrowAriaLabel="Campaign Design details"
                     layout="journal-short"
+                    articleClassName="lg:relative lg:z-0 lg:-mt-[68px]"
                     isDimmed={!isMobile && isGlobalFocus && activeArrowId !== campaignArrowId}
                     onArrowHoverStart={() => setActiveArrowId(campaignArrowId)}
                     onArrowHoverEnd={() => setActiveArrowId((current) => (current === campaignArrowId ? null : current))}
