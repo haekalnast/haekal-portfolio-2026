@@ -33,6 +33,22 @@ export const PUBLIC_HOME_FEATURED = {
   },
 } as const;
 
+/** Designs page — BPR-shell mockups (drop `navbar.png` + `content.png` into each folder). */
+export const PUBLIC_DESIGNS_MOCKUPS = {
+  sfc: {
+    navbar: "/designs/mockups/sfc/navbar.png",
+    content: "/designs/mockups/sfc/content.png",
+  },
+  nuho: {
+    navbar: "/designs/mockups/nuho/navbar.png",
+    content: "/designs/mockups/nuho/content.png",
+  },
+  b2b: {
+    navbar: "/designs/mockups/b2b/navbar.png",
+    content: "/designs/mockups/b2b/content.png",
+  },
+} as const;
+
 /** Creative Journal raster paths under `public/creative-journal/` (filenames from `creative-journal-png-names.ts`). */
 export const PUBLIC_CREATIVE_JOURNAL = {
   campaign: CREATIVE_JOURNAL_PNG_NAMES.campaign.map((name) => `/creative-journal/${name}`),
