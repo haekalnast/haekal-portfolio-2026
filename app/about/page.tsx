@@ -6,6 +6,10 @@ import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
 import {
+  isToolsDockTourSuppressedForThisLoad,
+  markToolsDockTourSuppressedForThisLoad,
+} from "@/lib/tools-dock-tour-suppress-until-reload";
+import {
   ARROW_REVEAL_EASE,
   ArrowRevealButton,
   ArrowRevealText,
@@ -123,8 +127,13 @@ function AboutToolsCard({
   const touchStartYRef = useRef<number | null>(null);
   const touchCooldownUntilRef = useRef(0);
   const lockScrollYRef = useRef(0);
-  const isScrollSequenceActive = isMobile && isCardCentered && !mobileSequenceDone;
-  const activeMobileTooltip = isScrollSequenceActive && mobileSequenceStep >= 0 && mobileSequenceStep < sequenceNames.length ? sequenceNames[mobileSequenceStep] : null;
+  const sessionTourSuppressed = isToolsDockTourSuppressedForThisLoad();
+  const isScrollSequenceActive =
+    isMobile && isCardCentered && !mobileSequenceDone && !sessionTourSuppressed;
+  const activeMobileTooltip =
+    isScrollSequenceActive && mobileSequenceStep >= 0 && mobileSequenceStep < sequenceNames.length
+      ? sequenceNames[mobileSequenceStep]
+      : null;
   const isDetailsActive = isMobile || isIconHovered;
   const activeTooltipName = isMobile ? (activeMobileTooltip ?? hoveredApp) : hoveredApp;
 
@@ -154,47 +163,46 @@ function AboutToolsCard({
     const body = document.body;
     const html = document.documentElement;
     lockScrollYRef.current = window.scrollY;
-    const prevBodyOverflow = body.style.overflow;
-    const prevBodyPosition = body.style.position;
-    const prevBodyTop = body.style.top;
-    const prevBodyWidth = body.style.width;
-    const prevHtmlOverflow = html.style.overflow;
+    const previousBodyOverflow = body.style.overflow;
+    const previousBodyPosition = body.style.position;
+    const previousBodyTop = body.style.top;
+    const previousBodyWidth = body.style.width;
+    const previousHtmlOverflow = html.style.overflow;
     body.style.overflow = "hidden";
     html.style.overflow = "hidden";
     body.style.position = "fixed";
     body.style.top = `-${lockScrollYRef.current}px`;
     body.style.width = "100%";
     return () => {
-      body.style.overflow = prevBodyOverflow;
-      html.style.overflow = prevHtmlOverflow;
-      body.style.position = prevBodyPosition;
-      body.style.top = prevBodyTop;
-      body.style.width = prevBodyWidth;
+      body.style.overflow = previousBodyOverflow;
+      html.style.overflow = previousHtmlOverflow;
+      body.style.position = previousBodyPosition;
+      body.style.top = previousBodyTop;
+      body.style.width = previousBodyWidth;
       window.scrollTo(0, lockScrollYRef.current);
     };
   }, [isScrollSequenceActive]);
 
   useEffect(() => {
     if (!isScrollSequenceActive) return;
-    const progress = () => {
-      setMobileSequenceStep((prev) => {
-        const next = Math.min(prev + 1, sequenceNames.length + 1);
-        if (next >= sequenceNames.length) {
-          window.setTimeout(() => {
-            setMobileSequenceStep(sequenceNames.length);
-            setMobileSequenceDone(true);
-          }, 320);
-        }
-        return next;
-      });
+    const finishTour = () => {
+      markToolsDockTourSuppressedForThisLoad();
+      setMobileSequenceStep(sequenceNames.length);
+      setMobileSequenceDone(true);
     };
-    const onWheelLock = (event: WheelEvent) => {
+    const onWheelLock = (event: globalThis.WheelEvent) => {
       if (event.deltaY <= 0 || Math.abs(event.deltaY) <= 2) return;
       event.preventDefault();
       const now = Date.now();
       if (now < wheelCooldownUntilRef.current) return;
       wheelCooldownUntilRef.current = now + 320;
-      progress();
+      setMobileSequenceStep((prev) => {
+        const next = Math.min(prev + 1, sequenceNames.length + 1);
+        if (next >= sequenceNames.length) {
+          window.setTimeout(finishTour, 320);
+        }
+        return next;
+      });
     };
     const onTouchMoveLock = (event: TouchEvent) => {
       const startY = touchStartYRef.current;
@@ -207,7 +215,13 @@ function AboutToolsCard({
       if (now < touchCooldownUntilRef.current) return;
       touchCooldownUntilRef.current = now + 320;
       touchStartYRef.current = currentY;
-      progress();
+      setMobileSequenceStep((prev) => {
+        const next = Math.min(prev + 1, sequenceNames.length + 1);
+        if (next >= sequenceNames.length) {
+          window.setTimeout(finishTour, 320);
+        }
+        return next;
+      });
     };
     const onTouchStartLock = (event: TouchEvent) => {
       touchStartYRef.current = event.touches[0]?.clientY ?? null;

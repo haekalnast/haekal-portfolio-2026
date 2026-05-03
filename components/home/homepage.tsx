@@ -5,6 +5,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
 import { cn } from "@/lib/cn";
+import {
+  isToolsDockTourSuppressedForThisLoad,
+  markToolsDockTourSuppressedForThisLoad,
+} from "@/lib/tools-dock-tour-suppress-until-reload";
 import { PUBLIC_BRAND, PUBLIC_HOME_FEATURED } from "@/lib/public-assets";
 import {
   ArrowIcon,
@@ -577,10 +581,13 @@ function AboutToolsCard({
   const touchStartYRef = useRef<number | null>(null);
   const touchCooldownUntilRef = useRef(0);
   const lockScrollYRef = useRef(0);
-  const isScrollSequenceActive = isMobile && isCardCentered && !mobileSequenceDone;
-  const activeMobileTooltip = isScrollSequenceActive && mobileSequenceStep >= 0 && mobileSequenceStep < sequenceNames.length
-    ? sequenceNames[mobileSequenceStep]
-    : null;
+  const sessionTourSuppressed = isToolsDockTourSuppressedForThisLoad();
+  const isScrollSequenceActive =
+    isMobile && isCardCentered && !mobileSequenceDone && !sessionTourSuppressed;
+  const activeMobileTooltip =
+    isScrollSequenceActive && mobileSequenceStep >= 0 && mobileSequenceStep < sequenceNames.length
+      ? sequenceNames[mobileSequenceStep]
+      : null;
   const isDetailsActive = isMobile || isIconHovered;
   const activeTooltipName = isMobile ? (activeMobileTooltip ?? hoveredApp) : hoveredApp;
 
@@ -632,6 +639,11 @@ function AboutToolsCard({
 
   useEffect(() => {
     if (!isScrollSequenceActive) return;
+    const finishTour = () => {
+      markToolsDockTourSuppressedForThisLoad();
+      setMobileSequenceStep(sequenceNames.length);
+      setMobileSequenceDone(true);
+    };
     const onWheelLock = (event: globalThis.WheelEvent) => {
       if (event.deltaY <= 0 || Math.abs(event.deltaY) <= 2) return;
       event.preventDefault();
@@ -641,10 +653,7 @@ function AboutToolsCard({
       setMobileSequenceStep((prev) => {
         const next = Math.min(prev + 1, sequenceNames.length + 1);
         if (next >= sequenceNames.length) {
-          window.setTimeout(() => {
-            setMobileSequenceStep(sequenceNames.length);
-            setMobileSequenceDone(true);
-          }, 320);
+          window.setTimeout(finishTour, 320);
         }
         return next;
       });
@@ -663,10 +672,7 @@ function AboutToolsCard({
       setMobileSequenceStep((prev) => {
         const next = Math.min(prev + 1, sequenceNames.length + 1);
         if (next >= sequenceNames.length) {
-          window.setTimeout(() => {
-            setMobileSequenceStep(sequenceNames.length);
-            setMobileSequenceDone(true);
-          }, 320);
+          window.setTimeout(finishTour, 320);
         }
         return next;
       });
