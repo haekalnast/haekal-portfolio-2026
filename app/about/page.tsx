@@ -392,6 +392,7 @@ function ThisIsHaekalCard({
 
 export default function AboutPage() {
   const isMobile = useIsMobileViewport();
+  const creativeJournalMobileStackRef = useRef<HTMLDivElement | null>(null);
   const [activeArrowId, setActiveArrowId] = useState<string | null>(null);
   const aboutArrowId = "about-tools";
   const resumeArrowId = "about-resume";
@@ -412,6 +413,71 @@ export default function AboutPage() {
   /** Dims content below the hero (and journal header) when any arrow is focused — matches home “global focus” feel; navbar stays full opacity. */
   const isRestOfPageDimmed = !isMobileNoDim && isGlobalFocus;
   const isJournalHeaderDimmed = isRestOfPageDimmed;
+
+  // #region agent log
+  useEffect(() => {
+    const logJournalMobileLayout = () => {
+      if (typeof window === "undefined") return;
+      const root = creativeJournalMobileStackRef.current;
+      if (!root || window.innerWidth >= 768) return;
+      const articles = Array.from(root.querySelectorAll(":scope article"));
+      const articleRects = articles.map((el, i) => {
+        const r = el.getBoundingClientRect();
+        const lastChild = el.children[el.children.length - 1] as HTMLElement | undefined;
+        const textR = lastChild?.getBoundingClientRect();
+        return {
+          i,
+          articleH: r.height,
+          articleBottom: r.bottom,
+          textBottom: textR?.bottom ?? null,
+          textTop: textR?.top ?? null,
+        };
+      });
+      let textOverlapsNext = false;
+      for (let i = 0; i < articleRects.length - 1; i++) {
+        const tb = articleRects[i]?.textBottom;
+        const nextTop = articles[i + 1]?.getBoundingClientRect().top;
+        if (tb != null && nextTop != null && tb > nextTop + 0.5) textOverlapsNext = true;
+      }
+      const gapStyle = window.getComputedStyle(root).gap;
+      const rowGap = window.getComputedStyle(root).rowGap;
+      const pubArticle = root.querySelector(":scope > article");
+      const firstBook = pubArticle?.querySelector("[class*='h-[271px]']") as HTMLElement | null;
+      const bookW = firstBook?.getBoundingClientRect().width ?? null;
+      const mobileCtaEl = root.parentElement?.nextElementSibling as HTMLElement | undefined;
+      const ctaTop = mobileCtaEl?.getBoundingClientRect().top ?? null;
+      const lastArticle = articles[articles.length - 1];
+      const lastTextChild = lastArticle?.children[lastArticle.children.length - 1] as HTMLElement | undefined;
+      const lastTextBottom = lastTextChild?.getBoundingClientRect().bottom ?? null;
+      const ctaGapPx =
+        ctaTop != null && lastTextBottom != null ? Math.round(ctaTop - lastTextBottom) : null;
+      fetch("http://127.0.0.1:7724/ingest/9ee8458a-422f-4b12-8c92-503cc483ca8f", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "085a7d" },
+        body: JSON.stringify({
+          sessionId: "085a7d",
+          runId: "post-layout-fix",
+          hypothesisId: "H1-H5",
+          location: "about/page.tsx:CreativeJournalMobileProbe",
+          message: "creative journal mobile layout probe",
+          data: {
+            vw: window.innerWidth,
+            gapComputed: gapStyle,
+            rowGapComputed: rowGap,
+            articleRects,
+            textOverlapsNext,
+            firstPublicationBookWidth: bookW,
+            ctaGapFromLastTextBottomPx: ctaGapPx,
+          },
+          timestamp: Date.now(),
+        }),
+      }).catch(() => {});
+    };
+    logJournalMobileLayout();
+    window.addEventListener("resize", logJournalMobileLayout);
+    return () => window.removeEventListener("resize", logJournalMobileLayout);
+  }, []);
+  // #endregion
 
   return (
     <div className="bg-[#FAFAFA] text-black">
@@ -643,14 +709,14 @@ export default function AboutPage() {
                 </div>
               </div>
 
-              <div className="flex flex-col gap-6 md:hidden">
+              <div ref={creativeJournalMobileStackRef} className="flex flex-col gap-[24px] md:hidden">
                 <PublicationHoverGalleryCard
                   images={JOURNAL_ASSETS.publication}
                   isDimmed={false}
                   onArrowHoverStart={() => setActiveArrowId(publicationArrowId)}
                   onArrowHoverEnd={() => setActiveArrowId((current) => (current === publicationArrowId ? null : current))}
                 />
-                <div className="grid grid-cols-2 gap-6">
+                <div className="flex flex-col gap-[24px]">
                   <ArrowAdvanceGalleryCard
                     images={JOURNAL_ASSETS.collateralSlides}
                     title="Collateral Design"

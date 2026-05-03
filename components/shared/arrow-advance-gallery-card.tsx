@@ -49,12 +49,13 @@ const LAYOUT = {
     revealText: "pointer-events-none absolute left-0 top-[218px]",
   },
   "journal-short": {
-    article: "relative h-[210px] w-full overflow-visible transition-all duration-300",
+    /** min-height reserves space for `ArrowRevealText` at `top-[218px]` (~30+24px lines) so flex siblings do not overlap clipped copy. */
+    article: "relative min-h-[278px] w-full overflow-visible transition-all duration-300",
     mockup: "relative h-[210px] overflow-hidden rounded-[20px] bg-[#F2F2F2]",
     revealText: "pointer-events-none absolute left-0 top-[218px]",
   },
   "journal-tall": {
-    article: "relative h-[444px] w-full overflow-visible transition-all duration-300",
+    article: "relative min-h-[510px] w-full overflow-visible transition-all duration-300",
     mockup: "relative h-[444px] overflow-hidden rounded-[20px] bg-[#F2F2F2]",
     revealText: "pointer-events-none absolute left-0 top-[452px]",
   },
@@ -114,7 +115,9 @@ export function ArrowAdvanceGalleryCard({
   const isMobile = useIsMobileViewport();
   const { ref, isActive } = useScrollRevealActive<HTMLElement>(0.45);
   const isRevealActive = isIconHovered || isActive;
-  const scaleUp = !isMobile && isCardHovered;
+  /** Same as FeaturedDesignCard (`homepage`): mockup scale from desktop hover OR mobile scroll-reveal. */
+  const isHoverState = isCardHovered || isActive;
+  const scaleUp = isHoverState;
   const cfg = LAYOUT[layout];
   const resolvedImageStageClassName = imageStageClassName ?? "absolute inset-0";
   const resolvedImageFrameClassName = imageFrameClassName ?? "absolute inset-0";

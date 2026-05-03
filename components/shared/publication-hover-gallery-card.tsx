@@ -4,12 +4,20 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { useState } from "react";
 import {
+  ARROW_REVEAL_EASE,
   ArrowRevealButton,
   ArrowRevealText,
   getGlobalFocusStyle,
 } from "@/components/shared/arrow-reveal";
 import { cn } from "@/lib/cn";
 import { useScrollRevealActive } from "@/lib/use-scroll-reveal-active";
+
+/**
+ * Publication row — same fixed pixel geometry as desktop (`156×271` × 3, `-space-x-8`).
+ * Layout mirrors `BPRMockup` + `FeaturedDesignCard`: absolute artboard, card `overflow-hidden` crops sides on narrow viewports; outer + inner scale on hover / scroll-reveal like BPR.
+ */
+const PUBLICATION_ARTBOARD_W = 404;
+const PUBLICATION_ARTBOARD_H = 271;
 
 type PublicationHoverGalleryCardProps = {
   images: readonly string[];
@@ -28,48 +36,61 @@ export function PublicationHoverGalleryCard({
 }: PublicationHoverGalleryCardProps) {
   const [isCardHovered, setIsCardHovered] = useState(false);
   const [isIconHovered, setIsIconHovered] = useState(false);
-  const [hoveredBook, setHoveredBook] = useState<number | null>(null);
   const { ref, isActive } = useScrollRevealActive<HTMLElement>(0.45);
   const isRevealActive = isIconHovered || isActive;
+  /** Same as FeaturedDesignCard + BPR: pointer hover OR mobile scroll-reveal. */
+  const isHoverState = isCardHovered || isActive;
+
   return (
     <article
       ref={ref}
-      className={cn("relative h-[444px] w-full overflow-visible transition-all duration-300", articleClassName)}
+      className={cn("relative min-h-[510px] w-full overflow-visible transition-all duration-300", articleClassName)}
       style={getGlobalFocusStyle(isDimmed)}
       onMouseEnter={() => setIsCardHovered(true)}
       onMouseLeave={() => {
         setIsCardHovered(false);
-        setHoveredBook(null);
         setIsIconHovered(false);
       }}
     >
-      <div className="relative h-[444px] overflow-hidden rounded-[20px] bg-[#F2F2F2] px-10 py-6">
+      <div className="relative h-[444px] w-full touch-manipulation overflow-hidden rounded-[20px] bg-[#F2F2F2]">
         <motion.div
-          className="flex h-full items-center justify-center -space-x-8"
-          animate={{ scale: isCardHovered ? 1.01 : 1 }}
-          transition={{ type: "spring", stiffness: 300, damping: 24, mass: 0.75 }}
+          className="relative h-full w-full px-0 py-0"
+          initial={false}
+          animate={{
+            scale: isHoverState ? 1.012 : 1,
+            y: isHoverState ? -2 : 0,
+          }}
+          transition={{ duration: 0.44, ease: ARROW_REVEAL_EASE }}
         >
-          {images.map((src, index) => (
+          <div className="relative h-full w-full">
             <motion.div
-              key={src}
-              className="relative h-[271px] w-[156px] overflow-hidden"
-              animate={{
-                y: hoveredBook === index ? -14 : 0,
-                scale: hoveredBook === index ? 1.025 : 1,
+              className="absolute overflow-hidden"
+              style={{
+                width: PUBLICATION_ARTBOARD_W,
+                height: PUBLICATION_ARTBOARD_H,
+                left: `calc(50% - ${PUBLICATION_ARTBOARD_W / 2}px)`,
+                top: `calc(50% - ${PUBLICATION_ARTBOARD_H / 2}px)`,
+                transformOrigin: "50% 50%",
               }}
-              transition={{ type: "spring", stiffness: 300, damping: 24, mass: 0.72 }}
-              onMouseEnter={() => setHoveredBook(index)}
-              onMouseLeave={() => setHoveredBook(null)}
+              initial={false}
+              animate={{ scale: isHoverState ? 1.02 : 1 }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
             >
-              <Image
-                src={src}
-                alt={`Publication mockup ${index + 1}`}
-                fill
-                unoptimized
-                className="object-contain"
-              />
+              <div className="flex h-full w-full items-center justify-center -space-x-8">
+                {images.map((src, index) => (
+                  <div key={src} className="relative h-[271px] w-[156px] shrink-0 overflow-hidden">
+                    <Image
+                      src={src}
+                      alt={`Publication mockup ${index + 1}`}
+                      fill
+                      unoptimized
+                      className="object-contain"
+                    />
+                  </div>
+                ))}
+              </div>
             </motion.div>
-          ))}
+          </div>
         </motion.div>
 
         <motion.div
@@ -97,7 +118,7 @@ export function PublicationHoverGalleryCard({
       <ArrowRevealText
         isActive={isRevealActive}
         title="Publication Design"
-        subtitle="Editorial and publication visuals"
+        subtitle="Print and editorial design"
         className="pointer-events-none absolute left-0 top-[452px]"
       />
     </article>
