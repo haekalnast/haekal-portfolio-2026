@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useCallback, useState } from "react";
 import { cn } from "@/lib/cn";
 import {
+  BPRDashboardFrameMockup,
   BPRFrameMockup,
   BPRMockup,
   DesignsFeaturedDesignCard,
@@ -188,7 +189,7 @@ export function DesignsPage() {
           <div className="flex min-w-0 flex-col gap-6">
             <DesignsFeaturedDesignCard
               cardKey="bpr"
-              title="BPR Platform"
+              title="bprqaya.co.id"
               subtitle="Web | Fintech"
               href="https://bprqaya.id/"
               mockupPaddingClass="px-0 py-0"
@@ -205,16 +206,15 @@ export function DesignsPage() {
 
             <DesignsFeaturedDesignCard
               cardKey="b2b"
-              title="B2B disbursement"
-              subtitle="Web | B2B dashboard"
-              href={FALLBACK}
+              title="enterprise.dipay.id"
+              subtitle="Web | Fintech"
+              href="https://enterprise.dipay.id/login"
               mockupPaddingClass="px-0 py-0"
               renderMockup={(hovered) => (
-                <BPRFrameMockup
+                <BPRDashboardFrameMockup
                   hovered={hovered}
-                  navbarSrc={PUBLIC_DESIGNS_MOCKUPS.b2b.navbar}
                   contentSrc={PUBLIC_DESIGNS_MOCKUPS.b2b.content}
-                  contentAlt="B2B mockup content"
+                  contentAlt="Dipay enterprise dashboard"
                 />
               )}
               {...cardShellProps}
@@ -246,16 +246,20 @@ export function DesignsPage() {
 
             <DesignsFeaturedDesignCard
               cardKey="nuho"
-              title="Nuho"
-              subtitle="Web | Product experience"
-              href={FALLBACK}
+              title="nuholiving.com"
+              subtitle="Web | Others"
+              href="https://nuholiving.com/"
               mockupPaddingClass="px-0 py-0"
               renderMockup={(hovered) => (
                 <BPRFrameMockup
                   hovered={hovered}
                   navbarSrc={PUBLIC_DESIGNS_MOCKUPS.nuho.navbar}
                   contentSrc={PUBLIC_DESIGNS_MOCKUPS.nuho.content}
-                  contentAlt="Nuho mockup content"
+                  contentAlt="nuholiving.com mockup"
+                  navbarDisplayPx={38.155555625}
+                  navbarIntrinsicWidth={1024}
+                  navbarIntrinsicHeight={76}
+                  contentHeightPx={2733}
                 />
               )}
               {...cardShellProps}
@@ -263,16 +267,21 @@ export function DesignsPage() {
 
             <DesignsFeaturedDesignCard
               cardKey="sfc"
-              title="Surya Fajar Capital"
-              subtitle="Web | Fintech company profile"
-              href={FALLBACK}
+              title="sfcapital.co.id"
+              subtitle="Web | Fintech"
+              href="https://sfcapital.co.id/"
               mockupPaddingClass="px-0 py-0"
               renderMockup={(hovered) => (
                 <BPRFrameMockup
                   hovered={hovered}
                   navbarSrc={PUBLIC_DESIGNS_MOCKUPS.sfc.navbar}
                   contentSrc={PUBLIC_DESIGNS_MOCKUPS.sfc.content}
-                  contentAlt="SFC mockup content"
+                  contentAlt="sfcapital.co.id mockup"
+                  navbarDisplayPx={28.444446563720703}
+                  navbarDisplayWidthPx={396.79998779296875}
+                  navbarIntrinsicWidth={2048}
+                  navbarIntrinsicHeight={160}
+                  contentHeightPx={1927}
                 />
               )}
               {...cardShellProps}

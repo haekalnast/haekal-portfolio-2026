@@ -23,7 +23,7 @@ export type HomeFeaturedCard = {
 export const HOME_FEATURED_CARDS: HomeFeaturedCard[] = [
   {
     id: "bpr",
-    title: "BPR Platform",
+    title: "bprqaya.co.id",
     subtitle: "Web | Fintech",
     href: "https://bprqaya.id/",
   },
@@ -81,7 +81,7 @@ export function BPRMockup({ hovered }: { hovered: boolean }) {
       >
         <Image
           src={FEATURED_ASSETS.bpr}
-          alt="BPR Platform"
+          alt="bprqaya.co.id"
           fill
           unoptimized
           className="object-cover"
@@ -120,11 +120,31 @@ export function BPRFrameMockup({
   navbarSrc,
   contentSrc,
   contentAlt,
+  /** Navbar strip height inside the 512×320 inset — BPR template 26px; match Figma per project (e.g. SFC ~28.44px, Nuho ~38.16px). */
+  navbarDisplayPx = 26,
+  /**
+   * When set, navbar image is this wide and horizontally centered in the 512px inset (Figma frame width).
+   * Omit for full-bleed strip (BPR, Nuho).
+   */
+  navbarDisplayWidthPx,
+  /** Pixel height of exported content PNG at 512px width (scroll length). */
+  contentHeightPx = 2008,
+  /**
+   * Navbar asset pixel size at export. BPR uses 2× (1024×52) scaled to 512×26.
+   * For 1× exports (512 wide), pass 512 and the same value as `navbarDisplayPx` (or 2× height).
+   */
+  navbarIntrinsicWidth = 1024,
+  navbarIntrinsicHeight = 52,
 }: {
   hovered: boolean;
   navbarSrc: string;
   contentSrc: string;
   contentAlt: string;
+  navbarDisplayPx?: number;
+  navbarDisplayWidthPx?: number;
+  contentHeightPx?: number;
+  navbarIntrinsicWidth?: number;
+  navbarIntrinsicHeight?: number;
 }) {
   return (
     <div className="relative h-full w-full">
@@ -150,20 +170,79 @@ export function BPRFrameMockup({
                 src={contentSrc}
                 alt={contentAlt}
                 width={512}
-                height={2008}
-                className="block h-[2008px] w-[512px] max-w-none"
+                height={contentHeightPx}
+                className="block max-w-none"
+                style={{ width: 512, height: contentHeightPx }}
+                draggable={false}
               />
             </div>
           </div>
-          <div className="pointer-events-none absolute inset-x-0 top-0 z-20 h-[26px] overflow-hidden bg-white">
+          <div
+            className={cn(
+              "pointer-events-none absolute inset-x-0 top-0 z-20 overflow-hidden bg-transparent",
+              navbarDisplayWidthPx == null ? "w-full" : "flex justify-center",
+            )}
+            style={{ height: navbarDisplayPx }}
+          >
             <img
               src={navbarSrc}
               alt=""
-              width={1024}
-              height={52}
-              className="block h-[26px] w-[512px] max-w-none"
+              width={navbarIntrinsicWidth}
+              height={navbarIntrinsicHeight}
+              className={cn(
+                "block max-w-none object-cover object-top",
+                navbarDisplayWidthPx == null ? "h-full w-full" : "shrink-0",
+              )}
+              style={
+                navbarDisplayWidthPx == null
+                  ? undefined
+                  : { width: navbarDisplayWidthPx, height: navbarDisplayPx }
+              }
+              draggable={false}
             />
           </div>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
+/** Laptop shell + 512×320 inset; one static dashboard image (no navbar, no scroll). */
+export function BPRDashboardFrameMockup({
+  hovered,
+  contentSrc,
+  contentAlt,
+}: {
+  hovered: boolean;
+  contentSrc: string;
+  contentAlt: string;
+}) {
+  return (
+    <div className="relative h-full w-full">
+      <motion.div
+        className="absolute left-[-22px] top-4 h-[412px] w-[692px] overflow-hidden transition-transform duration-500 ease-out"
+        style={{
+          transform: hovered ? "scale(1.02)" : "scale(1)",
+          transformOrigin: "50% 50%",
+        }}
+      >
+        <Image
+          src={FEATURED_ASSETS.bpr}
+          alt=""
+          fill
+          unoptimized
+          className="object-cover"
+          sizes="692px"
+        />
+        <div className="absolute left-[90px] top-[46px] z-10 h-[320px] w-[512px] overflow-hidden rounded-[2px] bg-white">
+          <img
+            src={contentSrc}
+            alt={contentAlt}
+            width={512}
+            height={320}
+            className="pointer-events-none block h-full w-full object-cover object-top"
+            draggable={false}
+          />
         </div>
       </motion.div>
     </div>

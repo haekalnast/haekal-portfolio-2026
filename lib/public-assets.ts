@@ -35,16 +35,18 @@ export const PUBLIC_HOME_FEATURED = {
 
 /** Designs page — BPR-shell mockups (drop `navbar.png` + `content.png` into each folder). */
 export const PUBLIC_DESIGNS_MOCKUPS = {
+  /** Navbar: Figma frame ~396.8×28.44px in inset; PNG with alpha (e.g. 2048×160) — see `BPRFrameMockup` on designs page. Content 512×1927. */
   sfc: {
     navbar: "/designs/mockups/sfc/navbar.png",
     content: "/designs/mockups/sfc/content.png",
   },
+  /** Navbar ~512×38.16 (or 1024×76 @2×); content 512×2733. */
   nuho: {
     navbar: "/designs/mockups/nuho/navbar.png",
     content: "/designs/mockups/nuho/content.png",
   },
+  /** Dashboard — single full-bleed `content.png` in the laptop inset (no navbar strip, no scroll). */
   b2b: {
-    navbar: "/designs/mockups/b2b/navbar.png",
     content: "/designs/mockups/b2b/content.png",
   },
 } as const;
