@@ -85,7 +85,7 @@ function DesignsOctoVariant1Mockup() {
           width={108}
           height={108}
           unoptimized
-          className="block h-[108px] w-[108px] object-contain"
+          className="block h-[108px] w-[108px] object-cover"
           sizes="108px"
         />
       </div>
@@ -96,14 +96,14 @@ function DesignsOctoVariant1Mockup() {
 function DesignsDsVariant1Mockup() {
   return (
     <div className="absolute inset-0 flex items-start justify-center px-10 py-6">
-      <div className="relative h-[78px] w-[140px] shrink-0 drop-shadow-[0px_0px_43.75px_rgba(0,0,0,0.06)]">
+      <div className="relative h-[77px] w-[140px] shrink-0 drop-shadow-[0px_0px_43.75px_rgba(0,0,0,0.06)]">
         <Image
           src={PUBLIC_DESIGNS_CARDS_VARIANT1.desaSeminyakLogo}
           alt="Desa Seminyak logo"
           width={140}
-          height={78}
+          height={77}
           unoptimized
-          className="block h-[78px] w-[140px] object-contain"
+          className="block h-[77px] w-[140px] object-contain"
           sizes="140px"
         />
       </div>

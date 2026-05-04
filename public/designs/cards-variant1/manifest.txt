@@ -1,13 +1,13 @@
 Designs page — Figma Variant 1 (PUBLIC_DESIGNS_CARDS_VARIANT1)
 
-  octo-app-icon.png       — OCTO Merchant 108×108 (fixed display box)
-  desa-seminyak-logo.png  — Desa Seminyak 140×78 (fixed display box)
-  sfs-logo.png            — SF Sekuritas full logo 246×72 (fixed display box)
+  octo-app-icon.png       — Figma `image 694` 108×108; UI uses object-cover (Variant 1 node 42439:39252)
+  desa-seminyak-logo.png  — Figma `Object [Vectorized]` 140×77 (node 42441:39457)
+  sfs-logo.png            — Figma row `Frame 34697` 246×72 (node 42441:46761); flattened mark + SEKURITAS
 
 Figma refs:
-  OCTO Variant 1 — node 42439-39252
-  DS Variant 1   — node 42441-39457
-  SFS Variant 1  — node 42441-46429
+  OCTO Variant 1 — 42439-39252
+  DS Variant 1   — 42441-39457
+  SFS Variant 1  — 42441-46429
 
 Card mockup band height (DesignsFeaturedDesignCard shell):
   Desktop (lg+): OCTO, DS, SFS → H 210

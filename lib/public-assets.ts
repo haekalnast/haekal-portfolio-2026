@@ -60,9 +60,11 @@ export const PUBLIC_HOME_SFAST_MOCKUP = {
 
 /** Designs page — Figma `Variant 1` mockup assets ([OCTO](https://www.figma.com/design/bPIWmX1Vl3Jn1C7WkYUZKF/Haekal-2026--Copy-?node-id=42439-39252), [DS](https://www.figma.com/design/bPIWmX1Vl3Jn1C7WkYUZKF/Haekal-2026--Copy-?node-id=42441-39457), [SFS](https://www.figma.com/design/bPIWmX1Vl3Jn1C7WkYUZKF/Haekal-2026--Copy-?node-id=42441-46429)). */
 export const PUBLIC_DESIGNS_CARDS_VARIANT1 = {
+  /** Figma `image 694` — 108×108; UI uses object-cover (Variant 1 node 42439:39252). */
   octoAppIcon: "/designs/cards-variant1/octo-app-icon.png",
+  /** Figma `Object [Vectorized]` — export at 140×77. */
   desaSeminyakLogo: "/designs/cards-variant1/desa-seminyak-logo.png",
-  /** Full wordmark 246×72 (mark + “SEKURITAS” in raster). */
+  /** Figma frame `42441:46761` — 246×72 (mark 72 + gap + type as flattened PNG). */
   sfsLogo: "/designs/cards-variant1/sfs-logo.png",
 } as const;
 
