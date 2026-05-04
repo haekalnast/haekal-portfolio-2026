@@ -23,22 +23,22 @@ import {
   SectionFeatureHeaderStaticRow,
   SectionFeatureHeaderTitleBlock,
 } from "@/components/shared/section-feature-header";
-import { PUBLIC_ABOUT, PUBLIC_BRAND, PUBLIC_CREATIVE_JOURNAL } from "@/lib/public-assets";
+import { PUBLIC_ABOUT, PUBLIC_BRAND, PUBLIC_CREATIVE_JOURNAL, PUBLIC_HOME_DOCK } from "@/lib/public-assets";
 import { useIsMobileViewport } from "@/lib/use-is-mobile-viewport";
 import { useScrollRevealActive } from "@/lib/use-scroll-reveal-active";
 
 const FALLBACK_ERROR_ROUTE = "/not-found";
 const dockApps = [
-  { name: "Figma", icon: "https://www.figma.com/api/mcp/asset/3928281a-3d0f-4b48-b7b7-adc64467900d" },
-  { name: "Cursor", icon: "https://www.figma.com/api/mcp/asset/c4008ecb-0f80-475f-8f10-1e21da0f250c" },
-  { name: "Affinity", icon: "https://www.figma.com/api/mcp/asset/7077e9dd-7ed2-4b04-95e6-2112418ef724" },
-  { name: "Github Desktop", icon: "https://www.figma.com/api/mcp/asset/0022a158-2622-49f7-85b1-51899b386bfe" },
-  { name: "Notion", icon: "https://www.figma.com/api/mcp/asset/99e8f6a5-ae66-4dcd-ac56-4bde678ac862" },
-  { name: "Framer", icon: "https://www.figma.com/api/mcp/asset/690d584b-d135-4799-b944-1b75510e8e5f" },
-  { name: "Spotify", icon: "https://www.figma.com/api/mcp/asset/cad70b18-1f0b-48a9-b78d-2cbb108071ce" },
-  { name: "WhatsApp", icon: "https://www.figma.com/api/mcp/asset/15c7de87-fd3a-4e2f-9fc6-1110cf302c97" },
-  { name: "Finder", icon: "https://www.figma.com/api/mcp/asset/c7b30e4e-76ac-4525-a021-05506e87a664" },
-  { name: "Trash", icon: "https://www.figma.com/api/mcp/asset/5271f34d-aa24-47e4-9454-6abff83ccbf0" },
+  { name: "Figma", icon: PUBLIC_HOME_DOCK.figma },
+  { name: "Cursor", icon: PUBLIC_HOME_DOCK.cursor },
+  { name: "Affinity", icon: PUBLIC_HOME_DOCK.affinity },
+  { name: "Github Desktop", icon: PUBLIC_HOME_DOCK.githubDesktop },
+  { name: "Notion", icon: PUBLIC_HOME_DOCK.notion },
+  { name: "Framer", icon: PUBLIC_HOME_DOCK.framer },
+  { name: "Spotify", icon: PUBLIC_HOME_DOCK.spotify },
+  { name: "WhatsApp", icon: PUBLIC_HOME_DOCK.whatsapp },
+  { name: "Finder", icon: PUBLIC_HOME_DOCK.finder },
+  { name: "Trash", icon: PUBLIC_HOME_DOCK.trash },
 ] as const;
 
 const experienceItems = [
@@ -546,7 +546,6 @@ export default function AboutPage() {
                   title="Creative Journal"
                   description="Work from my early years in visual communication, branding, and marketing, shaping how I design today."
                 />
-                <SectionFeatureHeaderDesktopCta href={FALLBACK_ERROR_ROUTE}>Explore Journal</SectionFeatureHeaderDesktopCta>
               </SectionFeatureHeaderStaticRow>
             </div>
 
@@ -711,7 +710,6 @@ export default function AboutPage() {
               </div>
             </div>
 
-            <SectionFeatureHeaderMobileCta href={FALLBACK_ERROR_ROUTE}>Explore Journal</SectionFeatureHeaderMobileCta>
           </section>
         </div>
       </main>

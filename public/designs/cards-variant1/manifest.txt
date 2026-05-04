@@ -1,0 +1,10 @@
+Designs page — Figma Variant 1 mockups (PUBLIC_DESIGNS_CARDS_VARIANT1)
+
+  octo-app-icon.png       — OCTO Merchant 108×108-style icon (export from Variant 1)
+  desa-seminyak-logo.png  — DS script logo (~140×77)
+  sfs-mark.png            — SF circular mark only (word SEKURITAS is rendered in CSS)
+
+Figma refs:
+  OCTO Variant 1 — node 42439-39252
+  DS Variant 1   — node 42441-39457
+  SFS Variant 1  — node 42441-46429

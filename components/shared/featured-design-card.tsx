@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import type { ReactNode, RefObject } from "react";
 import { cn } from "@/lib/cn";
-import { PUBLIC_HOME_FEATURED } from "@/lib/public-assets";
+import { PUBLIC_HOME_FEATURED, PUBLIC_HOME_FEATURED_CARD, PUBLIC_HOME_SFAST_MOCKUP } from "@/lib/public-assets";
 import { ArrowIcon, getGlobalFocusMotionAnimate } from "@/components/shared/arrow-reveal";
 import { useScrollRevealActive } from "@/lib/use-scroll-reveal-active";
 
@@ -42,9 +42,9 @@ export const HOME_FEATURED_CARDS: HomeFeaturedCard[] = [
 ];
 
 const FEATURED_ASSETS = {
-  bpr: "https://www.figma.com/api/mcp/asset/3be41822-89f8-4007-b31f-c1340f0d50d3",
-  sfast: "https://www.figma.com/api/mcp/asset/04b5daca-64b8-4b21-84ff-44be593cc8f2",
-  personal: "https://www.figma.com/api/mcp/asset/8c0eea6a-8f54-4cbb-8429-524080328d4c",
+  bpr: PUBLIC_HOME_FEATURED_CARD.bprLaptopShell,
+  sfast: PUBLIC_HOME_FEATURED_CARD.sfastCardHero,
+  personal: PUBLIC_HOME_FEATURED_CARD.personalPhoneFrame,
 } as const;
 
 const BPR_SCREEN_ASSETS = {
@@ -58,16 +58,7 @@ const PERSONAL_SCREEN_ASSETS = {
   bottombar: PUBLIC_HOME_FEATURED.personal.bottombar,
 } as const;
 
-const SFAST_MOCKUP_ASSETS = {
-  leftShell: "https://www.figma.com/api/mcp/asset/8fa4f215-88eb-4e13-a042-2d06ef0acacf",
-  rightShell: "https://www.figma.com/api/mcp/asset/414ac5c6-da91-482f-9679-9bfe79caf3cc",
-  leftScreenDefault: "https://www.figma.com/api/mcp/asset/5f1c6839-28bd-4868-bf64-54b49b29492c",
-  leftScreenHover: "https://www.figma.com/api/mcp/asset/16b32aec-013e-4f8e-8d96-cc0a083730ee",
-  rightScreenDefault: "https://www.figma.com/api/mcp/asset/e25185e5-b7c2-4623-a6c7-382c6285197d",
-  rightScreenHover: "https://www.figma.com/api/mcp/asset/cce268f6-1f04-4347-a0fd-67c61b8793ac",
-  lightScreenMask: "https://www.figma.com/api/mcp/asset/d195f289-22a9-4043-aec0-309ad6438e6f",
-  darkScreenMask: "https://www.figma.com/api/mcp/asset/158d416a-9138-447d-a11d-19b7d05ff4d8",
-} as const;
+const SFAST_MOCKUP_ASSETS = PUBLIC_HOME_SFAST_MOCKUP;
 
 export function BPRMockup({ hovered }: { hovered: boolean }) {
   return (
@@ -429,6 +420,7 @@ export function HomeFeaturedDesignCard({
       title={card.title}
       subtitle={card.subtitle}
       href={card.href}
+      revealStatus="live"
       isGlobalDimmed={isGlobalDimmed}
       isHoverState={isHoverState}
       isRevealState={isRevealState}
@@ -456,6 +448,7 @@ export function DesignsFeaturedDesignCard({
   title,
   subtitle,
   href,
+  revealStatus = "live",
   activeArrowId,
   onArrowHoverStart,
   onArrowHoverEnd,
@@ -470,6 +463,7 @@ export function DesignsFeaturedDesignCard({
   title: string;
   subtitle: string;
   href: string;
+  revealStatus?: "live" | "preview";
   activeArrowId: string | null;
   onArrowHoverStart: (id: string) => void;
   onArrowHoverEnd: (id: string) => void;
@@ -495,6 +489,7 @@ export function DesignsFeaturedDesignCard({
       title={title}
       subtitle={subtitle}
       href={href}
+      revealStatus={revealStatus}
       isGlobalDimmed={isGlobalDimmed}
       isHoverState={isHoverState}
       isRevealState={isRevealState}
@@ -523,6 +518,7 @@ function FeaturedDesignCardShell({
   title,
   subtitle,
   href,
+  revealStatus = "live",
   isGlobalDimmed,
   isHoverState,
   isRevealState,
@@ -538,6 +534,7 @@ function FeaturedDesignCardShell({
   title: string;
   subtitle: string;
   href: string;
+  revealStatus?: "live" | "preview";
   isGlobalDimmed: boolean;
   isHoverState: boolean;
   isRevealState: boolean;
@@ -548,6 +545,7 @@ function FeaturedDesignCardShell({
   onRevealHoverStart: () => void;
   onRevealHoverEnd: () => void;
 }) {
+  const isPreviewStatus = revealStatus === "preview";
   return (
     <motion.article
       ref={cardRef}
@@ -603,11 +601,11 @@ function FeaturedDesignCardShell({
           <h3 className="text-[20px] leading-[30px] tracking-[-1px] text-black">{title}</h3>
           <span className="inline-flex items-center gap-2 rounded-[8px] border border-[#DEDEE0] bg-[#F2F2F2] px-3 py-[3px] text-base leading-6 text-black">
             <motion.span
-              className="inline-block h-2 w-2 rounded-full bg-[#14C95D]"
+              className={cn("inline-block h-2 w-2 rounded-full", isPreviewStatus ? "bg-[#FF9A3D]" : "bg-[#14C95D]")}
               animate={{ opacity: [0.35, 1, 0.35], scale: [0.92, 1.08, 0.92] }}
               transition={{ duration: 1.9, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
             />
-            Live
+            {isPreviewStatus ? "Preview" : "Live"}
           </span>
         </div>
         <p className="text-base leading-6 text-[#707070]">{subtitle}</p>

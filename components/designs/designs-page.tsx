@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useState } from "react";
-import { cn } from "@/lib/cn";
 import {
   BPRDashboardFrameMockup,
   BPRFrameMockup,
@@ -14,13 +13,14 @@ import {
   SFASTMockup,
 } from "@/components/shared/featured-design-card";
 import { getGlobalFocusMotionAnimate } from "@/components/shared/arrow-reveal";
-import { PUBLIC_BRAND, PUBLIC_DESIGNS_MOCKUPS } from "@/lib/public-assets";
+import { PUBLIC_BRAND, PUBLIC_DESIGNS_CARDS_VARIANT1, PUBLIC_DESIGNS_MOCKUPS } from "@/lib/public-assets";
 
 const PREMIUM_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 const PREMIUM_DURATION = 0.32;
 const FALLBACK = "/not-found";
-
-const FILTER_LABELS = ["All", "Web", "Mobile", "Brand", "B2B"] as const;
+const OCTO_HREF = "https://play.google.com/store/apps/details?id=com.cimbedc&pcampaignid=web_share";
+const DS_HREF = "https://desa-seminyak.vercel.app/";
+const SFS_HREF = "https://www.sfsekuritas.co.id/";
 
 function LogoMark() {
   return (
@@ -57,42 +57,57 @@ function FooterLink({ href, children }: { href: string; children: string }) {
   );
 }
 
-/** Figma: media 210px, 12px to title stack — no motion or chrome. */
-function DesignsPlaceholderCard({
-  title,
-  subtitle,
-  className,
-}: {
-  title: string;
-  subtitle: string;
-  className?: string;
-}) {
+/** Figma `Variant 1` nodes: [OCTO](https://www.figma.com/design/bPIWmX1Vl3Jn1C7WkYUZKF/Haekal-2026--Copy-?node-id=42439-39252), [DS](https://www.figma.com/design/bPIWmX1Vl3Jn1C7WkYUZKF/Haekal-2026--Copy-?node-id=42441-39457), [SFS](https://www.figma.com/design/bPIWmX1Vl3Jn1C7WkYUZKF/Haekal-2026--Copy-?node-id=42441-46429) — assets under `public/designs/cards-variant1/`. */
+function DesignsOctoVariant1Mockup() {
   return (
-    <div className={cn("min-w-0", className)}>
-      <div className="h-[210px] w-full rounded-[20px] bg-[#F2F2F2]" />
-      <div className="mt-3 space-y-1">
-        <p className="text-[20px] leading-[30px] tracking-[-1px] text-black">{title}</p>
-        <p className="text-base leading-6 text-[#707070]">{subtitle}</p>
+    <div className="absolute inset-0 flex items-center justify-center px-10 py-6">
+      <div className="relative h-[108px] w-[108px] shadow-[0px_0px_50px_0px_rgba(0,0,0,0.06)]">
+        <Image
+          src={PUBLIC_DESIGNS_CARDS_VARIANT1.octoAppIcon}
+          alt="OCTO Merchant app icon"
+          fill
+          unoptimized
+          className="object-cover"
+          sizes="108px"
+        />
       </div>
     </div>
   );
 }
 
-function DesignsFilterRow() {
+function DesignsDsVariant1Mockup() {
   return (
-    <div className="flex flex-wrap gap-[14px]" role="toolbar" aria-label="Design categories">
-      {FILTER_LABELS.map((label, index) => (
-        <button
-          key={label}
-          type="button"
-          className={cn(
-            "inline-flex h-11 shrink-0 items-center justify-center rounded-[230px] px-6 text-base leading-[21px] transition-colors",
-            index === 0 ? "bg-[#F2F2F2] text-black" : "bg-transparent text-[#707070] hover:bg-[#F2F2F2]",
-          )}
-        >
-          {label}
-        </button>
-      ))}
+    <div className="absolute inset-0 flex items-center justify-center px-10 py-6">
+      <div className="relative h-[77px] w-[140px] drop-shadow-[0px_0px_43.75px_rgba(0,0,0,0.06)]">
+        <Image
+          src={PUBLIC_DESIGNS_CARDS_VARIANT1.desaSeminyakLogo}
+          alt="Desa Seminyak logo"
+          fill
+          unoptimized
+          className="object-contain"
+          sizes="140px"
+        />
+      </div>
+    </div>
+  );
+}
+
+function DesignsSfsVariant1Mockup() {
+  return (
+    <div className="absolute inset-0 flex items-center justify-center px-10 py-6">
+      <div className="flex w-[246px] max-w-full shrink-0 items-center gap-[10px] drop-shadow-[0px_0px_24.899px_rgba(0,0,0,0.06)]">
+        <div className="relative h-[72px] w-[72px] shrink-0">
+          <Image
+            src={PUBLIC_DESIGNS_CARDS_VARIANT1.sfsMark}
+            alt=""
+            fill
+            unoptimized
+            className="object-cover"
+            sizes="72px"
+          />
+        </div>
+        <p className="shrink-0 text-center text-[30px] font-bold leading-[33px] tracking-normal text-[#1979F5]">SEKURITAS</p>
+      </div>
     </div>
   );
 }
@@ -178,11 +193,6 @@ export function DesignsPage() {
           </p>
         </div>
 
-        {/* Filters → grid: 48px (mb-12) */}
-        <div className="mb-12">
-          <DesignsFilterRow />
-        </div>
-
         {/* Grid: column gap 24px; row gap 24px — lg: two columns 1fr matching 648+24+648 */}
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           {/* Left column */}
@@ -198,11 +208,36 @@ export function DesignsPage() {
             />
 
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-              <DesignsPlaceholderCard title="Design preview" subtitle="Web · Coming soon" />
-              <DesignsPlaceholderCard title="Brand system" subtitle="Brand · Coming soon" />
+              <DesignsFeaturedDesignCard
+                cardKey="octo"
+                title="OCTO Merchant"
+                subtitle="Mobile | Merchant App"
+                href={OCTO_HREF}
+                mockupPaddingClass="px-0 py-0"
+                renderMockup={() => <DesignsOctoVariant1Mockup />}
+                {...cardShellProps}
+              />
+              <DesignsFeaturedDesignCard
+                cardKey="ds"
+                title="Desa Seminyak"
+                subtitle="Web | Others"
+                href={DS_HREF}
+                revealStatus="preview"
+                mockupPaddingClass="px-0 py-0"
+                renderMockup={() => <DesignsDsVariant1Mockup />}
+                {...cardShellProps}
+              />
             </div>
 
-            <DesignsPlaceholderCard title="About this project" subtitle="Internal · Placeholder layout" />
+            <DesignsFeaturedDesignCard
+              cardKey="sfs"
+              title="sfsekuritas.co.id"
+              subtitle="Web | Fintech"
+              href={SFS_HREF}
+              mockupPaddingClass="px-0 py-0"
+              renderMockup={() => <DesignsSfsVariant1Mockup />}
+              {...cardShellProps}
+            />
 
             <DesignsFeaturedDesignCard
               cardKey="b2b"

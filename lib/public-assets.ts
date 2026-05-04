@@ -16,6 +16,55 @@ export const PUBLIC_ABOUT = {
   ],
 } as const;
 
+/** Homepage hero marquee mockups — `public/home/marquee/*.png` */
+export const PUBLIC_HOME_MARQUEE = {
+  b2bMockup: "/home/marquee/b2b-mockup.png",
+  comproMockup: "/home/marquee/compro-mockup.png",
+  tradingMockup: "/home/marquee/trading-mockup.png",
+  merchantMockup: "/home/marquee/merchant-mockup.png",
+  ewalletMockup: "/home/marquee/ewallet-mockup.png",
+} as const;
+
+/** Tools dock icons — `public/home/dock/*.png` */
+export const PUBLIC_HOME_DOCK = {
+  figma: "/home/dock/figma.png",
+  cursor: "/home/dock/cursor.png",
+  affinity: "/home/dock/affinity.png",
+  githubDesktop: "/home/dock/github-desktop.png",
+  notion: "/home/dock/notion.png",
+  framer: "/home/dock/framer.png",
+  spotify: "/home/dock/spotify.png",
+  whatsapp: "/home/dock/whatsapp.png",
+  finder: "/home/dock/finder.png",
+  trash: "/home/dock/trash.png",
+} as const;
+
+/** Featured card shell rasters (replaces expired Figma MCP URLs). */
+export const PUBLIC_HOME_FEATURED_CARD = {
+  bprLaptopShell: "/home/featured/bpr-laptop-shell.png",
+  sfastCardHero: "/home/featured/sfast-card-hero.png",
+  personalPhoneFrame: "/home/featured/personal-phone-frame.png",
+} as const;
+
+/** SFAST dual-phone mockup — masks + screens + shells */
+export const PUBLIC_HOME_SFAST_MOCKUP = {
+  leftShell: "/home/featured/sfast/left-shell.png",
+  rightShell: "/home/featured/sfast/right-shell.png",
+  leftScreenDefault: "/home/featured/sfast/left-screen-default.png",
+  leftScreenHover: "/home/featured/sfast/left-screen-hover.png",
+  rightScreenDefault: "/home/featured/sfast/right-screen-default.png",
+  rightScreenHover: "/home/featured/sfast/right-screen-hover.png",
+  lightScreenMask: "/home/featured/sfast/light-screen-mask.png",
+  darkScreenMask: "/home/featured/sfast/dark-screen-mask.png",
+} as const;
+
+/** Designs page — Figma `Variant 1` mockup assets ([OCTO](https://www.figma.com/design/bPIWmX1Vl3Jn1C7WkYUZKF/Haekal-2026--Copy-?node-id=42439-39252), [DS](https://www.figma.com/design/bPIWmX1Vl3Jn1C7WkYUZKF/Haekal-2026--Copy-?node-id=42441-39457), [SFS](https://www.figma.com/design/bPIWmX1Vl3Jn1C7WkYUZKF/Haekal-2026--Copy-?node-id=42441-46429)). */
+export const PUBLIC_DESIGNS_CARDS_VARIANT1 = {
+  octoAppIcon: "/designs/cards-variant1/octo-app-icon.png",
+  desaSeminyakLogo: "/designs/cards-variant1/desa-seminyak-logo.png",
+  sfsMark: "/designs/cards-variant1/sfs-mark.png",
+} as const;
+
 /** Homepage Featured Designs — local mockup slices */
 export const PUBLIC_HOME_FEATURED = {
   bpr: {

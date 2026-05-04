@@ -9,7 +9,7 @@ import {
   isToolsDockTourSuppressedForThisLoad,
   markToolsDockTourSuppressedForThisLoad,
 } from "@/lib/tools-dock-tour-suppress-until-reload";
-import { PUBLIC_BRAND } from "@/lib/public-assets";
+import { PUBLIC_BRAND, PUBLIC_HOME_DOCK, PUBLIC_HOME_MARQUEE } from "@/lib/public-assets";
 import {
   ArrowRevealButton,
   ArrowRevealText,
@@ -40,8 +40,8 @@ type MarqueeItem = {
   hoverCardBg?: string;
   hoverTextColor?: string;
   defaultImageUrl?: string;
-  mediaWidth?: number;
-  mediaHeight?: number;
+  /** Figma Variant 1: mockup cluster max width inside 312px frame (px). */
+  mockupMaxWidth?: number;
 };
 
 const FALLBACK_ERROR_ROUTE = "/not-found";
@@ -64,9 +64,8 @@ const marqueeItems: MarqueeItem[] = [
     href: FALLBACK_ERROR_ROUTE,
     kind: "mockup",
     defaultCardBg: "#B48CFF",
-    defaultImageUrl: "https://www.figma.com/api/mcp/asset/2d44c91f-075a-46ae-88b3-4cc9d66abc94",
-    mediaWidth: 272,
-    mediaHeight: 186,
+    defaultImageUrl: PUBLIC_HOME_MARQUEE.b2bMockup,
+    mockupMaxWidth: 282,
   },
   {
     key: "compro-hero",
@@ -85,9 +84,8 @@ const marqueeItems: MarqueeItem[] = [
     href: FALLBACK_ERROR_ROUTE,
     kind: "mockup",
     defaultCardBg: "#FF814D",
-    defaultImageUrl: "https://www.figma.com/api/mcp/asset/51a71833-419a-4070-b919-edc3fe0a9884",
-    mediaWidth: 272,
-    mediaHeight: 186,
+    defaultImageUrl: PUBLIC_HOME_MARQUEE.comproMockup,
+    mockupMaxWidth: 282,
   },
   {
     key: "trading-hero",
@@ -106,9 +104,8 @@ const marqueeItems: MarqueeItem[] = [
     href: FALLBACK_ERROR_ROUTE,
     kind: "mockup",
     defaultCardBg: "#73B8FF",
-    defaultImageUrl: "https://www.figma.com/api/mcp/asset/04b5daca-64b8-4b21-84ff-44be593cc8f2",
-    mediaWidth: 206,
-    mediaHeight: 186,
+    defaultImageUrl: PUBLIC_HOME_MARQUEE.tradingMockup,
+    mockupMaxWidth: 206,
   },
   {
     key: "merchant-hero",
@@ -127,9 +124,8 @@ const marqueeItems: MarqueeItem[] = [
     href: FALLBACK_ERROR_ROUTE,
     kind: "mockup",
     defaultCardBg: "#FF7878",
-    defaultImageUrl: "https://www.figma.com/api/mcp/asset/887cfb82-fe15-469a-8872-350b9f376ecf",
-    mediaWidth: 272,
-    mediaHeight: 186,
+    defaultImageUrl: PUBLIC_HOME_MARQUEE.merchantMockup,
+    mockupMaxWidth: 282,
   },
   {
     key: "ewallet-hero",
@@ -148,9 +144,8 @@ const marqueeItems: MarqueeItem[] = [
     href: FALLBACK_ERROR_ROUTE,
     kind: "mockup",
     defaultCardBg: "#FEE97F",
-    defaultImageUrl: "https://www.figma.com/api/mcp/asset/6b25901b-42d5-4871-8e31-f5700949cc2f",
-    mediaWidth: 174,
-    mediaHeight: 186,
+    defaultImageUrl: PUBLIC_HOME_MARQUEE.ewalletMockup,
+    mockupMaxWidth: 174,
   },
 ];
 
@@ -169,16 +164,16 @@ const instagramLinks = {
 };
 
 const dockApps = [
-  { name: "Figma", icon: "https://www.figma.com/api/mcp/asset/3928281a-3d0f-4b48-b7b7-adc64467900d" },
-  { name: "Cursor", icon: "https://www.figma.com/api/mcp/asset/c4008ecb-0f80-475f-8f10-1e21da0f250c" },
-  { name: "Affinity", icon: "https://www.figma.com/api/mcp/asset/7077e9dd-7ed2-4b04-95e6-2112418ef724" },
-  { name: "Github Desktop", icon: "https://www.figma.com/api/mcp/asset/0022a158-2622-49f7-85b1-51899b386bfe" },
-  { name: "Notion", icon: "https://www.figma.com/api/mcp/asset/99e8f6a5-ae66-4dcd-ac56-4bde678ac862" },
-  { name: "Framer", icon: "https://www.figma.com/api/mcp/asset/690d584b-d135-4799-b944-1b75510e8e5f" },
-  { name: "Spotify", icon: "https://www.figma.com/api/mcp/asset/cad70b18-1f0b-48a9-b78d-2cbb108071ce" },
-  { name: "WhatsApp", icon: "https://www.figma.com/api/mcp/asset/15c7de87-fd3a-4e2f-9fc6-1110cf302c97" },
-  { name: "Finder", icon: "https://www.figma.com/api/mcp/asset/c7b30e4e-76ac-4525-a021-05506e87a664" },
-  { name: "Trash", icon: "https://www.figma.com/api/mcp/asset/5271f34d-aa24-47e4-9454-6abff83ccbf0" },
+  { name: "Figma", icon: PUBLIC_HOME_DOCK.figma },
+  { name: "Cursor", icon: PUBLIC_HOME_DOCK.cursor },
+  { name: "Affinity", icon: PUBLIC_HOME_DOCK.affinity },
+  { name: "Github Desktop", icon: PUBLIC_HOME_DOCK.githubDesktop },
+  { name: "Notion", icon: PUBLIC_HOME_DOCK.notion },
+  { name: "Framer", icon: PUBLIC_HOME_DOCK.framer },
+  { name: "Spotify", icon: PUBLIC_HOME_DOCK.spotify },
+  { name: "WhatsApp", icon: PUBLIC_HOME_DOCK.whatsapp },
+  { name: "Finder", icon: PUBLIC_HOME_DOCK.finder },
+  { name: "Trash", icon: PUBLIC_HOME_DOCK.trash },
 ];
 
 const PREMIUM_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
@@ -309,14 +304,13 @@ function HeroSection({
           <div className="max-w-[640px] space-y-4">
             <p className="text-base leading-6 text-black">Bagas Al Haekal Nasution</p>
             <h1 className="text-[38px] leading-[46px] tracking-[-1px] text-black lg:text-[48px] lg:leading-[56px]">
-              Design Digital Products
+              Making Complexity
               <br />
-              for Financial Tech
+              Feel Simple
             </h1>
             <p className="max-w-[640px] text-base leading-6 text-[#707070]">
-              Designing digital products across finance, web, and business systems.
-              <br />
-              Built and shipped.
+              Product designer helping turn business needs and complex systems into digital products that feel
+              simple and useful.
             </p>
           </div>
           <div className="inline-flex items-center gap-4 rounded-[1000px] border border-black/5 bg-white px-4 py-[6px] pl-[6px]">
@@ -797,29 +791,33 @@ function MarqueeCard({
               transition={{ duration: 0.62, ease: PREMIUM_EASE }}
             />
             {item.defaultImageUrl && (
-              <motion.div
-                className="relative z-10 origin-center"
-                initial={false}
-                animate={{ scale: isCardHovered ? 1.02 : 1 }}
-                transition={{ duration: 0.5, ease: PREMIUM_EASE }}
-              >
-                <Image
-                  src={item.defaultImageUrl}
-                  alt={item.title}
-                  width={item.mediaWidth ?? 272}
-                  height={item.mediaHeight ?? 186}
-                  unoptimized
-                  draggable={false}
-                  className={cn(
-                    "relative z-10 object-contain",
-                    item.key === "ewallet-mockup"
-                      ? "mx-auto mt-6 h-[186px] w-[174px]"
-                      : item.key === "trading-mockup"
-                        ? "mx-auto mt-6 h-[186px] w-[206px]"
-                        : "mx-auto mt-6 h-[186px] w-[272px]",
-                  )}
-                />
-              </motion.div>
+              <div className="relative z-10 flex h-full w-full flex-col items-center pt-6">
+                <motion.div
+                  className="relative flex h-[186px] w-full shrink-0 items-start justify-center overflow-hidden"
+                  initial={false}
+                  animate={{ scale: isCardHovered ? 1.02 : 1 }}
+                  transition={{ duration: 0.5, ease: PREMIUM_EASE }}
+                  style={{ transformOrigin: "50% 0%" }}
+                >
+                  <div
+                    className="relative shrink-0"
+                    style={{
+                      width: item.mockupMaxWidth ?? 282,
+                      height: 186,
+                    }}
+                  >
+                    <Image
+                      src={item.defaultImageUrl}
+                      alt={item.title}
+                      fill
+                      sizes={`${item.mockupMaxWidth ?? 282}px`}
+                      unoptimized
+                      draggable={false}
+                      className="object-contain object-top"
+                    />
+                  </div>
+                </motion.div>
+              </div>
             )}
           </motion.div>
           <ArrowRevealText
