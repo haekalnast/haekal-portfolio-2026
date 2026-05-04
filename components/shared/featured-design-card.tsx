@@ -11,6 +11,21 @@ import { useScrollRevealActive } from "@/lib/use-scroll-reveal-active";
 const PREMIUM_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 const PREMIUM_DURATION = 0.32;
 
+/** Optional overrides for `FeaturedDesignCardShell` (designs page + home). */
+export type FeaturedCardShellLayoutOverrides = Partial<{
+  mockupInnerClassName: string;
+  titleBlockClassName: string;
+  articleCollapsed: string;
+  articleRevealed: string;
+}>;
+
+const DEFAULT_FEATURED_CARD_SHELL_LAYOUT = {
+  mockupInnerClassName: "h-[444px]",
+  titleBlockClassName: "pointer-events-none mt-4 lg:absolute lg:left-0 lg:top-[460px] lg:mt-0",
+  articleCollapsed: "h-[444px] lg:h-[444px]",
+  articleRevealed: "h-[512px] lg:h-[444px]",
+} as const;
+
 export type HomeFeaturedCardId = "bpr" | "sfast" | "personal";
 
 export type HomeFeaturedCard = {
@@ -458,6 +473,7 @@ export function DesignsFeaturedDesignCard({
   setHoveredKey,
   mockupPaddingClass,
   renderMockup,
+  shellLayout,
 }: {
   cardKey: string;
   title: string;
@@ -473,6 +489,7 @@ export function DesignsFeaturedDesignCard({
   setHoveredKey: (id: string | null) => void;
   mockupPaddingClass: string;
   renderMockup: (hovered: boolean) => ReactNode;
+  shellLayout?: FeaturedCardShellLayoutOverrides;
 }) {
   const isRevealed = revealedKey === cardKey;
   const isMockupHovered = hoveredKey === cardKey;
@@ -495,6 +512,7 @@ export function DesignsFeaturedDesignCard({
       isRevealState={isRevealState}
       mockupPaddingClass={mockupPaddingClass}
       mockup={renderMockup(isHoverState)}
+      shellLayout={shellLayout}
       onMouseEnter={() => setHoveredKey(cardKey)}
       onMouseLeave={() => {
         setHoveredKey(null);
@@ -524,6 +542,7 @@ function FeaturedDesignCardShell({
   isRevealState,
   mockupPaddingClass,
   mockup,
+  shellLayout,
   onMouseEnter,
   onMouseLeave,
   onRevealHoverStart,
@@ -540,19 +559,18 @@ function FeaturedDesignCardShell({
   isRevealState: boolean;
   mockupPaddingClass: string;
   mockup: ReactNode;
+  shellLayout?: FeaturedCardShellLayoutOverrides;
   onMouseEnter: () => void;
   onMouseLeave: () => void;
   onRevealHoverStart: () => void;
   onRevealHoverEnd: () => void;
 }) {
   const isPreviewStatus = revealStatus === "preview";
+  const layout = { ...DEFAULT_FEATURED_CARD_SHELL_LAYOUT, ...shellLayout };
   return (
     <motion.article
       ref={cardRef}
-      className={cn(
-        "relative lg:h-[444px]",
-        isRevealState ? "h-[512px]" : "h-[444px]",
-      )}
+      className={cn("relative", isRevealState ? layout.articleRevealed : layout.articleCollapsed)}
       initial={false}
       animate={getGlobalFocusMotionAnimate(isGlobalDimmed)}
       transition={{ duration: PREMIUM_DURATION, ease: PREMIUM_EASE }}
@@ -560,7 +578,12 @@ function FeaturedDesignCardShell({
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
-      <div className="relative h-[444px] w-full overflow-hidden rounded-[20px] bg-[#F2F2F2]">
+      <div
+        className={cn(
+          "relative w-full overflow-hidden rounded-[20px] bg-[#F2F2F2]",
+          layout.mockupInnerClassName,
+        )}
+      >
         <motion.div
           className={cn("relative h-full w-full", mockupPaddingClass)}
           initial={false}
@@ -592,7 +615,7 @@ function FeaturedDesignCardShell({
       </div>
 
       <motion.div
-        className="pointer-events-none mt-4 lg:absolute lg:left-0 lg:top-[460px] lg:mt-0"
+        className={layout.titleBlockClassName}
         initial={false}
         animate={{ opacity: isRevealState ? 1 : 0, y: isRevealState ? 0 : 8 }}
         transition={{ duration: 0.36, ease: PREMIUM_EASE, delay: isRevealState ? 0.2 : 0 }}

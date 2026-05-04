@@ -62,7 +62,8 @@ export const PUBLIC_HOME_SFAST_MOCKUP = {
 export const PUBLIC_DESIGNS_CARDS_VARIANT1 = {
   octoAppIcon: "/designs/cards-variant1/octo-app-icon.png",
   desaSeminyakLogo: "/designs/cards-variant1/desa-seminyak-logo.png",
-  sfsMark: "/designs/cards-variant1/sfs-mark.png",
+  /** Full wordmark 246×72 (mark + “SEKURITAS” in raster). */
+  sfsLogo: "/designs/cards-variant1/sfs-logo.png",
 } as const;
 
 /** Homepage Featured Designs — local mockup slices */
