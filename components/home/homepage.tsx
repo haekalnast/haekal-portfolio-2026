@@ -40,8 +40,9 @@ type MarqueeItem = {
   hoverCardBg?: string;
   hoverTextColor?: string;
   defaultImageUrl?: string;
-  /** Figma Variant 1: mockup cluster max width inside 312px frame (px). */
-  mockupMaxWidth?: number;
+  /** Figma Variant 1 mockup layer size (px), fixed display box. */
+  mockupWidth?: number;
+  mockupHeight?: number;
 };
 
 const FALLBACK_ERROR_ROUTE = "/not-found";
@@ -65,7 +66,8 @@ const marqueeItems: MarqueeItem[] = [
     kind: "mockup",
     defaultCardBg: "#B48CFF",
     defaultImageUrl: PUBLIC_HOME_MARQUEE.b2bMockup,
-    mockupMaxWidth: 282,
+    mockupWidth: 282,
+    mockupHeight: 216,
   },
   {
     key: "compro-hero",
@@ -85,7 +87,8 @@ const marqueeItems: MarqueeItem[] = [
     kind: "mockup",
     defaultCardBg: "#FF814D",
     defaultImageUrl: PUBLIC_HOME_MARQUEE.comproMockup,
-    mockupMaxWidth: 282,
+    mockupWidth: 282,
+    mockupHeight: 195,
   },
   {
     key: "trading-hero",
@@ -105,7 +108,8 @@ const marqueeItems: MarqueeItem[] = [
     kind: "mockup",
     defaultCardBg: "#73B8FF",
     defaultImageUrl: PUBLIC_HOME_MARQUEE.tradingMockup,
-    mockupMaxWidth: 206,
+    mockupWidth: 206,
+    mockupHeight: 332,
   },
   {
     key: "merchant-hero",
@@ -125,7 +129,8 @@ const marqueeItems: MarqueeItem[] = [
     kind: "mockup",
     defaultCardBg: "#FF7878",
     defaultImageUrl: PUBLIC_HOME_MARQUEE.merchantMockup,
-    mockupMaxWidth: 282,
+    mockupWidth: 282,
+    mockupHeight: 195,
   },
   {
     key: "ewallet-hero",
@@ -145,7 +150,8 @@ const marqueeItems: MarqueeItem[] = [
     kind: "mockup",
     defaultCardBg: "#FEE97F",
     defaultImageUrl: PUBLIC_HOME_MARQUEE.ewalletMockup,
-    mockupMaxWidth: 174,
+    mockupWidth: 174,
+    mockupHeight: 352,
   },
 ];
 
@@ -790,35 +796,34 @@ function MarqueeCard({
               }}
               transition={{ duration: 0.62, ease: PREMIUM_EASE }}
             />
-            {item.defaultImageUrl && (
-              <div className="relative z-10 flex h-full w-full flex-col items-center pt-6">
-                <motion.div
-                  className="relative flex h-[186px] w-full shrink-0 items-start justify-center overflow-hidden"
-                  initial={false}
-                  animate={{ scale: isCardHovered ? 1.02 : 1 }}
-                  transition={{ duration: 0.5, ease: PREMIUM_EASE }}
-                  style={{ transformOrigin: "50% 0%" }}
-                >
-                  <div
-                    className="relative shrink-0"
+            {item.defaultImageUrl &&
+              item.mockupWidth != null &&
+              item.mockupHeight != null && (
+                <div className="relative z-10 flex w-full flex-col items-center pt-6">
+                  <motion.div
+                    className="relative shrink-0 overflow-hidden"
+                    initial={false}
+                    animate={{ scale: isCardHovered ? 1.02 : 1 }}
+                    transition={{ duration: 0.5, ease: PREMIUM_EASE }}
                     style={{
-                      width: item.mockupMaxWidth ?? 282,
-                      height: 186,
+                      width: item.mockupWidth,
+                      height: item.mockupHeight,
+                      transformOrigin: "50% 0%",
                     }}
                   >
                     <Image
                       src={item.defaultImageUrl}
                       alt={item.title}
-                      fill
-                      sizes={`${item.mockupMaxWidth ?? 282}px`}
+                      width={item.mockupWidth}
+                      height={item.mockupHeight}
+                      sizes={`${item.mockupWidth}px`}
                       unoptimized
                       draggable={false}
-                      className="object-contain object-top"
+                      className="relative z-10 block h-full w-full object-cover object-top"
                     />
-                  </div>
-                </motion.div>
-              </div>
-            )}
+                  </motion.div>
+                </div>
+              )}
           </motion.div>
           <ArrowRevealText
             isActive={isIconHovered}
