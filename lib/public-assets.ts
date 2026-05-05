@@ -61,7 +61,8 @@ export const PUBLIC_HOME_SFAST_MOCKUP = {
 
 /** Designs page Variant 1 logos — `Image fill` + `object-contain` in fixed frames (same pattern as About journal collateral/packaging). */
 export const PUBLIC_DESIGNS_CARDS_VARIANT1 = {
-  octoAppIcon: "/designs/cards-variant1/octo-app-icon.png",
+  /** Cache-bust when `octo-app-icon.png` plate-normalization changes (browser/CDN aggressive caching). */
+  octoAppIcon: "/designs/cards-variant1/octo-app-icon.png?v=plate-v6",
   desaSeminyakLogo: "/designs/cards-variant1/desa-seminyak-logo.png",
   sfsLogo: "/designs/cards-variant1/sfs-logo.png",
 } as const;

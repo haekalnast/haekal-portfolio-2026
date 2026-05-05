@@ -17,6 +17,8 @@ export type FeaturedCardShellLayoutOverrides = Partial<{
   titleBlockClassName: string;
   articleCollapsed: string;
   articleRevealed: string;
+  /** Replaces default title typography when present (merged via `cn`, Tailwind-merge resolves conflicts). */
+  titleHeadingClassName: string;
 }>;
 
 const DEFAULT_FEATURED_CARD_SHELL_LAYOUT = {
@@ -621,7 +623,14 @@ function FeaturedDesignCardShell({
         transition={{ duration: 0.36, ease: PREMIUM_EASE, delay: isRevealState ? 0.2 : 0 }}
       >
         <div className="mb-[6px] flex flex-wrap items-center gap-2">
-          <h3 className="text-[20px] leading-[30px] tracking-[-1px] text-black">{title}</h3>
+          <h3
+            className={cn(
+              "text-[20px] leading-[30px] tracking-[-1px] text-black",
+              shellLayout?.titleHeadingClassName,
+            )}
+          >
+            {title}
+          </h3>
           <span className="inline-flex items-center gap-2 rounded-[8px] border border-[#DEDEE0] bg-[#F2F2F2] px-3 py-[3px] text-base leading-6 text-black">
             <motion.span
               className={cn("inline-block h-2 w-2 rounded-full", isPreviewStatus ? "bg-[#FF9A3D]" : "bg-[#14C95D]")}

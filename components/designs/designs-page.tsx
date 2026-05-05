@@ -34,6 +34,12 @@ const VARIANT1_LOGO_CARD_SHELL: FeaturedCardShellLayoutOverrides = {
 /** Same rhythm as OCTO / DS — mockup H 210, article H 328 (all viewports). */
 const VARIANT1_SFS_CARD_SHELL: FeaturedCardShellLayoutOverrides = VARIANT1_LOGO_CARD_SHELL;
 
+/** OCTO card: title `Heading/H4` from Figma (18 / 20, tracking -1). */
+const OCTO_VARIANT1_CARD_SHELL: FeaturedCardShellLayoutOverrides = {
+  ...VARIANT1_LOGO_CARD_SHELL,
+  titleHeadingClassName: "text-[18px] leading-[20px] tracking-[-1px] text-black",
+};
+
 function LogoMark() {
   return (
     <Link href="/" aria-label="Go to home" className="group relative block h-[27px] w-[124px]">
@@ -69,18 +75,20 @@ function FooterLink({ href, children }: { href: string; children: string }) {
   );
 }
 
-/** Variant 1 logos — same recipe as About `ArrowAdvanceGalleryCard` collateral/packaging: stage `absolute inset-0 flex items-center justify-center px-10 py-6`, then `relative h-[…] w-[…]` + `Image fill object-contain`. Figma: OCTO 108×108, DS 140×78, SFS 246×72. No extra plate behind OCTO. */
+/** OCTO Variant 1 — shadow tracks opaque silhouette (`drop-shadow`); raster plate neutrals normalized to `#F2F2F2` (see `scripts/normalize-octo-icon-plate.py`). */
 function DesignsOctoVariant1Mockup() {
+  const logoSrc = PUBLIC_DESIGNS_CARDS_VARIANT1.octoAppIcon;
   return (
     <div className="absolute inset-0 flex items-center justify-center px-10 py-6">
       <div className="relative h-[108px] w-[108px] shrink-0">
-        <Image
-          src={PUBLIC_DESIGNS_CARDS_VARIANT1.octoAppIcon}
+        <img
+          src={logoSrc}
           alt="OCTO Merchant app icon"
-          fill
-          unoptimized
-          className="object-contain"
-          sizes="108px"
+          width={108}
+          height={108}
+          draggable={false}
+          className="block h-[108px] w-[108px] object-contain"
+          style={{ filter: "drop-shadow(0px 0px 50px rgba(0, 0, 0, 0.06))" }}
         />
       </div>
     </div>
@@ -223,10 +231,10 @@ export function DesignsPage() {
               <DesignsFeaturedDesignCard
                 cardKey="octo"
                 title="OCTO Merchant"
-                subtitle="Mobile | Merchant App"
+                subtitle="Mobile | Fintech"
                 href={OCTO_HREF}
                 mockupPaddingClass="px-0 py-0"
-                shellLayout={VARIANT1_LOGO_CARD_SHELL}
+                shellLayout={OCTO_VARIANT1_CARD_SHELL}
                 renderMockup={() => <DesignsOctoVariant1Mockup />}
                 {...cardShellProps}
               />
