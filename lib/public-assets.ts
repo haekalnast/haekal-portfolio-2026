@@ -58,6 +58,12 @@ export const PUBLIC_HOME_SFAST_MOCKUP = {
   darkScreenMask: "/home/featured/sfast/dark-screen-mask.svg",
 } as const;
 
+/** Designs page Variant 1 logos — centered logo cards. */
+export const PUBLIC_DESIGNS_CARDS_VARIANT1 = {
+  octoAppIcon: "/designs/cards-variant1/octo-app-icon.png",
+  desaSeminyakLogo: "/designs/cards-variant1/desa-seminyak-logo.png",
+} as const;
+
 /** Homepage Featured Designs — local mockup slices */
 export const PUBLIC_HOME_FEATURED = {
   bpr: {

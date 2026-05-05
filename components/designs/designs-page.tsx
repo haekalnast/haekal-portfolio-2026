@@ -11,13 +11,28 @@ import {
   DesignsFeaturedDesignCard,
   PersonalMockup,
   SFASTMockup,
+  type FeaturedCardShellLayoutOverrides,
 } from "@/components/shared/featured-design-card";
 import { getGlobalFocusMotionAnimate } from "@/components/shared/arrow-reveal";
-import { PUBLIC_BRAND, PUBLIC_DESIGNS_MOCKUPS } from "@/lib/public-assets";
+import { PUBLIC_BRAND, PUBLIC_DESIGNS_CARDS_VARIANT1, PUBLIC_DESIGNS_MOCKUPS } from "@/lib/public-assets";
 
 const PREMIUM_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 const PREMIUM_DURATION = 0.32;
 const FALLBACK = "/not-found";
+const OCTO_HREF = "https://play.google.com/store/apps/details?id=com.cimbedc&pcampaignid=web_share";
+const DS_HREF = "https://desa-seminyak.vercel.app/";
+
+const VARIANT1_LOGO_CARD_SHELL: FeaturedCardShellLayoutOverrides = {
+  mockupInnerClassName: "h-[210px]",
+  titleBlockClassName: "pointer-events-none mt-6 lg:absolute lg:left-0 lg:mt-0 lg:top-[234px]",
+  articleCollapsed: "h-[328px] lg:h-[328px]",
+  articleRevealed: "h-[512px] lg:h-[408px]",
+};
+
+const OCTO_VARIANT1_CARD_SHELL: FeaturedCardShellLayoutOverrides = {
+  ...VARIANT1_LOGO_CARD_SHELL,
+  titleHeadingClassName: "text-[18px] leading-[20px] tracking-[-1px] text-black",
+};
 
 function LogoMark() {
   return (
@@ -51,6 +66,41 @@ function FooterLink({ href, children }: { href: string; children: string }) {
         <path d="M14.1667 5.83203L5.625 14.3737" stroke="#141414" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     </Link>
+  );
+}
+
+function DesignsOctoVariant1Mockup() {
+  return (
+    <div className="absolute inset-0 flex items-center justify-center px-10 py-6">
+      <div className="relative h-[108px] w-[108px] shrink-0">
+        <img
+          src={PUBLIC_DESIGNS_CARDS_VARIANT1.octoAppIcon}
+          alt="OCTO Merchant app icon"
+          width={108}
+          height={108}
+          draggable={false}
+          className="block h-[108px] w-[108px] object-contain"
+          style={{ filter: "drop-shadow(0px 0px 50px rgba(0, 0, 0, 0.06))" }}
+        />
+      </div>
+    </div>
+  );
+}
+
+function DesignsDsVariant1Mockup() {
+  return (
+    <div className="absolute inset-0 flex items-center justify-center px-10 py-6">
+      <div className="relative h-[78px] w-[140px] shrink-0">
+        <Image
+          src={PUBLIC_DESIGNS_CARDS_VARIANT1.desaSeminyakLogo}
+          alt="Desa Seminyak logo"
+          fill
+          unoptimized
+          className="object-contain"
+          sizes="140px"
+        />
+      </div>
+    </div>
   );
 }
 
@@ -151,6 +201,30 @@ export function DesignsPage() {
               renderMockup={(hovered) => <BPRMockup hovered={hovered} />}
               {...cardShellProps}
             />
+
+            <div className="grid grid-cols-1 gap-[24px] lg:grid-cols-2">
+              <DesignsFeaturedDesignCard
+                cardKey="octo"
+                title="OCTO Merchant"
+                subtitle="Mobile | Fintech"
+                href={OCTO_HREF}
+                mockupPaddingClass="px-0 py-0"
+                shellLayout={OCTO_VARIANT1_CARD_SHELL}
+                renderMockup={() => <DesignsOctoVariant1Mockup />}
+                {...cardShellProps}
+              />
+              <DesignsFeaturedDesignCard
+                cardKey="ds"
+                title="Desa Seminyak"
+                subtitle="Web | Others"
+                href={DS_HREF}
+                revealStatus="preview"
+                mockupPaddingClass="px-0 py-0"
+                shellLayout={VARIANT1_LOGO_CARD_SHELL}
+                renderMockup={() => <DesignsDsVariant1Mockup />}
+                {...cardShellProps}
+              />
+            </div>
 
             <DesignsFeaturedDesignCard
               cardKey="b2b"
