@@ -126,9 +126,9 @@ export function DesignsPage() {
         </div>
       </header>
 
-      <main className="mx-auto w-full max-w-[1440px] px-4 pt-[124px] sm:px-10 lg:px-[60px]">
+      <main className="mx-auto w-full max-w-[1440px] px-4 pt-[124px] pb-[108px] sm:px-10 lg:px-[60px] lg:pb-[124px]">
         <motion.div
-          className="max-w-[640px] flex flex-col gap-[24px] pb-[24px]"
+          className="max-w-[640px] flex flex-col gap-[24px] pb-[48px]"
           initial={false}
           animate={getGlobalFocusMotionAnimate(activeArrowId !== null)}
           transition={{ duration: PREMIUM_DURATION, ease: PREMIUM_EASE }}
@@ -244,11 +244,11 @@ export function DesignsPage() {
         animate={getGlobalFocusMotionAnimate(isGlobalArrowFocus)}
         transition={{ duration: PREMIUM_DURATION, ease: PREMIUM_EASE }}
       >
-        <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-[24px] px-4 pb-[124px] sm:px-10 lg:px-[60px]">
-          <div className="flex flex-col gap-[24px] py-[24px]">
-            <div className="flex items-start justify-between gap-[24px]">
+        <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-16 px-4 pb-[124px] sm:px-10 lg:px-[60px]">
+          <div className="flex flex-col gap-16 py-8 sm:py-20">
+            <div className="flex items-start justify-between gap-8 sm:gap-6">
               <LogoMark />
-              <nav className="flex flex-col items-end gap-[24px] text-base leading-6 text-black sm:flex-row sm:items-center">
+              <nav className="flex flex-col items-end gap-6 text-base leading-6 text-black sm:flex-row sm:items-center sm:gap-6">
                 <FooterLink href="https://docs.google.com/document/d/1rFAuSJrV4IpffI2PRfBmjHlHG5QDDF6L/edit?usp=sharing&ouid=107776713613949709441&rtpof=true&sd=true">
                   Resume
                 </FooterLink>
