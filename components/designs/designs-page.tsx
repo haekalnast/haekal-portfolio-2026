@@ -21,17 +21,25 @@ const PREMIUM_DURATION = 0.32;
 const FALLBACK = "/not-found";
 const OCTO_HREF = "https://play.google.com/store/apps/details?id=com.cimbedc&pcampaignid=web_share";
 const DS_HREF = "https://desa-seminyak.vercel.app/";
+const SFS_HREF = "https://www.sfsekuritas.co.id/";
 
 const VARIANT1_LOGO_CARD_SHELL: FeaturedCardShellLayoutOverrides = {
   mockupInnerClassName: "h-[210px]",
   titleBlockClassName: "pointer-events-none mt-6 lg:absolute lg:left-0 lg:mt-0 lg:top-[234px]",
   articleCollapsed: "h-[210px] lg:h-[210px]",
-  articleRevealed: "h-[294px] lg:h-[408px]",
+  articleRevealed: "h-[294px] lg:h-[210px]",
 };
 
 const OCTO_VARIANT1_CARD_SHELL: FeaturedCardShellLayoutOverrides = {
   ...VARIANT1_LOGO_CARD_SHELL,
   titleHeadingClassName: "text-[18px] leading-[20px] tracking-[-1px] text-black",
+};
+
+const VARIANT1_SFS_CARD_SHELL: FeaturedCardShellLayoutOverrides = {
+  mockupInnerClassName: "h-[210px]",
+  titleBlockClassName: "pointer-events-none mt-6 lg:absolute lg:left-0 lg:mt-0 lg:top-[234px]",
+  articleCollapsed: "h-[444px] lg:h-[210px]",
+  articleRevealed: "h-[444px] lg:h-[210px]",
 };
 
 function LogoMark() {
@@ -98,6 +106,23 @@ function DesignsDsVariant1Mockup() {
           unoptimized
           className="object-contain"
           sizes="140px"
+        />
+      </div>
+    </div>
+  );
+}
+
+function DesignsSfsVariant1Mockup() {
+  return (
+    <div className="absolute inset-0 flex items-center justify-center px-10 py-6">
+      <div className="relative h-[72px] w-[246px] shrink-0">
+        <Image
+          src={PUBLIC_DESIGNS_CARDS_VARIANT1.sfsLogo}
+          alt="SF Sekuritas"
+          fill
+          unoptimized
+          className="object-contain"
+          sizes="246px"
         />
       </div>
     </div>
@@ -225,6 +250,17 @@ export function DesignsPage() {
                 {...cardShellProps}
               />
             </div>
+
+            <DesignsFeaturedDesignCard
+              cardKey="sfs"
+              title="sfsekuritas.co.id"
+              subtitle="Web | Fintech"
+              href={SFS_HREF}
+              mockupPaddingClass="px-0 py-0"
+              shellLayout={VARIANT1_SFS_CARD_SHELL}
+              renderMockup={() => <DesignsSfsVariant1Mockup />}
+              {...cardShellProps}
+            />
 
             <DesignsFeaturedDesignCard
               cardKey="b2b"
