@@ -24,9 +24,9 @@ const DS_HREF = "https://desa-seminyak.vercel.app/";
 
 const VARIANT1_LOGO_CARD_SHELL: FeaturedCardShellLayoutOverrides = {
   mockupInnerClassName: "h-[210px]",
-  titleBlockClassName: "pointer-events-none mt-6 lg:absolute lg:left-0 lg:mt-0 lg:top-[226px]",
+  titleBlockClassName: "pointer-events-none mt-6 lg:absolute lg:left-0 lg:mt-0 lg:top-[234px]",
   articleCollapsed: "h-[210px] lg:h-[210px]",
-  articleRevealed: "h-[512px] lg:h-[408px]",
+  articleRevealed: "h-[294px] lg:h-[408px]",
 };
 
 const OCTO_VARIANT1_CARD_SHELL: FeaturedCardShellLayoutOverrides = {
