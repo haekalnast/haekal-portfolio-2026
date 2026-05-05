@@ -31,13 +31,8 @@ const VARIANT1_LOGO_CARD_SHELL: FeaturedCardShellLayoutOverrides = {
   articleRevealed: "h-[512px] lg:h-[408px]",
 };
 
-/** Desktop (lg+): mockup H 210. Tablet/mobile (<lg): mockup H 444. */
-const VARIANT1_SFS_CARD_SHELL: FeaturedCardShellLayoutOverrides = {
-  mockupInnerClassName: "h-[444px] lg:h-[210px]",
-  titleBlockClassName: "pointer-events-none mt-6 lg:absolute lg:left-0 lg:mt-0 lg:top-[234px]",
-  articleCollapsed: "h-[568px] lg:h-[328px]",
-  articleRevealed: "h-[512px] lg:h-[408px]",
-};
+/** Same rhythm as OCTO / DS — mockup H 210, article H 328 (all viewports). */
+const VARIANT1_SFS_CARD_SHELL: FeaturedCardShellLayoutOverrides = VARIANT1_LOGO_CARD_SHELL;
 
 function LogoMark() {
   return (
@@ -74,18 +69,17 @@ function FooterLink({ href, children }: { href: string; children: string }) {
   );
 }
 
-/** Figma `Variant 1` nodes: [OCTO](https://www.figma.com/design/bPIWmX1Vl3Jn1C7WkYUZKF/Haekal-2026--Copy-?node-id=42439-39252), [DS](https://www.figma.com/design/bPIWmX1Vl3Jn1C7WkYUZKF/Haekal-2026--Copy-?node-id=42441-39457), [SFS](https://www.figma.com/design/bPIWmX1Vl3Jn1C7WkYUZKF/Haekal-2026--Copy-?node-id=42441-46429) — assets under `public/designs/cards-variant1/`. */
+/** Variant 1 logos — same recipe as About `ArrowAdvanceGalleryCard` collateral/packaging: stage `absolute inset-0 flex items-center justify-center px-10 py-6`, then `relative h-[…] w-[…]` + `Image fill object-contain`. Figma: OCTO 108×108, DS 140×78, SFS 246×72. No extra plate behind OCTO. */
 function DesignsOctoVariant1Mockup() {
   return (
-    <div className="absolute inset-0 flex items-start justify-center px-10 py-6">
-      <div className="relative h-[108px] w-[108px] shrink-0 shadow-[0px_0px_50px_0px_rgba(0,0,0,0.06)]">
+    <div className="absolute inset-0 flex items-center justify-center px-10 py-6">
+      <div className="relative h-[108px] w-[108px] shrink-0">
         <Image
           src={PUBLIC_DESIGNS_CARDS_VARIANT1.octoAppIcon}
           alt="OCTO Merchant app icon"
-          width={108}
-          height={108}
+          fill
           unoptimized
-          className="block h-[108px] w-[108px] object-cover"
+          className="object-contain"
           sizes="108px"
         />
       </div>
@@ -95,15 +89,14 @@ function DesignsOctoVariant1Mockup() {
 
 function DesignsDsVariant1Mockup() {
   return (
-    <div className="absolute inset-0 flex items-start justify-center px-10 py-6">
-      <div className="relative h-[77px] w-[140px] shrink-0 drop-shadow-[0px_0px_43.75px_rgba(0,0,0,0.06)]">
+    <div className="absolute inset-0 flex items-center justify-center px-10 py-6">
+      <div className="relative h-[78px] w-[140px] shrink-0">
         <Image
           src={PUBLIC_DESIGNS_CARDS_VARIANT1.desaSeminyakLogo}
           alt="Desa Seminyak logo"
-          width={140}
-          height={77}
+          fill
           unoptimized
-          className="block h-[77px] w-[140px] object-contain"
+          className="object-contain"
           sizes="140px"
         />
       </div>
@@ -113,15 +106,14 @@ function DesignsDsVariant1Mockup() {
 
 function DesignsSfsVariant1Mockup() {
   return (
-    <div className="absolute inset-0 flex items-start justify-center px-10 py-6">
-      <div className="relative h-[72px] w-[246px] shrink-0 drop-shadow-[0px_0px_24.899px_rgba(0,0,0,0.06)]">
+    <div className="absolute inset-0 flex items-center justify-center px-10 py-6">
+      <div className="relative h-[72px] w-[246px] shrink-0">
         <Image
           src={PUBLIC_DESIGNS_CARDS_VARIANT1.sfsLogo}
           alt="SF Sekuritas"
-          width={246}
-          height={72}
+          fill
           unoptimized
-          className="block h-[72px] w-[246px] object-contain"
+          className="object-contain"
           sizes="246px"
         />
       </div>

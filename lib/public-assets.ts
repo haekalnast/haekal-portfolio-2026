@@ -54,17 +54,15 @@ export const PUBLIC_HOME_SFAST_MOCKUP = {
   leftScreenHover: "/home/featured/sfast/left-screen-hover.png",
   rightScreenDefault: "/home/featured/sfast/right-screen-default.png",
   rightScreenHover: "/home/featured/sfast/right-screen-hover.png",
-  lightScreenMask: "/home/featured/sfast/light-screen-mask.png",
-  darkScreenMask: "/home/featured/sfast/dark-screen-mask.png",
+  /** SVG masks (must stay SVG — raster PNG MIME broke `-webkit-mask-image` in some browsers). */
+  lightScreenMask: "/home/featured/sfast/light-screen-mask.svg",
+  darkScreenMask: "/home/featured/sfast/dark-screen-mask.svg",
 } as const;
 
-/** Designs page — Figma `Variant 1` mockup assets ([OCTO](https://www.figma.com/design/bPIWmX1Vl3Jn1C7WkYUZKF/Haekal-2026--Copy-?node-id=42439-39252), [DS](https://www.figma.com/design/bPIWmX1Vl3Jn1C7WkYUZKF/Haekal-2026--Copy-?node-id=42441-39457), [SFS](https://www.figma.com/design/bPIWmX1Vl3Jn1C7WkYUZKF/Haekal-2026--Copy-?node-id=42441-46429)). */
+/** Designs page Variant 1 logos — `Image fill` + `object-contain` in fixed frames (same pattern as About journal collateral/packaging). */
 export const PUBLIC_DESIGNS_CARDS_VARIANT1 = {
-  /** Figma `image 694` — 108×108; UI uses object-cover (Variant 1 node 42439:39252). */
   octoAppIcon: "/designs/cards-variant1/octo-app-icon.png",
-  /** Figma `Object [Vectorized]` — export at 140×77. */
   desaSeminyakLogo: "/designs/cards-variant1/desa-seminyak-logo.png",
-  /** Figma frame `42441:46761` — 246×72 (mark 72 + gap + type as flattened PNG). */
   sfsLogo: "/designs/cards-variant1/sfs-logo.png",
 } as const;
 
