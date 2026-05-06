@@ -54,7 +54,7 @@ export const HOME_FEATURED_CARDS: HomeFeaturedCard[] = [
     id: "personal",
     title: "Dipay Personal",
     subtitle: "Mobile | E-Wallet",
-    href: "/not-found",
+    href: "/designs/case/personal",
   },
 ];
 
@@ -465,6 +465,7 @@ export function DesignsFeaturedDesignCard({
   title,
   subtitle,
   href,
+  caseChip,
   revealStatus = "live",
   activeArrowId,
   onArrowHoverStart,
@@ -481,6 +482,7 @@ export function DesignsFeaturedDesignCard({
   title: string;
   subtitle: string;
   href: string;
+  caseChip?: string;
   revealStatus?: "live" | "preview";
   activeArrowId: string | null;
   onArrowHoverStart: (id: string) => void;
@@ -508,6 +510,7 @@ export function DesignsFeaturedDesignCard({
       title={title}
       subtitle={subtitle}
       href={href}
+      caseChip={caseChip}
       revealStatus={revealStatus}
       isGlobalDimmed={isGlobalDimmed}
       isHoverState={isHoverState}
@@ -538,6 +541,7 @@ function FeaturedDesignCardShell({
   title,
   subtitle,
   href,
+  caseChip,
   revealStatus = "live",
   isGlobalDimmed,
   isHoverState,
@@ -555,6 +559,7 @@ function FeaturedDesignCardShell({
   title: string;
   subtitle: string;
   href: string;
+  caseChip?: string;
   revealStatus?: "live" | "preview";
   isGlobalDimmed: boolean;
   isHoverState: boolean;
@@ -609,6 +614,10 @@ function FeaturedDesignCardShell({
           onBlur={onRevealHoverEnd}
           onClick={(event) => {
             event.stopPropagation();
+            if (href.startsWith("/")) {
+              window.location.assign(href);
+              return;
+            }
             window.open(href, "_blank", "noopener,noreferrer");
           }}
         >
@@ -631,6 +640,11 @@ function FeaturedDesignCardShell({
           >
             {title}
           </h3>
+          {caseChip ? (
+            <span className="inline-flex items-center rounded-[8px] border border-[#DEDEE0] bg-[#F2F2F2] px-3 py-[3px] text-base leading-6 text-black">
+              {caseChip}
+            </span>
+          ) : null}
           <span className="inline-flex items-center gap-2 rounded-[8px] border border-[#DEDEE0] bg-[#F2F2F2] px-3 py-[3px] text-base leading-6 text-black">
             <motion.span
               className={cn("inline-block h-2 w-2 rounded-full", isPreviewStatus ? "bg-[#FF9A3D]" : "bg-[#14C95D]")}

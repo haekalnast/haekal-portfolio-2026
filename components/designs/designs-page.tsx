@@ -14,6 +14,7 @@ import {
   type FeaturedCardShellLayoutOverrides,
 } from "@/components/shared/featured-design-card";
 import { getGlobalFocusMotionAnimate } from "@/components/shared/arrow-reveal";
+import { CASE_DESIGNS } from "@/lib/case-designs";
 import { PUBLIC_BRAND, PUBLIC_DESIGNS_CARDS_VARIANT1, PUBLIC_DESIGNS_MOCKUPS } from "@/lib/public-assets";
 
 const PREMIUM_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
@@ -295,7 +296,8 @@ export function DesignsPage() {
                 cardKey="personal"
                 title="Dipay Personal"
                 subtitle="Mobile | E-Wallet"
-                href={FALLBACK}
+                href={CASE_DESIGNS.personal.detailHref}
+                caseChip="Case"
                 mockupPaddingClass="px-10 py-6"
                 renderMockup={(hovered) => <PersonalMockup hovered={hovered} />}
                 {...cardShellProps}
