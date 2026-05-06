@@ -335,13 +335,13 @@ export function CaseDetailPage({ slug }: { slug: CaseSlug }) {
       <main className="mx-auto w-full max-w-[1440px] px-4 pt-[124px] pb-[108px] sm:px-10 lg:px-[60px] lg:pb-[124px]">
         {isPersonal ? (
           <>
-            {/* Hero — Figma node 42462:38506 */}
-            <motion.section
-              className="flex flex-col items-center gap-[48px]"
+            <motion.div
               initial={false}
               animate={getGlobalFocusMotionAnimate(activeArrowId !== null)}
               transition={{ duration: PREMIUM_DURATION, ease: PREMIUM_EASE }}
             >
+              {/* Hero — Figma node 42462:38506 */}
+              <section className="flex flex-col items-center gap-[48px]">
               <div className="flex w-full max-w-[800px] flex-col gap-[24px]">
                 <p className="text-[16px] leading-[24px] text-black">Dipay Personal</p>
                 <div className="flex flex-col gap-[16px]">
@@ -369,7 +369,7 @@ export function CaseDetailPage({ slug }: { slug: CaseSlug }) {
                   className="object-cover"
                 />
               </div>
-            </motion.section>
+              </section>
 
             {/* Quick Overview — Figma node 42462:38514 */}
             <section className="flex flex-col items-center py-[80px]">
@@ -621,8 +621,8 @@ export function CaseDetailPage({ slug }: { slug: CaseSlug }) {
               </div>
             </section>
 
-            {/* D. Learnings — Figma node 42462:38599 */}
-            <section className="flex flex-col items-center gap-[48px] py-[80px]">
+              {/* D. Learnings — Figma node 42462:38599 */}
+              <section className="flex flex-col items-center gap-[48px] py-[80px]">
               <div className="flex w-full max-w-[800px] flex-col gap-[16px]">
                 <h2 className={TEXT_STYLE_H3}>D. Learnings</h2>
                 <p className={TEXT_STYLE_BODY_SUBTLE}>
@@ -655,7 +655,8 @@ export function CaseDetailPage({ slug }: { slug: CaseSlug }) {
                   <CaseLinkButton href="https://play.google.com/store/apps/details?id=com.dipay.user&hl=id" label="Play Store" />
                 </div>
               </div>
-            </section>
+              </section>
+            </motion.div>
 
             <section className="mx-auto w-full max-w-[1440px] bg-[#FAFAFA] py-20 sm:py-[108px] lg:py-[124px]">
               <div className="mx-auto w-full max-w-[1320px]">
