@@ -332,7 +332,7 @@ export function CaseDetailPage({ slug }: { slug: CaseSlug }) {
         </div>
       </header>
 
-      <main className="mx-auto w-full max-w-[1440px] px-4 pt-[124px] pb-[108px] sm:px-10 lg:px-[60px] lg:pb-[124px]">
+      <main className="mx-auto w-full max-w-[1440px] px-4 pt-[124px] sm:px-10 lg:px-[60px]">
         {isPersonal ? (
           <>
             <motion.div
@@ -707,7 +707,7 @@ export function CaseDetailPage({ slug }: { slug: CaseSlug }) {
       </main>
 
       <motion.footer
-        className="mt-[24px] w-full bg-[#F2F2F2]"
+        className="w-full bg-[#F2F2F2]"
         initial={false}
         animate={getGlobalFocusMotionAnimate(activeArrowId !== null)}
         transition={{ duration: PREMIUM_DURATION, ease: PREMIUM_EASE }}
