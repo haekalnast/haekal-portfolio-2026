@@ -11,11 +11,11 @@ const PREMIUM_DURATION = 0.32;
 
 /** Shared layout for Featured Designs (home) and Creative Journal (about) section titles + desktop CTA. */
 export const SECTION_FEATURE_HEADER_ROW_CLASS =
-  "mb-12 flex w-full min-w-0 flex-col gap-6 lg:mb-12 lg:flex-row lg:items-start lg:justify-between";
+  "mb-12 flex w-full min-w-0 flex-col gap-6 lg:mb-12 lg:flex-row lg:items-center lg:justify-between";
 
 export function SectionFeatureHeaderTitleBlock({ title, description }: { title: string; description: string }) {
   return (
-    <div className="min-w-0 flex-1 space-y-2">
+    <div className="min-w-0 flex-1 space-y-4">
       <h2 className="text-[32px] leading-[40px] tracking-[-1px] text-black lg:text-[40px] lg:leading-[56px]">{title}</h2>
       <p className="max-w-[640px] text-base leading-6 text-[#707070]">{description}</p>
     </div>

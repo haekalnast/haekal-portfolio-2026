@@ -12,6 +12,12 @@ import {
   type FeaturedCardShellLayoutOverrides,
 } from "@/components/shared/featured-design-card";
 import { getGlobalFocusMotionAnimate } from "@/components/shared/arrow-reveal";
+import {
+  SectionFeatureHeaderDesktopCta,
+  SectionFeatureHeaderMobileCta,
+  SectionFeatureHeaderMotionRow,
+  SectionFeatureHeaderTitleBlock,
+} from "@/components/shared/section-feature-header";
 import { CASE_DESIGNS, CASE_RELATED_MAPPING, type CaseSlug } from "@/lib/case-designs";
 import {
   PUBLIC_BRAND,
@@ -696,24 +702,19 @@ export function CaseDetailPage({ slug }: { slug: CaseSlug }) {
               </div>
             </section>
 
-            <section>
+            <section className="mx-auto w-full max-w-[1440px] bg-[#FAFAFA] py-20 sm:py-[108px] lg:py-[124px]">
               <div className="mx-auto w-full max-w-[1320px]">
-                <div className="mb-12 flex w-full min-w-0 flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
-                  <div>
-                    <h2 className={TEXT_STYLE_SECTION_TITLE}>Featured Designs Case</h2>
-                    <p className={TEXT_STYLE_BODY}>
-                      Selected products I&apos;ve designed, from launched platforms to ongoing builds.
-                    </p>
-                  </div>
-                  <Link
-                    href="/designs"
-                    className="hidden h-[46px] items-center rounded-[230px] bg-[#F2F2F2] px-6 text-base leading-[21px] text-[#707070] transition-colors hover:text-black lg:inline-flex"
-                  >
+                <SectionFeatureHeaderMotionRow isDimmed={activeArrowId !== null}>
+                  <SectionFeatureHeaderTitleBlock
+                    title="Featured Designs Case"
+                    description="Selected products I've designed, from launched platforms to ongoing builds."
+                  />
+                  <SectionFeatureHeaderDesktopCta href="/designs">
                     See All Designs
-                  </Link>
-                </div>
+                  </SectionFeatureHeaderDesktopCta>
+                </SectionFeatureHeaderMotionRow>
 
-                <div className="grid grid-cols-1 gap-[24px] xl:grid-cols-2">
+                <div className="grid grid-cols-1 gap-[24px] lg:grid-cols-2">
                   <RelatedCaseCard
                     slug={relatedCards[0]}
                     activeArrowId={activeArrowId}
@@ -735,14 +736,9 @@ export function CaseDetailPage({ slug }: { slug: CaseSlug }) {
                     setHoveredKey={setHoveredKey}
                   />
                 </div>
-                <div className="mt-12 flex justify-center lg:hidden">
-                  <Link
-                    href="/designs"
-                    className="inline-flex h-[46px] items-center rounded-[230px] bg-[#F2F2F2] px-6 text-base leading-[21px] text-[#707070] transition-colors hover:text-black"
-                  >
-                    See All Designs
-                  </Link>
-                </div>
+                <SectionFeatureHeaderMobileCta href="/designs">
+                  See All Designs
+                </SectionFeatureHeaderMobileCta>
               </div>
             </section>
           </>
