@@ -112,7 +112,7 @@ export default function NotFound() {
       </header>
 
       <header className="pointer-events-none fixed inset-x-0 top-6 z-40 px-4 sm:hidden">
-        <div className="pointer-events-auto mx-auto flex h-[46px] w-full max-w-[358px] items-center justify-between">
+        <div className="pointer-events-auto mx-auto flex h-[46px] w-full items-center justify-between">
           <LogoMark />
           <PillLink href="mailto:alhaekalnast@gmail.com">Let&apos;s Talk</PillLink>
         </div>
@@ -120,7 +120,7 @@ export default function NotFound() {
 
       <main className="mx-auto flex w-full max-w-[1440px] flex-col">
         <section className="relative h-[960px] px-4 pt-[124px] pb-20 sm:h-[946px] sm:px-10 sm:pb-[108px] lg:h-[1014px] lg:px-[60px] lg:pb-[124px]">
-          <div className="absolute left-1/2 top-1/2 flex w-full max-w-[358px] -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-10 px-4 text-center sm:max-w-none sm:px-10 lg:px-[60px]">
+          <div className="absolute left-1/2 top-1/2 flex w-full -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-10 px-4 text-center sm:px-10 lg:px-[60px]">
             <div className="space-y-4">
               <h1 className="text-[26px] leading-8 tracking-[-1px] lg:text-[32px] lg:leading-[40px]">
                 Something&apos;s not right

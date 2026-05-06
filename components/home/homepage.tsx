@@ -47,6 +47,7 @@ type MarqueeItem = {
 };
 
 const FALLBACK_ERROR_ROUTE = "/not-found";
+const ALL_DESIGNS_ROUTE = "/designs";
 
 const marqueeItems: MarqueeItem[] = [
   {
@@ -228,7 +229,7 @@ function FloatingNavbar() {
       </header>
 
       <header className="pointer-events-none fixed inset-x-0 top-6 z-40 px-4 sm:hidden">
-        <div className="pointer-events-auto mx-auto flex h-[46px] w-full max-w-[358px] items-center justify-between">
+        <div className="pointer-events-auto mx-auto flex h-[46px] w-full items-center justify-between">
           <LogoMark />
           <Link
             href="mailto:alhaekalnast@gmail.com"
@@ -330,13 +331,25 @@ function MarqueeShowcase({
   onArrowHoverStart: (id: string) => void;
   onArrowHoverEnd: (id: string) => void;
 }) {
+  const isMobile = useIsMobileViewport();
+  const [viewportWidth, setViewportWidth] = useState(0);
   const [isPausedByIcon, setIsPausedByIcon] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const x = useMotionValue(0);
 
   const loopItems = useMemo(() => [...marqueeItems, ...marqueeItems], []);
-  const itemFullWidth = 326; // 312 card + 14 gap
+  useEffect(() => {
+    const updateViewportWidth = () => setViewportWidth(window.innerWidth);
+    updateViewportWidth();
+    window.addEventListener("resize", updateViewportWidth);
+    return () => window.removeEventListener("resize", updateViewportWidth);
+  }, []);
+
+  const mobileCardWidth = Math.max(280, viewportWidth - 32);
+  const desktopCardWidth = 312;
+  const cardWidth = isMobile ? mobileCardWidth : desktopCardWidth;
+  const itemFullWidth = cardWidth + 14; // card width + gap
   const oneSetWidth = marqueeItems.length * itemFullWidth;
   const wrapX = (value: number) => {
     let normalized = value % oneSetWidth;
@@ -366,6 +379,7 @@ function MarqueeShowcase({
             <MarqueeCard
               key={`${item.key}-ssr`}
               item={item}
+              cardWidth={cardWidth}
               isGlobalDimmed={activeArrowId !== null && activeArrowId !== `${item.key}-ssr`}
               onIconHoverStart={() => {
                 onArrowHoverStart(`${item.key}-ssr`);
@@ -404,6 +418,7 @@ function MarqueeShowcase({
           <MarqueeCard
             key={`${item.key}-${i}`}
             item={item}
+            cardWidth={cardWidth}
             isGlobalDimmed={activeArrowId !== null && activeArrowId !== `${item.key}-${i}`}
             onIconHoverStart={() => {
               setIsPausedByIcon(true);
@@ -553,7 +568,7 @@ function AboutToolsCard({
   return (
     <article
       ref={cardRef}
-      className="relative mx-auto w-[358px] transition-all duration-300 md:w-full lg:w-[648px]"
+      className="relative mx-auto w-full transition-all duration-300 lg:w-[648px]"
       style={{
         ...getGlobalFocusStyle(isGlobalDimmed),
         touchAction: isScrollSequenceActive ? "none" : "auto",
@@ -667,11 +682,13 @@ function AboutToolsCard({
 
 function MarqueeCard({
   item,
+  cardWidth = 312,
   isGlobalDimmed = false,
   onIconHoverStart,
   onIconHoverEnd,
 }: {
   item: MarqueeItem;
+  cardWidth?: number;
   isGlobalDimmed?: boolean;
   onIconHoverStart: () => void;
   onIconHoverEnd: () => void;
@@ -703,10 +720,10 @@ function MarqueeCard({
   return (
     <article
       className={cn(
-        "group relative w-[312px] shrink-0 overflow-visible rounded-[20px] transition-all duration-300",
+        "group relative shrink-0 overflow-visible rounded-[20px] transition-all duration-300",
         isMockup ? "h-[278px]" : "h-[210px]",
       )}
-      style={getGlobalFocusStyle(isGlobalDimmed)}
+      style={{ ...getGlobalFocusStyle(isGlobalDimmed), width: cardWidth }}
       onMouseEnter={(event) => {
         setIsCardHovered(true);
         updateCursorFill(event);
@@ -795,17 +812,14 @@ function MarqueeCard({
             }}
             onClick={(event) => {
               event.stopPropagation();
-              if (item.href.startsWith("/")) {
-                window.location.href = item.href;
-                return;
-              }
-              window.open(item.href, "_blank", "noopener,noreferrer");
+              window.location.href = ALL_DESIGNS_ROUTE;
             }}
           />
         </div>
       ) : (
         <motion.div
-          className="relative h-[210px] w-[312px] overflow-hidden rounded-[20px] p-6 transition-colors duration-300"
+          className="relative h-[210px] overflow-hidden rounded-[20px] p-6 transition-colors duration-300"
+          style={{ width: cardWidth }}
           initial={false}
           animate={{ backgroundColor: isCardHovered ? hoverFillColor : item.defaultCardBg }}
           transition={{ duration: 0.42, ease: PREMIUM_EASE }}
