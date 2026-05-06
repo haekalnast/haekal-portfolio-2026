@@ -65,6 +65,20 @@ export const PUBLIC_DESIGNS_CARDS_VARIANT1 = {
   sfsLogo: "/designs/cards-variant1/sfs-logo.png",
 } as const;
 
+/** Case detail — Dipay Personal hero + body images. */
+export const PUBLIC_CASE_PERSONAL = {
+  heroMockup: "/designs/case/personal/hero-mockup.png",
+  oldDesign: "/designs/case/personal/old-design.png",
+  benchmarking: "/designs/case/personal/benchmarking.png",
+  competitorTable: "/designs/case/personal/competitor-table.png",
+  spendingCategoryCards: "/designs/case/personal/spending-category-cards.png",
+  newCardHomepage: "/designs/case/personal/new-card-homepage.png",
+  newStatisticPage: "/designs/case/personal/new-statistic-page.png",
+  newQrisPayment: "/designs/case/personal/new-qris-payment.png",
+  newTransferPayment: "/designs/case/personal/new-transfer-payment.png",
+  ppobPayment: "/designs/case/personal/ppob-payment.png",
+} as const;
+
 /** Homepage Featured Designs — local mockup slices */
 export const PUBLIC_HOME_FEATURED = {
   bpr: {

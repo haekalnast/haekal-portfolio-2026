@@ -13,11 +13,25 @@ import {
 } from "@/components/shared/featured-design-card";
 import { getGlobalFocusMotionAnimate } from "@/components/shared/arrow-reveal";
 import { CASE_DESIGNS, CASE_RELATED_MAPPING, type CaseSlug } from "@/lib/case-designs";
-import { PUBLIC_BRAND, PUBLIC_DESIGNS_CARDS_VARIANT1, PUBLIC_DESIGNS_MOCKUPS } from "@/lib/public-assets";
+import {
+  PUBLIC_BRAND,
+  PUBLIC_CASE_PERSONAL,
+  PUBLIC_DESIGNS_CARDS_VARIANT1,
+  PUBLIC_DESIGNS_MOCKUPS,
+} from "@/lib/public-assets";
 
 const PREMIUM_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 const PREMIUM_DURATION = 0.32;
-const TEXT_STYLE_SECTION_TITLE = "text-[32px] leading-[40px] tracking-[-1px] text-black lg:text-[40px] lg:leading-[56px]";
+
+const TEXT_STYLE_BODY_DEFAULT = "text-[16px] leading-[24px] font-normal text-[#707070]";
+const TEXT_STYLE_BODY_SUBTLE = "text-[16px] leading-[24px] font-light text-[#707070]";
+const TEXT_STYLE_CAPTION = "text-[16px] leading-[24px] font-normal text-[#707070]";
+const TEXT_STYLE_H2 = "text-[32px] leading-[40px] tracking-[-1px] text-black lg:text-[40px] lg:leading-[56px]";
+const TEXT_STYLE_H3 = "text-[28px] leading-[36px] tracking-[-1px] text-black lg:text-[32px] lg:leading-[40px]";
+const TEXT_STYLE_H4 = "text-[20px] leading-[24px] tracking-[-1px] text-black";
+const TEXT_STYLE_LINK = "font-[family-name:var(--font-open-sans)] text-[16px] leading-[24px] text-black";
+
+const TEXT_STYLE_SECTION_TITLE = TEXT_STYLE_H2;
 const TEXT_STYLE_BODY = "text-base leading-6 text-[#707070]";
 const TEXT_STYLE_BODY_STRONG = "text-base leading-6 text-black";
 
@@ -48,6 +62,105 @@ function LogoMark() {
         className="absolute inset-0 h-full w-full opacity-0 transition-opacity duration-200 group-hover:opacity-100"
       />
     </Link>
+  );
+}
+
+function FooterLink({ href, children }: { href: string; children: string }) {
+  return (
+    <Link href={href} target="_blank" rel="noreferrer noopener" className="relative inline-flex items-center gap-1">
+      {children}
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <path d="M14.3763 12.7083V5.625H7.29297" stroke="#141414" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M14.1667 5.83203L5.625 14.3737" stroke="#141414" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    </Link>
+  );
+}
+
+function ArrowUpRightIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      fill="none"
+      aria-hidden="true"
+      className={className}
+    >
+      <path
+        d="M14.3763 12.7083V5.625H7.29297"
+        stroke="#141414"
+        strokeWidth="1.25"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M14.1667 5.83203L5.625 14.3737"
+        stroke="#141414"
+        strokeWidth="1.25"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function CaseLinkButton({ href, label }: { href: string; label: string }) {
+  return (
+    <Link
+      href={href}
+      target="_blank"
+      rel="noreferrer noopener"
+      className="inline-flex items-center gap-[6px]"
+    >
+      <span className={TEXT_STYLE_LINK}>{label}</span>
+      <ArrowUpRightIcon className="size-[20px] shrink-0" />
+    </Link>
+  );
+}
+
+function CaseSectionImage({
+  src,
+  alt,
+  caption,
+  priority,
+}: {
+  src: string;
+  alt: string;
+  caption?: string;
+  priority?: boolean;
+}) {
+  return (
+    <div className="flex w-full flex-col items-center gap-[16px]">
+      <div className="relative h-[260px] w-full overflow-hidden rounded-[16px] sm:h-[420px] lg:h-[533px]">
+        <Image
+          src={src}
+          alt={alt}
+          fill
+          priority={priority}
+          sizes="(min-width: 1024px) 800px, 100vw"
+          className="object-cover"
+        />
+      </div>
+      {caption ? (
+        <p className={`${TEXT_STYLE_CAPTION} w-full text-center`}>{caption}</p>
+      ) : null}
+    </div>
+  );
+}
+
+function BodyMixedParagraph({
+  strong,
+  light,
+}: {
+  strong: string;
+  light: string;
+}) {
+  return (
+    <p className="text-[16px] leading-[24px] text-[#707070]">
+      <span className="font-normal">{strong}</span>
+      <span className="font-light">{light}</span>
+    </p>
   );
 }
 
@@ -206,14 +319,49 @@ export function CaseDetailPage({ slug }: { slug: CaseSlug }) {
 
   return (
     <div className="bg-[#FAFAFA] text-black">
-      <header className="pointer-events-none fixed inset-x-0 top-6 z-40 px-4 sm:px-10 lg:px-[60px]">
+      <header className="pointer-events-none fixed inset-x-0 top-6 z-40 hidden px-10 sm:block lg:px-[60px]">
         <div className="pointer-events-auto mx-auto flex h-14 w-full max-w-[1320px] items-center justify-between">
           <LogoMark />
+          <nav
+            aria-label="Primary navigation"
+            className="flex items-center rounded-[56px] border border-black/10 bg-white/80 p-[5px] shadow-[0_10px_10px_-5px_rgba(0,0,0,0.10)] backdrop-blur-[8px]"
+          >
+            <Link
+              href="/"
+              className="flex h-[46px] w-[84px] items-center justify-center rounded-[230px] text-center text-base leading-[21px] text-[#707070] transition-colors hover:bg-[#F2F2F2]"
+            >
+              Home
+            </Link>
+            <Link
+              href="/about"
+              className="flex h-[46px] w-[84px] items-center justify-center rounded-[230px] text-center text-base leading-[21px] text-[#707070] transition-colors hover:bg-[#F2F2F2]"
+            >
+              About
+            </Link>
+            <Link
+              href="/designs"
+              className="flex h-[46px] w-[84px] items-center justify-center rounded-[230px] bg-[#F2F2F2] text-center text-base leading-[21px] text-black"
+            >
+              Designs
+            </Link>
+          </nav>
           <Link
-            href="/designs"
+            href="mailto:alhaekalnast@gmail.com"
             className="rounded-[230px] bg-[#F2F2F2] px-6 py-3 text-base leading-[21px] text-[#707070] transition-colors hover:text-black"
           >
-            Back to All Designs
+            Let&apos;s Talk
+          </Link>
+        </div>
+      </header>
+
+      <header className="pointer-events-none fixed inset-x-0 top-6 z-40 px-4 sm:hidden">
+        <div className="pointer-events-auto mx-auto flex h-[46px] w-full items-center justify-between">
+          <LogoMark />
+          <Link
+            href="mailto:alhaekalnast@gmail.com"
+            className="rounded-[230px] bg-[#F2F2F2] px-6 py-3 text-base leading-[21px] text-[#707070]"
+          >
+            Let&apos;s Talk
           </Link>
         </div>
       </header>
@@ -221,103 +369,380 @@ export function CaseDetailPage({ slug }: { slug: CaseSlug }) {
       <main className="mx-auto w-full max-w-[1440px] px-4 pt-[124px] pb-[108px] sm:px-10 lg:px-[60px] lg:pb-[124px]">
         {isPersonal ? (
           <>
+            {/* Hero — Figma node 42462:38506 */}
             <motion.section
-              className="pb-20"
+              className="flex flex-col items-center gap-[48px]"
               initial={false}
               animate={getGlobalFocusMotionAnimate(activeArrowId !== null)}
               transition={{ duration: PREMIUM_DURATION, ease: PREMIUM_EASE }}
             >
-              <div className="mx-auto w-full max-w-[800px]">
-                <p className="text-base leading-6 text-black">Dipay Personal</p>
-                <h1 className="mt-6 text-[38px] leading-[46px] tracking-[-1px] text-black lg:text-[56px] lg:leading-[56px]">
-                  Helping Users Track Their Finances Smarter with Spending Statistic
-                </h1>
-                <div className="mt-4 flex flex-wrap items-center gap-2">
-                  <span className="text-base leading-6 text-[#707070]">Mobile</span>
-                  <span className="text-base leading-6 text-[#707070]">|</span>
-                  <span className="text-base leading-6 text-[#707070]">E-Wallet</span>
-                  <span className="inline-flex items-center rounded-[8px] border border-[#DEDEE0] bg-[#F2F2F2] px-3 py-[3px] text-base leading-6 text-black">
-                    Live
-                  </span>
-                  <span className="inline-flex items-center rounded-[8px] border border-[#DEDEE0] bg-[#F2F2F2] px-3 py-[3px] text-base leading-6 text-black">
-                    Case
-                  </span>
+              <div className="flex w-full max-w-[800px] flex-col gap-[24px]">
+                <p className="text-[16px] leading-[24px] text-black">Dipay Personal</p>
+                <div className="flex flex-col gap-[16px]">
+                  <h1 className={`${TEXT_STYLE_H2} font-normal`}>
+                    Helping Users Track Their Finances Smarter with Spending Statistic
+                  </h1>
+                  <div className="flex flex-wrap items-center gap-[8px]">
+                    <div className="flex flex-1 items-start gap-[4px] text-[16px] leading-[24px] text-[#707070]">
+                      <span>Mobile</span>
+                      <span>|</span>
+                      <span>Fintech</span>
+                    </div>
+                    <span className="inline-flex shrink-0 items-center justify-center gap-[8px] rounded-[8px] border border-[#DEDEE0] bg-[#F2F2F2] px-[12px] py-[3px] text-[16px] leading-[24px] text-black">
+                      <span aria-hidden="true" className="block size-[8px] rounded-full bg-[#22C55E]" />
+                      Live
+                    </span>
+                    <span className="inline-flex shrink-0 items-center justify-center rounded-[8px] border border-[#DEDEE0] bg-[#F2F2F2] px-[12px] py-[3px] text-[16px] leading-[24px] text-black">
+                      Case
+                    </span>
+                  </div>
                 </div>
-                <div className="relative mt-12 h-[240px] overflow-hidden rounded-[20px] bg-[#F2F2F2] sm:h-[470px] lg:h-[533px]">
-                  <PersonalMockup hovered={false} />
-                </div>
+              </div>
+              <div className="relative h-[260px] w-full max-w-[800px] overflow-hidden rounded-[16px] sm:h-[420px] lg:h-[533px]">
+                <Image
+                  src={PUBLIC_CASE_PERSONAL.heroMockup}
+                  alt="Dipay Personal — Spending Statistic"
+                  fill
+                  priority
+                  sizes="(min-width: 1024px) 800px, 100vw"
+                  className="object-cover"
+                />
               </div>
             </motion.section>
 
-            <section className="pb-20">
-              <div className="mx-auto max-w-[800px] rounded-[20px] border border-[#DEDEE0] bg-[#F2F2F2] p-6">
-                <h2 className="text-base leading-6 text-black">Quick Overview</h2>
-                <p className="mt-4 text-base leading-6 text-[#707070]">
-                  I introduced a new feature in Dipay Personal to help users automatically track and understand their spending habits.
-                  The Spending Statistic module includes categorized expenses, monthly comparisons, and visual charts, all generated
-                  without manual input. By removing friction and offering clear insights, the feature turned passive users into more
-                  financially aware individuals.
+            {/* Quick Overview — Figma node 42462:38514 */}
+            <section className="flex flex-col items-center py-[80px]">
+              <div className="flex w-full max-w-[800px] flex-col gap-[24px] rounded-[16px] bg-[#F2F2F2] py-[24px]">
+                <div className="flex flex-col gap-[16px] px-[24px]">
+                  <h2 className={TEXT_STYLE_H4}>Quick Overview</h2>
+                  <p className={TEXT_STYLE_BODY_SUBTLE}>
+                    I introduced a new feature in Dipay Personal to help users automatically track and understand their spending habits.
+                    The Spending Statistic module includes categorized expenses, monthly comparisons, and visual charts, all generated
+                    without manual input. By removing friction and offering clear insights, the feature turned passive users into more
+                    financially aware individuals.
+                  </p>
+                </div>
+                <div className="h-px w-full bg-[#DEDEE0]" />
+                <div className="flex flex-col gap-[16px] px-[24px]">
+                  <h3 className={TEXT_STYLE_H4}>Live Mobile App</h3>
+                  <div className="flex flex-wrap items-start gap-[16px]">
+                    <CaseLinkButton href="https://apps.apple.com/us/app/dipay/id1497076024" label="App Store" />
+                    <CaseLinkButton href="https://play.google.com/store/apps/details?id=com.dipay.user&hl=id" label="Play Store" />
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* A. Knowing the Why? — Figma node 42462:38519 */}
+            <section className="flex flex-col items-center gap-[48px] py-[80px]">
+              <div className="flex w-full max-w-[800px] flex-col gap-[16px]">
+                <h2 className={TEXT_STYLE_H3}>A. Knowing the Why?</h2>
+                <p className={TEXT_STYLE_BODY_SUBTLE}>
+                  Before this feature existed, most Dipay users simply used the app for quick transactions, to top up, pay bills, or
+                  scan QR codes. However, there was no way for them to review how much they were actually spending, or on what.
                 </p>
-                <div className="my-6 h-px w-full bg-[#DEDEE0]" />
-                <p className="text-base leading-6 text-black">Live Mobile App</p>
-                <div className="mt-4 flex flex-wrap gap-4">
-                  <Link href={currentCase.liveHref} target="_blank" rel="noreferrer noopener" className="text-base leading-6 text-[#707070] underline">
-                    App Store
-                  </Link>
-                  <Link href="https://play.google.com/store/apps/details?id=com.dipay.user&hl=id" target="_blank" rel="noreferrer noopener" className="text-base leading-6 text-[#707070] underline">
-                    Play Store
-                  </Link>
-                </div>
-              </div>
-            </section>
-
-            <section className="pb-20">
-              <div className="mx-auto max-w-[800px]">
-                <h2 className={TEXT_STYLE_SECTION_TITLE}>A. Knowing the Why?</h2>
-                <div className="mt-4 space-y-4 text-base leading-6 text-[#707070]">
-                  <p>
-                    Before this feature existed, most Dipay users simply used the app for quick transactions, to top up, pay bills, or
-                    scan QR codes. However, there was no way for them to review how much they were actually spending, or on what.
-                  </p>
-                  <p>
-                    As a result, users often lacked financial awareness. They might overspend across categories like Shopping or Eat &
-                    Drinks without realizing it, and there was no visual cue to help them reflect on their habits.
-                  </p>
-                  <p>
-                    That gap inspired us to build Spending Statistic, a feature that helps users understand their monthly expenses by
-                    automatically categorizing and visualizing their transactions, without requiring any manual input.
+                <p className={TEXT_STYLE_BODY_SUBTLE}>
+                  As a result, users often lacked financial awareness. They might overspend across categories like “Shopping” or
+                  “Eat &amp; Drinks” without realizing it, and there was no visual cue to help them reflect on their habits.
+                </p>
+                <p className={TEXT_STYLE_BODY_SUBTLE}>
+                  That gap inspired us to build Spending Statistic, a feature that helps users understand their monthly expenses by
+                  automatically categorizing and visualizing their transactions, without requiring any manual input.
+                </p>
+                <div className="flex w-full items-center justify-center rounded-[16px] bg-[#F2F2F2] p-[24px]">
+                  <p className={`flex-1 ${TEXT_STYLE_BODY_SUBTLE}`}>
+                    From internal feedback and data logs, we found that users rarely opened the transaction history unless their balance
+                    looked “too low.” Most people didn’t realize they’d spent 1–2 million until they were forced to check, so this
+                    feature was designed to be passive, but powerful.
                   </p>
                 </div>
               </div>
+
+              <div className="flex w-full max-w-[800px] flex-col gap-[16px]">
+                <h3 className={TEXT_STYLE_H4}>That insight led us to design a new feature:</h3>
+                <BodyMixedParagraph
+                  strong="Spending Statistic "
+                  light="→ a monthly transaction breakdown grouped into meaningful categories to help users understand their financial habits."
+                />
+                <p className={TEXT_STYLE_BODY_SUBTLE}>
+                  Rather than asking users to log their expenses manually, we designed a system that detects, categorizes, and visualizes
+                  spending patterns automatically, giving users a financial mirror they could trust.
+                </p>
+              </div>
+
+              <div className="flex w-full max-w-[800px] flex-col gap-[16px]">
+                <h3 className={TEXT_STYLE_H4}>This led us to the development of four key sub-features:</h3>
+                <BodyMixedParagraph
+                  strong="Automatic Tracking "
+                  light="→ all transactions recorded seamlessly behind the scenes"
+                />
+                <BodyMixedParagraph
+                  strong="Spending Categories "
+                  light="→ grouped into 7 everyday segments to help users interpret spending faster"
+                />
+                <BodyMixedParagraph
+                  strong="Monthly Comparison "
+                  light="→ shows increases or decreases in each category compared to previous month"
+                />
+                <BodyMixedParagraph
+                  strong="Spending Chart "
+                  light="→ a visual donut chart to quickly scan where most money goes"
+                />
+              </div>
+
+              <div className="flex w-full max-w-[800px] flex-col gap-[16px]">
+                <h3 className={TEXT_STYLE_H4}>The intention behind these features was clear:</h3>
+                <p className={TEXT_STYLE_BODY_SUBTLE}>
+                  To empower users to build financial awareness without friction, helping them identify patterns, spot problems, and
+                  eventually feel more in control of their money.
+                </p>
+              </div>
+
+              <div className="flex w-full max-w-[800px] flex-col gap-[16px]">
+                <CaseSectionImage
+                  src={PUBLIC_CASE_PERSONAL.oldDesign}
+                  alt="Dipay Personal Old Design"
+                  caption="Dipay Personal Old Design"
+                />
+              </div>
             </section>
 
-            <section className="pb-20">
-              <div className="mx-auto max-w-[800px]">
-                <h2 className={TEXT_STYLE_SECTION_TITLE}>B. Design Process</h2>
-                <p className="mt-4 text-base leading-6 text-[#707070]">
+            {/* B. Design Process — Figma node 42462:38545 */}
+            <section className="flex flex-col items-center gap-[48px] py-[80px]">
+              <div className="flex w-full max-w-[800px] flex-col gap-[16px]">
+                <h2 className={TEXT_STYLE_H3}>B. Design Process</h2>
+                <p className={TEXT_STYLE_BODY_SUBTLE}>
                   I led this project as Lead Product Designer, collaborating with two product designers and one product manager. My role
                   was to guide the UX vision, define the structure of insights, and align experience patterns across the product.
                 </p>
-              </div>
-            </section>
-
-            <section className="pb-20">
-              <div className="mx-auto max-w-[800px]">
-                <h2 className={TEXT_STYLE_SECTION_TITLE}>C. Design Preview</h2>
-                <p className="mt-4 text-base leading-6 text-[#707070]">
-                  The final direction focuses on clear categorization, monthly comparison, and visualized spending summary so users can
-                  build financial awareness without friction.
+                <p className="text-[16px] leading-[24px] text-[#707070]">
+                  <span className="font-light">The feature was designed to answer a simple question → </span>
+                  <span className="font-normal">“Where is my money going?”</span>
+                </p>
+                <p className={TEXT_STYLE_BODY_SUBTLE}>
+                  We structured the experience to feel effortless and data-driven, with clarity as a design priority. To ensure we were
+                  building a product users would truly benefit from, we benchmarked how similar products delivered spending insights.
                 </p>
               </div>
+
+              <div className="flex w-full max-w-[800px] flex-col gap-[16px]">
+                <h3 className={TEXT_STYLE_H4}>User Goals</h3>
+                <BodyMixedParagraph
+                  strong="Understand where their money goes "
+                  light="→ Users get categorized summaries of their monthly spending, updated automatically"
+                />
+                <BodyMixedParagraph
+                  strong="Compare their spending across time "
+                  light="→ With monthly percentage differences and trend icons, users can reflect and adjust habits."
+                />
+                <BodyMixedParagraph
+                  strong="Get insights without manual work "
+                  light="→ Everything works in the background, no extra setup or effort needed."
+                />
+              </div>
+
+              <div className="flex w-full max-w-[800px] flex-col gap-[16px]">
+                <h3 className={TEXT_STYLE_H4}>Business Goals</h3>
+                <BodyMixedParagraph
+                  strong="Increase user retention "
+                  light="→ Financial awareness creates stickiness; users return monthly to check their stats."
+                />
+                <BodyMixedParagraph
+                  strong="Strengthen perceived value of Dipay "
+                  light="→ Going beyond transactions into personal finance helps Dipay stand out in a crowded payments space."
+                />
+                <BodyMixedParagraph
+                  strong="Enable future monetization "
+                  light="→ Spending habits open up opportunities for cross-sell (e.g., financial products, savings goals)."
+                />
+              </div>
+
+              <div className="flex w-full max-w-[800px] flex-col gap-[16px]">
+                <h3 className={TEXT_STYLE_H4}>Key Findings</h3>
+                <p className={TEXT_STYLE_BODY_SUBTLE}>
+                  With goals aligned, I benchmarked other app like Bank Jago (a digital bank) and Pina (a budgeting + investment app) to
+                  gather answers to specific questions.
+                </p>
+                <CaseSectionImage
+                  src={PUBLIC_CASE_PERSONAL.benchmarking}
+                  alt="Benchmarking from other app's"
+                  caption="Benchmarking from other app’s"
+                />
+              </div>
+
+              <div className="flex w-full max-w-[800px] flex-col gap-[16px]">
+                <BodyMixedParagraph
+                  strong="What makes Bank Jago's spending insights work? "
+                  light="→ Jago keeps insights clean, visual, and tailored for younger users. It supports flexible category editing and offers monthly comparisons, which gave us the idea to include visualized changes and grouping flexibility."
+                />
+                <BodyMixedParagraph
+                  strong="What does Pina do well for non-bank users? "
+                  light="→ Pina’s UI is fresh and includes goal budgeting. While their categorization is generic, they integrate investment tracking too. We took inspiration from their simplicity but opted for tighter data mapping to actual transactions."
+                />
+              </div>
+
+              <div className="flex w-full max-w-[800px] flex-col gap-[16px]">
+                <CaseSectionImage
+                  src={PUBLIC_CASE_PERSONAL.competitorTable}
+                  alt="Competitor Comparison Table"
+                  caption="Competitor Comparison Table"
+                />
+              </div>
             </section>
 
-            <section className="pb-20">
-              <div className="mx-auto max-w-[800px]">
-                <h2 className={TEXT_STYLE_SECTION_TITLE}>D. Learnings</h2>
-                <p className="mt-4 text-base leading-6 text-[#707070]">
+            {/* C. Design Preview — Figma node 42462:38572 */}
+            <section className="flex flex-col items-center gap-[48px] py-[80px]">
+              <div className="flex w-full max-w-[800px] flex-col">
+                <h2 className={TEXT_STYLE_H3}>C. Design Preview</h2>
+              </div>
+
+              <div className="flex w-full max-w-[800px] flex-col gap-[16px]">
+                <h3 className={TEXT_STYLE_H4}>Spending Category</h3>
+                <p className={TEXT_STYLE_BODY_SUBTLE}>
+                  On the Statistik page, users can view all 7 spending categories as stacked cards, each showing icon, label, and
+                  amount. This card layout reduces scanning friction and reinforces segmentation.
+                </p>
+                <CaseSectionImage
+                  src={PUBLIC_CASE_PERSONAL.spendingCategoryCards}
+                  alt="Spending Category Cards"
+                  caption="Spending Category Cards"
+                />
+              </div>
+
+              <div className="flex w-full max-w-[800px] flex-col gap-[16px]">
+                <h3 className={TEXT_STYLE_H4}>Statistic Entry Point on Homepage</h3>
+                <p className={TEXT_STYLE_BODY_SUBTLE}>
+                  The feature was placed in the Dompet section of the homepage. It shows the top 3 categories and total spending with a
+                  CTA to “Lihat Statistik.”
+                </p>
+                <CaseSectionImage
+                  src={PUBLIC_CASE_PERSONAL.newCardHomepage}
+                  alt="New Card on Homepage"
+                  caption="New Card on Homepage"
+                />
+              </div>
+
+              <div className="flex w-full max-w-[800px] flex-col gap-[16px]">
+                <h3 className={TEXT_STYLE_H4}>Full Statistic Page with Donut Chart</h3>
+                <p className={TEXT_STYLE_BODY_SUBTLE}>
+                  Tapping “Lihat Statistik” brings users to a dedicated Statistik page, where a donut chart summarizes their full
+                  monthly spending. Users can navigate by month and view breakdowns per category.
+                </p>
+                <CaseSectionImage
+                  src={PUBLIC_CASE_PERSONAL.newStatisticPage}
+                  alt="New Statistic Page"
+                  caption="New Statistic Page"
+                />
+              </div>
+
+              <div className="flex w-full max-w-[800px] flex-col gap-[16px]">
+                <h3 className={TEXT_STYLE_H4}>Auto-Categorized Payment Proof</h3>
+                <p className={TEXT_STYLE_BODY_SUBTLE}>
+                  Each completed transaction from QRIS, PPOB, to transfers, is instantly labeled with the proper spending category on
+                  its success screen. To enable this, we used a merchant keyword/tag mapping system, and applied fallback heuristics
+                  when category confidence was low.
+                </p>
+                <CaseSectionImage
+                  src={PUBLIC_CASE_PERSONAL.newQrisPayment}
+                  alt="New QRIS Payment Proof"
+                  caption="New QRIS Payment Proof"
+                />
+                <CaseSectionImage
+                  src={PUBLIC_CASE_PERSONAL.newTransferPayment}
+                  alt="New Transfer Payment Proof"
+                  caption="New Transfer Payment Proof"
+                />
+                <CaseSectionImage
+                  src={PUBLIC_CASE_PERSONAL.ppobPayment}
+                  alt="PPOB Payment Proof"
+                  caption="PPOB Payment Proof"
+                />
+              </div>
+            </section>
+
+            {/* D. Learnings — Figma node 42462:38599 */}
+            <section className="flex flex-col items-center gap-[48px] py-[80px]">
+              <div className="flex w-full max-w-[800px] flex-col gap-[16px]">
+                <h2 className={TEXT_STYLE_H3}>D. Learnings</h2>
+                <p className={TEXT_STYLE_BODY_SUBTLE}>
+                  This project taught me how powerful data can be when it’s visualized simply. Most users don’t need accounting-level
+                  granularity, they just want awareness.
+                </p>
+                <div className={TEXT_STYLE_BODY_SUBTLE}>
+                  <p>We were able to ship a smart, low-friction feature by leaning on:</p>
+                  <ul className="ms-[24px] list-disc">
+                    <li>Internal CS &amp; product feedback</li>
+                    <li>Real transaction data</li>
+                    <li>Smart fallback logic</li>
+                    <li>Competitor benchmarking</li>
+                  </ul>
+                </div>
+                <p className={TEXT_STYLE_BODY_SUBTLE}>
+                  Even without user interviews, we delivered something useful and the feedback showed it: users began referencing
+                  categories like “Shopping” and “Bills” when discussing their expenses, something that never happened before.
+                </p>
+                <p className={TEXT_STYLE_BODY_SUBTLE}>
                   Spending Statistic proved that thoughtful defaults and invisible UX can meaningfully change behavior, even in products
                   as routine as digital wallets.
                 </p>
+              </div>
+
+              <div className="flex w-full max-w-[800px] flex-col gap-[16px]">
+                <h3 className={TEXT_STYLE_H4}>Live Mobile App</h3>
+                <div className="flex flex-wrap items-start gap-[16px]">
+                  <CaseLinkButton href="https://apps.apple.com/us/app/dipay/id1497076024" label="App Store" />
+                  <CaseLinkButton href="https://play.google.com/store/apps/details?id=com.dipay.user&hl=id" label="Play Store" />
+                </div>
+              </div>
+            </section>
+
+            <section>
+              <div className="mx-auto w-full max-w-[1320px]">
+                <div className="mb-12 flex w-full min-w-0 flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
+                  <div>
+                    <h2 className={TEXT_STYLE_SECTION_TITLE}>Featured Designs Case</h2>
+                    <p className={TEXT_STYLE_BODY}>
+                      Selected products I&apos;ve designed, from launched platforms to ongoing builds.
+                    </p>
+                  </div>
+                  <Link
+                    href="/designs"
+                    className="hidden h-[46px] items-center rounded-[230px] bg-[#F2F2F2] px-6 text-base leading-[21px] text-[#707070] transition-colors hover:text-black lg:inline-flex"
+                  >
+                    See All Designs
+                  </Link>
+                </div>
+
+                <div className="grid grid-cols-1 gap-[24px] xl:grid-cols-2">
+                  <RelatedCaseCard
+                    slug={relatedCards[0]}
+                    activeArrowId={activeArrowId}
+                    onArrowHoverStart={onArrowHoverStart}
+                    onArrowHoverEnd={onArrowHoverEnd}
+                    revealedKey={revealedKey}
+                    setRevealedKey={setRevealedKey}
+                    hoveredKey={hoveredKey}
+                    setHoveredKey={setHoveredKey}
+                  />
+                  <RelatedCaseCard
+                    slug={relatedCards[1]}
+                    activeArrowId={activeArrowId}
+                    onArrowHoverStart={onArrowHoverStart}
+                    onArrowHoverEnd={onArrowHoverEnd}
+                    revealedKey={revealedKey}
+                    setRevealedKey={setRevealedKey}
+                    hoveredKey={hoveredKey}
+                    setHoveredKey={setHoveredKey}
+                  />
+                </div>
+                <div className="mt-12 flex justify-center lg:hidden">
+                  <Link
+                    href="/designs"
+                    className="inline-flex h-[46px] items-center rounded-[230px] bg-[#F2F2F2] px-6 text-base leading-[21px] text-[#707070] transition-colors hover:text-black"
+                  >
+                    See All Designs
+                  </Link>
+                </div>
               </div>
             </section>
           </>
@@ -328,6 +753,51 @@ export function CaseDetailPage({ slug }: { slug: CaseSlug }) {
           </section>
         )}
       </main>
+
+      <motion.footer
+        className="mt-[24px] w-full bg-[#F2F2F2]"
+        initial={false}
+        animate={getGlobalFocusMotionAnimate(activeArrowId !== null)}
+        transition={{ duration: PREMIUM_DURATION, ease: PREMIUM_EASE }}
+      >
+        <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-16 px-4 pb-[124px] sm:px-10 lg:px-[60px]">
+          <div className="flex flex-col gap-16 py-8 sm:py-20">
+            <div className="flex items-start justify-between gap-8 sm:gap-6">
+              <LogoMark />
+              <nav className="flex flex-col items-end gap-6 text-base leading-6 text-black sm:flex-row sm:items-center sm:gap-6">
+                <FooterLink href="https://docs.google.com/document/d/1rFAuSJrV4IpffI2PRfBmjHlHG5QDDF6L/edit?usp=sharing&ouid=107776713613949709441&rtpof=true&sd=true">
+                  Resume
+                </FooterLink>
+                <FooterLink href="https://www.linkedin.com/in/haekalnast/">Linkedin</FooterLink>
+                <FooterLink href="https://github.com/haekalnast">Github</FooterLink>
+              </nav>
+            </div>
+            <p className="text-base leading-6 font-light text-[#707070]">
+              Copyright © 2026 Bagas Al Haekal Nasution
+              <br className="sm:hidden" />
+              <span className="hidden sm:inline"> </span>
+              All rights reserved
+            </p>
+          </div>
+        </div>
+      </motion.footer>
+
+      <div className="pointer-events-none fixed inset-x-0 bottom-6 z-40 px-4 sm:hidden">
+        <nav
+          aria-label="Mobile navigation"
+          className="pointer-events-auto mx-auto flex w-fit items-center rounded-[56px] border border-black/10 bg-white/80 p-[5px] shadow-[0_10px_10px_-5px_rgba(0,0,0,0.10)] backdrop-blur-[8px]"
+        >
+          <Link href="/" className="flex h-[46px] w-[84px] items-center justify-center rounded-[230px] text-base leading-[21px] text-[#707070]">
+            Home
+          </Link>
+          <Link href="/about" className="flex h-[46px] w-[84px] items-center justify-center rounded-[230px] text-base leading-[21px] text-[#707070]">
+            About
+          </Link>
+          <Link href="/designs" className="flex h-[46px] w-[84px] items-center justify-center rounded-[230px] bg-[#F2F2F2] text-base leading-[21px] text-black">
+            Designs
+          </Link>
+        </nav>
+      </div>
     </div>
   );
 }
