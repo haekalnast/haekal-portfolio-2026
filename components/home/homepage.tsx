@@ -420,37 +420,6 @@ function MarqueeShowcase({
   );
 }
 
-function SmartUnderlineLink({
-  href,
-  children,
-}: {
-  href: string;
-  children: string;
-}) {
-  const [hovered, setHovered] = useState(false);
-  const isMobile = useIsMobileViewport();
-  const isUnderlineVisible = isMobile || hovered;
-
-  return (
-    <Link
-      href={href}
-      target="_blank"
-      className="relative inline-block text-[#707070]"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
-      {children}
-      <motion.span
-        className="absolute right-0 bottom-0 left-0 h-px bg-[#707070]"
-        initial={{ scaleX: 0 }}
-        animate={{ scaleX: isUnderlineVisible ? 1 : 0 }}
-        transition={{ duration: 0.22, ease: "easeOut" }}
-        style={{ originX: 0 }}
-      />
-    </Link>
-  );
-}
-
 function AboutToolsCard({
   isGlobalDimmed,
   onArrowHoverStart,
@@ -911,26 +880,51 @@ function AboutSection({
           </p>
           <p className="w-full text-base leading-6 text-[#707070] lg:max-w-[720px]">
             Currently building{" "}
-            <SmartUnderlineLink href={instagramLinks.sfast}>
+            <ExternalUnderlineLink
+              href={instagramLinks.sfast}
+              variant="subtle"
+              showExternalIcon={false}
+              alwaysUnderlineOnMobile
+            >
               @sfast.official
-            </SmartUnderlineLink>
+            </ExternalUnderlineLink>
             ,{" "}
-            <SmartUnderlineLink href={instagramLinks.dipay}>
+            <ExternalUnderlineLink
+              href={instagramLinks.dipay}
+              variant="subtle"
+              showExternalIcon={false}
+              alwaysUnderlineOnMobile
+            >
               @dipayindonesia
-            </SmartUnderlineLink>
+            </ExternalUnderlineLink>
             , and{" "}
-            <SmartUnderlineLink href={instagramLinks.bpr}>
+            <ExternalUnderlineLink
+              href={instagramLinks.bpr}
+              variant="subtle"
+              showExternalIcon={false}
+              alwaysUnderlineOnMobile
+            >
               @bpr_qaya
-            </SmartUnderlineLink>
+            </ExternalUnderlineLink>
             <br />
             Previously{" "}
-            <SmartUnderlineLink href={instagramLinks.cimb}>
+            <ExternalUnderlineLink
+              href={instagramLinks.cimb}
+              variant="subtle"
+              showExternalIcon={false}
+              alwaysUnderlineOnMobile
+            >
               @cimb_niaga
-            </SmartUnderlineLink>{" "}
+            </ExternalUnderlineLink>{" "}
             &amp;{" "}
-            <SmartUnderlineLink href={instagramLinks.brin}>
+            <ExternalUnderlineLink
+              href={instagramLinks.brin}
+              variant="subtle"
+              showExternalIcon={false}
+              alwaysUnderlineOnMobile
+            >
               @brin_indonesia
-            </SmartUnderlineLink>
+            </ExternalUnderlineLink>
             .
           </p>
         </div>

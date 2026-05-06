@@ -4,14 +4,17 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { useState, type ReactNode } from "react";
 import { cn } from "@/lib/cn";
+import { useIsMobileViewport } from "@/lib/use-is-mobile-viewport";
 
 type ExternalUnderlineLinkProps = {
   href: string;
   children: ReactNode;
+  variant?: "default" | "subtle";
   className?: string;
   textClassName?: string;
   underlineClassName?: string;
   showExternalIcon?: boolean;
+  alwaysUnderlineOnMobile?: boolean;
 };
 
 function ArrowUpRightIcon({ className }: { className?: string }) {
@@ -38,12 +41,19 @@ function ArrowUpRightIcon({ className }: { className?: string }) {
 export function ExternalUnderlineLink({
   href,
   children,
+  variant = "default",
   className,
   textClassName,
   underlineClassName,
   showExternalIcon = true,
+  alwaysUnderlineOnMobile = false,
 }: ExternalUnderlineLinkProps) {
   const [hovered, setHovered] = useState(false);
+  const isMobile = useIsMobileViewport();
+  const isUnderlineVisible = hovered || (alwaysUnderlineOnMobile && isMobile);
+  const isSubtleVariant = variant === "subtle";
+  const defaultTextClassName = isSubtleVariant ? "text-[#707070]" : "text-black";
+  const defaultUnderlineClassName = isSubtleVariant ? "bg-[#707070]" : "bg-[#141414]";
 
   return (
     <Link
@@ -54,12 +64,12 @@ export function ExternalUnderlineLink({
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      <span className={textClassName}>{children}</span>
+      <span className={cn(defaultTextClassName, textClassName)}>{children}</span>
       {showExternalIcon ? <ArrowUpRightIcon className="size-5 shrink-0" /> : null}
       <motion.span
-        className={cn("absolute right-0 bottom-0 left-0 h-px bg-[#141414]", underlineClassName)}
+        className={cn("absolute right-0 bottom-0 left-0 h-px", defaultUnderlineClassName, underlineClassName)}
         initial={{ scaleX: 0 }}
-        animate={{ scaleX: hovered ? 1 : 0 }}
+        animate={{ scaleX: isUnderlineVisible ? 1 : 0 }}
         transition={{ duration: 0.22, ease: "easeOut" }}
         style={{ originX: 0 }}
       />

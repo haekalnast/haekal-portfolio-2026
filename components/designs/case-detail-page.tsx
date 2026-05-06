@@ -306,7 +306,7 @@ export function CaseDetailPage({ slug }: { slug: CaseSlug }) {
             </Link>
             <Link
               href="/designs"
-              className="flex h-[46px] w-[84px] items-center justify-center rounded-[230px] bg-[#F2F2F2] text-center text-base leading-[21px] text-black"
+              className="flex h-[46px] w-[84px] items-center justify-center rounded-[230px] text-center text-base leading-[21px] text-[#707070] transition-colors hover:bg-[#F2F2F2]"
             >
               Designs
             </Link>
@@ -744,7 +744,7 @@ export function CaseDetailPage({ slug }: { slug: CaseSlug }) {
           <Link href="/about" className="flex h-[46px] w-[84px] items-center justify-center rounded-[230px] text-base leading-[21px] text-[#707070]">
             About
           </Link>
-          <Link href="/designs" className="flex h-[46px] w-[84px] items-center justify-center rounded-[230px] bg-[#F2F2F2] text-base leading-[21px] text-black">
+          <Link href="/designs" className="flex h-[46px] w-[84px] items-center justify-center rounded-[230px] text-base leading-[21px] text-[#707070]">
             Designs
           </Link>
         </nav>
