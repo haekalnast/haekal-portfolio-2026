@@ -437,6 +437,7 @@ export function HomeFeaturedDesignCard({
       title={card.title}
       subtitle={card.subtitle}
       href={card.href}
+      caseChip={card.id === "personal" ? "Case" : undefined}
       revealStatus="live"
       isGlobalDimmed={isGlobalDimmed}
       isHoverState={isHoverState}
@@ -640,11 +641,6 @@ function FeaturedDesignCardShell({
           >
             {title}
           </h3>
-          {caseChip ? (
-            <span className="inline-flex items-center rounded-[8px] border border-[#DEDEE0] bg-[#F2F2F2] px-3 py-[3px] text-base leading-6 text-black">
-              {caseChip}
-            </span>
-          ) : null}
           <span className="inline-flex items-center gap-2 rounded-[8px] border border-[#DEDEE0] bg-[#F2F2F2] px-3 py-[3px] text-base leading-6 text-black">
             <motion.span
               className={cn("inline-block h-2 w-2 rounded-full", isPreviewStatus ? "bg-[#FF9A3D]" : "bg-[#14C95D]")}
@@ -653,6 +649,11 @@ function FeaturedDesignCardShell({
             />
             {isPreviewStatus ? "Preview" : "Live"}
           </span>
+          {caseChip ? (
+            <span className="inline-flex items-center rounded-[8px] border border-[#DEDEE0] bg-[#F2F2F2] px-3 py-[3px] text-base leading-6 text-black">
+              {caseChip}
+            </span>
+          ) : null}
         </div>
         <p className="text-base leading-6 text-[#707070]">{subtitle}</p>
       </motion.div>
