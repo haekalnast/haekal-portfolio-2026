@@ -13,6 +13,7 @@ import {
   SFASTMockup,
   type FeaturedCardShellLayoutOverrides,
 } from "@/components/shared/featured-design-card";
+import { ExternalUnderlineLink } from "@/components/shared/external-underline-link";
 import { getGlobalFocusMotionAnimate } from "@/components/shared/arrow-reveal";
 import { CASE_DESIGNS } from "@/lib/case-designs";
 import { PUBLIC_BRAND, PUBLIC_DESIGNS_CARDS_VARIANT1, PUBLIC_DESIGNS_MOCKUPS } from "@/lib/public-assets";
@@ -62,18 +63,6 @@ function LogoMark() {
         unoptimized
         className="absolute inset-0 h-full w-full opacity-0 transition-opacity duration-200 group-hover:opacity-100"
       />
-    </Link>
-  );
-}
-
-function FooterLink({ href, children }: { href: string; children: string }) {
-  return (
-    <Link href={href} target="_blank" rel="noreferrer noopener" className="relative inline-flex items-center gap-1">
-      {children}
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-        <path d="M14.3763 12.7083V5.625H7.29297" stroke="#141414" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M14.1667 5.83203L5.625 14.3737" stroke="#141414" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
     </Link>
   );
 }
@@ -361,11 +350,11 @@ export function DesignsPage() {
             <div className="flex items-start justify-between gap-8 sm:gap-6">
               <LogoMark />
               <nav className="flex flex-col items-end gap-6 text-base leading-6 text-black sm:flex-row sm:items-center sm:gap-6">
-                <FooterLink href="https://docs.google.com/document/d/1rFAuSJrV4IpffI2PRfBmjHlHG5QDDF6L/edit?usp=sharing&ouid=107776713613949709441&rtpof=true&sd=true">
+                <ExternalUnderlineLink href="https://docs.google.com/document/d/1rFAuSJrV4IpffI2PRfBmjHlHG5QDDF6L/edit?usp=sharing&ouid=107776713613949709441&rtpof=true&sd=true">
                   Resume
-                </FooterLink>
-                <FooterLink href="https://www.linkedin.com/in/haekalnast/">Linkedin</FooterLink>
-                <FooterLink href="https://github.com/haekalnast">Github</FooterLink>
+                </ExternalUnderlineLink>
+                <ExternalUnderlineLink href="https://www.linkedin.com/in/haekalnast/">Linkedin</ExternalUnderlineLink>
+                <ExternalUnderlineLink href="https://github.com/haekalnast">Github</ExternalUnderlineLink>
               </nav>
             </div>
             <p className="text-base leading-6 font-light text-[#707070]">

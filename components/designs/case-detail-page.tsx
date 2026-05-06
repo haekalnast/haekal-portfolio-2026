@@ -11,7 +11,9 @@ import {
   PersonalMockup,
   type FeaturedCardShellLayoutOverrides,
 } from "@/components/shared/featured-design-card";
+import { ExternalUnderlineLink } from "@/components/shared/external-underline-link";
 import { getGlobalFocusMotionAnimate } from "@/components/shared/arrow-reveal";
+import { StatusChip } from "@/components/shared/status-chip";
 import {
   SectionFeatureHeaderDesktopCta,
   SectionFeatureHeaderMobileCta,
@@ -71,57 +73,15 @@ function LogoMark() {
   );
 }
 
-function FooterLink({ href, children }: { href: string; children: string }) {
-  return (
-    <Link href={href} target="_blank" rel="noreferrer noopener" className="relative inline-flex items-center gap-1">
-      {children}
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-        <path d="M14.3763 12.7083V5.625H7.29297" stroke="#141414" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M14.1667 5.83203L5.625 14.3737" stroke="#141414" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    </Link>
-  );
-}
-
-function ArrowUpRightIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 20 20"
-      fill="none"
-      aria-hidden="true"
-      className={className}
-    >
-      <path
-        d="M14.3763 12.7083V5.625H7.29297"
-        stroke="#141414"
-        strokeWidth="1.25"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M14.1667 5.83203L5.625 14.3737"
-        stroke="#141414"
-        strokeWidth="1.25"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
 function CaseLinkButton({ href, label }: { href: string; label: string }) {
   return (
-    <Link
+    <ExternalUnderlineLink
       href={href}
-      target="_blank"
-      rel="noreferrer noopener"
       className="inline-flex items-center gap-[6px]"
+      textClassName={TEXT_STYLE_LINK}
     >
-      <span className={TEXT_STYLE_LINK}>{label}</span>
-      <ArrowUpRightIcon className="size-[20px] shrink-0" />
-    </Link>
+      {label}
+    </ExternalUnderlineLink>
   );
 }
 
@@ -394,13 +354,8 @@ export function CaseDetailPage({ slug }: { slug: CaseSlug }) {
                       <span>|</span>
                       <span>Fintech</span>
                     </div>
-                    <span className="inline-flex shrink-0 items-center justify-center gap-[8px] rounded-[8px] border border-[#DEDEE0] bg-[#F2F2F2] px-[12px] py-[3px] text-[16px] leading-[24px] text-black">
-                      <span aria-hidden="true" className="block size-[8px] rounded-full bg-[#22C55E]" />
-                      Live
-                    </span>
-                    <span className="inline-flex shrink-0 items-center justify-center rounded-[8px] border border-[#DEDEE0] bg-[#F2F2F2] px-[12px] py-[3px] text-[16px] leading-[24px] text-black">
-                      Case
-                    </span>
+                    <StatusChip label="Live" tone="live" className="shrink-0 justify-center" />
+                    <StatusChip label="Case" tone="neutral" className="shrink-0 justify-center" />
                   </div>
                 </div>
               </div>
@@ -761,11 +716,11 @@ export function CaseDetailPage({ slug }: { slug: CaseSlug }) {
             <div className="flex items-start justify-between gap-8 sm:gap-6">
               <LogoMark />
               <nav className="flex flex-col items-end gap-6 text-base leading-6 text-black sm:flex-row sm:items-center sm:gap-6">
-                <FooterLink href="https://docs.google.com/document/d/1rFAuSJrV4IpffI2PRfBmjHlHG5QDDF6L/edit?usp=sharing&ouid=107776713613949709441&rtpof=true&sd=true">
+                <ExternalUnderlineLink href="https://docs.google.com/document/d/1rFAuSJrV4IpffI2PRfBmjHlHG5QDDF6L/edit?usp=sharing&ouid=107776713613949709441&rtpof=true&sd=true">
                   Resume
-                </FooterLink>
-                <FooterLink href="https://www.linkedin.com/in/haekalnast/">Linkedin</FooterLink>
-                <FooterLink href="https://github.com/haekalnast">Github</FooterLink>
+                </ExternalUnderlineLink>
+                <ExternalUnderlineLink href="https://www.linkedin.com/in/haekalnast/">Linkedin</ExternalUnderlineLink>
+                <ExternalUnderlineLink href="https://github.com/haekalnast">Github</ExternalUnderlineLink>
               </nav>
             </div>
             <p className="text-base leading-6 font-light text-[#707070]">

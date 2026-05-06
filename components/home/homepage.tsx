@@ -27,6 +27,7 @@ import {
   SectionFeatureHeaderMotionRow,
   SectionFeatureHeaderTitleBlock,
 } from "@/components/shared/section-feature-header";
+import { ExternalUnderlineLink } from "@/components/shared/external-underline-link";
 import { useIsMobileViewport } from "@/lib/use-is-mobile-viewport";
 
 type MarqueeItem = {
@@ -1050,11 +1051,11 @@ function FooterSection() {
           <div className="flex items-start justify-between gap-8 sm:gap-6">
             <LogoMark />
             <nav className="flex flex-col items-end gap-6 text-base leading-6 text-black sm:flex-row sm:items-center sm:gap-6">
-              <FooterLink href="https://docs.google.com/document/d/1rFAuSJrV4IpffI2PRfBmjHlHG5QDDF6L/edit?usp=sharing&ouid=107776713613949709441&rtpof=true&sd=true">
+              <ExternalUnderlineLink href="https://docs.google.com/document/d/1rFAuSJrV4IpffI2PRfBmjHlHG5QDDF6L/edit?usp=sharing&ouid=107776713613949709441&rtpof=true&sd=true">
                 Resume
-              </FooterLink>
-              <FooterLink href="https://www.linkedin.com/in/haekalnast/">Linkedin</FooterLink>
-              <FooterLink href="https://github.com/haekalnast">Github</FooterLink>
+              </ExternalUnderlineLink>
+              <ExternalUnderlineLink href="https://www.linkedin.com/in/haekalnast/">Linkedin</ExternalUnderlineLink>
+              <ExternalUnderlineLink href="https://github.com/haekalnast">Github</ExternalUnderlineLink>
             </nav>
           </div>
           <p className="text-base leading-6 font-light text-[#707070]">
@@ -1066,46 +1067,6 @@ function FooterSection() {
         </div>
       </div>
     </footer>
-  );
-}
-
-function FooterLink({ href, children }: { href: string; children: string }) {
-  const [hovered, setHovered] = useState(false);
-
-  return (
-    <Link
-      href={href}
-      target="_blank"
-      rel="noreferrer noopener"
-      className="relative inline-flex items-center gap-1"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
-      {children}
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-        <path
-          d="M14.3763 12.7083V5.625H7.29297"
-          stroke="#141414"
-          strokeWidth="1.25"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M14.1667 5.83203L5.625 14.3737"
-          stroke="#141414"
-          strokeWidth="1.25"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-      <motion.span
-        className="absolute right-0 bottom-0 left-0 h-px bg-[#141414]"
-        initial={{ scaleX: 0 }}
-        animate={{ scaleX: hovered ? 1 : 0 }}
-        transition={{ duration: 0.22, ease: "easeOut" }}
-        style={{ originX: 0 }}
-      />
-    </Link>
   );
 }
 

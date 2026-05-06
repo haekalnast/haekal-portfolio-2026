@@ -6,6 +6,7 @@ import type { ReactNode, RefObject } from "react";
 import { cn } from "@/lib/cn";
 import { PUBLIC_HOME_FEATURED, PUBLIC_HOME_FEATURED_CARD, PUBLIC_HOME_SFAST_MOCKUP } from "@/lib/public-assets";
 import { ArrowIcon, getGlobalFocusMotionAnimate } from "@/components/shared/arrow-reveal";
+import { StatusChip } from "@/components/shared/status-chip";
 import { useScrollRevealActive } from "@/lib/use-scroll-reveal-active";
 
 const PREMIUM_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
@@ -641,18 +642,9 @@ function FeaturedDesignCardShell({
           >
             {title}
           </h3>
-          <span className="inline-flex items-center gap-2 rounded-[8px] border border-[#DEDEE0] bg-[#F2F2F2] px-3 py-[3px] text-base leading-6 text-black">
-            <motion.span
-              className={cn("inline-block h-2 w-2 rounded-full", isPreviewStatus ? "bg-[#FF9A3D]" : "bg-[#14C95D]")}
-              animate={{ opacity: [0.35, 1, 0.35], scale: [0.92, 1.08, 0.92] }}
-              transition={{ duration: 1.9, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
-            />
-            {isPreviewStatus ? "Preview" : "Live"}
-          </span>
+          <StatusChip label={isPreviewStatus ? "Preview" : "Live"} tone={isPreviewStatus ? "preview" : "live"} />
           {caseChip ? (
-            <span className="inline-flex items-center rounded-[8px] border border-[#DEDEE0] bg-[#F2F2F2] px-3 py-[3px] text-base leading-6 text-black">
-              {caseChip}
-            </span>
+            <StatusChip label={caseChip} tone="neutral" />
           ) : null}
         </div>
         <p className="text-base leading-6 text-[#707070]">{subtitle}</p>
