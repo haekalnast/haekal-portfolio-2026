@@ -819,11 +819,10 @@ function MarqueeCard({
       ) : (
         <motion.div
           className="relative h-[210px] overflow-hidden rounded-[20px] p-6 transition-colors duration-300"
-          style={{ width: cardWidth }}
+          style={{ width: cardWidth, willChange: "background-color" }}
           initial={false}
           animate={{ backgroundColor: isCardHovered ? hoverFillColor : item.defaultCardBg }}
           transition={{ duration: 0.42, ease: PREMIUM_EASE }}
-          style={{ willChange: "background-color" }}
         >
           <motion.div
             className="pointer-events-none absolute inset-0 z-[1] rounded-[20px]"
