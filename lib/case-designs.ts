@@ -99,5 +99,5 @@ export function getCaseStatusMap(): Record<CaseSlug, CaseRevealStatus> {
 }
 
 export function isCaseSlug(value: string): value is CaseSlug {
-  return value in CASE_DESIGNS;
+  return Object.prototype.hasOwnProperty.call(CASE_DESIGNS, value);
 }

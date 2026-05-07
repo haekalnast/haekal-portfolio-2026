@@ -6,11 +6,19 @@ type CaseDetailRouteProps = {
   params: { slug: string } | Promise<{ slug: string }>;
 };
 
+function normalizeSlug(value: string) {
+  try {
+    return decodeURIComponent(value.trim()).toLowerCase();
+  } catch {
+    return null;
+  }
+}
+
 export default async function CaseDetailRoute({ params }: CaseDetailRouteProps) {
   const resolvedParams = await Promise.resolve(params);
-  const slug = decodeURIComponent((resolvedParams.slug ?? "").trim()).toLowerCase();
+  const slug = normalizeSlug(resolvedParams.slug ?? "");
 
-  if (!isCaseSlug(slug)) {
+  if (slug === null || !isCaseSlug(slug)) {
     notFound();
   }
 
