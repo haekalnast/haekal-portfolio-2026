@@ -68,7 +68,6 @@ const FEATURED_ASSETS = {
 const BPR_SCREEN_ASSETS = {
   navbar: PUBLIC_HOME_FEATURED.bpr.navbarHq,
   sections: PUBLIC_HOME_FEATURED.bpr.sectionsHq,
-  sections512: PUBLIC_HOME_FEATURED.bpr.sectionsUser512,
 } as const;
 
 const PERSONAL_SCREEN_ASSETS = {
@@ -101,8 +100,6 @@ export function BPRMockup({ hovered }: { hovered: boolean }) {
             <div className="w-[512px]">
               <img
                 src={BPR_SCREEN_ASSETS.sections}
-                srcSet={`${BPR_SCREEN_ASSETS.sections512} 512w, ${BPR_SCREEN_ASSETS.sections} 1024w`}
-                sizes="512px"
                 alt="BPR sections content"
                 width={512}
                 height={2008}
