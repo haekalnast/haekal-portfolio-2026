@@ -92,7 +92,6 @@ export function BPRMockup({ hovered }: { hovered: boolean }) {
           src={FEATURED_ASSETS.bpr}
           alt="bprqaya.co.id"
           fill
-          unoptimized
           className="object-cover"
           sizes="692px"
         />
@@ -104,6 +103,8 @@ export function BPRMockup({ hovered }: { hovered: boolean }) {
                 alt="BPR sections content"
                 width={512}
                 height={2008}
+                loading="lazy"
+                decoding="async"
                 className="block h-[2008px] w-[512px] max-w-none"
               />
             </div>
@@ -114,6 +115,7 @@ export function BPRMockup({ hovered }: { hovered: boolean }) {
               alt="BPR mockup navbar"
               width={1024}
               height={52}
+              decoding="async"
               className="block h-[26px] w-[512px] max-w-none"
             />
           </div>
@@ -168,7 +170,6 @@ export function BPRFrameMockup({
           src={FEATURED_ASSETS.bpr}
           alt=""
           fill
-          unoptimized
           className="object-cover"
           sizes="692px"
         />
@@ -180,6 +181,8 @@ export function BPRFrameMockup({
                 alt={contentAlt}
                 width={512}
                 height={contentHeightPx}
+                loading="lazy"
+                decoding="async"
                 className="block max-w-none"
                 style={{ width: 512, height: contentHeightPx }}
                 draggable={false}
@@ -198,6 +201,7 @@ export function BPRFrameMockup({
               alt=""
               width={navbarIntrinsicWidth}
               height={navbarIntrinsicHeight}
+              decoding="async"
               className={cn(
                 "block max-w-none object-cover object-top",
                 navbarDisplayWidthPx == null ? "h-full w-full" : "shrink-0",
@@ -239,7 +243,6 @@ export function BPRDashboardFrameMockup({
           src={FEATURED_ASSETS.bpr}
           alt=""
           fill
-          unoptimized
           className="object-cover"
           sizes="692px"
         />
@@ -249,6 +252,8 @@ export function BPRDashboardFrameMockup({
             alt={contentAlt}
             width={512}
             height={320}
+            loading="lazy"
+            decoding="async"
             className="pointer-events-none block h-full w-full object-cover object-top"
             draggable={false}
           />
@@ -293,7 +298,7 @@ export function SFASTMockup({ hovered }: { hovered: boolean }) {
                 style={{ top: `${darkPhoneTop}px` }}
               >
                 <div className="relative h-[282.482px] w-[111.449px]">
-                  <Image src={SFAST_MOCKUP_ASSETS.leftShell} alt="" fill unoptimized className="object-contain" sizes="111px" />
+                  <Image src={SFAST_MOCKUP_ASSETS.leftShell} alt="" fill className="object-contain" sizes="111px" />
                   <div
                     className="absolute left-[4.26px] top-[6.37px] h-[271.241px] w-[95.987px] overflow-hidden"
                     style={darkScreenMaskStyle}
@@ -302,7 +307,6 @@ export function SFASTMockup({ hovered }: { hovered: boolean }) {
                       src={hovered ? SFAST_MOCKUP_ASSETS.leftScreenHover : SFAST_MOCKUP_ASSETS.leftScreenDefault}
                       alt="SFAST dark mode"
                       fill
-                      unoptimized
                       className="object-cover"
                       sizes="96px"
                     />
@@ -315,7 +319,7 @@ export function SFASTMockup({ hovered }: { hovered: boolean }) {
                 style={{ top: `${lightPhoneTop}px` }}
               >
                 <div className="relative h-[286.877px] w-[104.416px]">
-                  <Image src={SFAST_MOCKUP_ASSETS.rightShell} alt="" fill unoptimized className="object-contain" sizes="104px" />
+                  <Image src={SFAST_MOCKUP_ASSETS.rightShell} alt="" fill className="object-contain" sizes="104px" />
                   <div
                     className="absolute left-[15.01px] top-[6.66px] h-[276.031px] w-[86.62px] overflow-hidden"
                     style={lightScreenMaskStyle}
@@ -324,7 +328,6 @@ export function SFASTMockup({ hovered }: { hovered: boolean }) {
                       src={hovered ? SFAST_MOCKUP_ASSETS.rightScreenHover : SFAST_MOCKUP_ASSETS.rightScreenDefault}
                       alt="SFAST light mode"
                       fill
-                      unoptimized
                       className="object-cover"
                       sizes="87px"
                     />
@@ -357,7 +360,6 @@ export function PersonalMockup({ hovered }: { hovered: boolean }) {
                 alt="Personal top app bar"
                 width={155}
                 height={56}
-                unoptimized
                 className="h-[55.74px] w-[155.29px] object-cover"
               />
             </div>
@@ -368,7 +370,6 @@ export function PersonalMockup({ hovered }: { hovered: boolean }) {
                 alt="Personal statistics content"
                 width={155}
                 height={1200}
-                unoptimized
                 className="block h-auto w-[155.29px] max-w-none"
               />
             </div>
@@ -379,7 +380,6 @@ export function PersonalMockup({ hovered }: { hovered: boolean }) {
                 alt="Personal bottom navigation"
                 width={155}
                 height={33}
-                unoptimized
                 className="h-[33.05px] w-[155.29px] object-cover"
               />
             </div>
@@ -390,7 +390,6 @@ export function PersonalMockup({ hovered }: { hovered: boolean }) {
             alt="Dipay Personal phone mockup"
             width={174}
             height={351}
-            unoptimized
             className="pointer-events-none absolute inset-0 z-30 h-full w-full object-contain"
           />
         </div>

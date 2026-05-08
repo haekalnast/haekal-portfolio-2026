@@ -99,7 +99,6 @@ export function PublicationHoverGalleryCard({
                       src={src}
                       alt={`Publication mockup ${index + 1}`}
                       fill
-                      unoptimized
                       className="object-contain"
                     />
                   </motion.div>

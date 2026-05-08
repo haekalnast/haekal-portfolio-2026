@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -15,9 +16,7 @@ import {
   ArrowRevealText,
   getGlobalFocusStyle,
 } from "@/components/shared/arrow-reveal";
-import { ArrowAdvanceGalleryCard } from "@/components/shared/arrow-advance-gallery-card";
 import { ExternalUnderlineLink } from "@/components/shared/external-underline-link";
-import { PublicationHoverGalleryCard } from "@/components/shared/publication-hover-gallery-card";
 import {
   SectionFeatureHeaderDesktopCta,
   SectionFeatureHeaderMobileCta,
@@ -27,6 +26,23 @@ import {
 import { PUBLIC_ABOUT, PUBLIC_BRAND, PUBLIC_CREATIVE_JOURNAL, PUBLIC_HOME_DOCK } from "@/lib/public-assets";
 import { useIsMobileViewport } from "@/lib/use-is-mobile-viewport";
 import { useScrollRevealActive } from "@/lib/use-scroll-reveal-active";
+
+const ArrowAdvanceGalleryCard = dynamic(
+  () => import("@/components/shared/arrow-advance-gallery-card").then((module) => module.ArrowAdvanceGalleryCard),
+  {
+    ssr: false,
+  },
+);
+
+const PublicationHoverGalleryCard = dynamic(
+  () =>
+    import("@/components/shared/publication-hover-gallery-card").then(
+      (module) => module.PublicationHoverGalleryCard,
+    ),
+  {
+    ssr: false,
+  },
+);
 
 const FALLBACK_ERROR_ROUTE = "/not-found";
 const dockApps = [
@@ -78,8 +94,8 @@ const JOURNAL_ASSETS = {
 function LogoMark() {
   return (
     <Link href="/" aria-label="Go to home" className="group relative block h-[27px] w-[124px]">
-      <Image src={PUBLIC_BRAND.logoDefault} alt="Haekal" width={124} height={27} unoptimized className="absolute inset-0 h-full w-full opacity-100 transition-opacity duration-200 group-hover:opacity-0" />
-      <Image src={PUBLIC_BRAND.logoHover} alt="Haekal" width={124} height={27} unoptimized className="absolute inset-0 h-full w-full opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
+      <Image src={PUBLIC_BRAND.logoDefault} alt="Haekal" width={124} height={27} className="absolute inset-0 h-full w-full opacity-100 transition-opacity duration-200 group-hover:opacity-0" />
+      <Image src={PUBLIC_BRAND.logoHover} alt="Haekal" width={124} height={27} className="absolute inset-0 h-full w-full opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
     </Link>
   );
 }
@@ -345,7 +361,7 @@ function ResumeCard({
             }}
             style={{ transformOrigin: "50% 0%" }}
           >
-            <Image src={PUBLIC_ABOUT.resumeSheet} alt="Resume preview" fill unoptimized className="object-cover" />
+            <Image src={PUBLIC_ABOUT.resumeSheet} alt="Resume preview" fill className="object-cover" />
           </motion.div>
         </div>
         <ArrowRevealButton

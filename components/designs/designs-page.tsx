@@ -59,7 +59,6 @@ function LogoMark() {
         alt="Haekal"
         width={124}
         height={27}
-        unoptimized
         className="absolute inset-0 h-full w-full opacity-100 transition-opacity duration-200 group-hover:opacity-0"
       />
       <Image
@@ -67,7 +66,6 @@ function LogoMark() {
         alt="Haekal"
         width={124}
         height={27}
-        unoptimized
         className="absolute inset-0 h-full w-full opacity-0 transition-opacity duration-200 group-hover:opacity-100"
       />
     </Link>
@@ -83,6 +81,8 @@ function DesignsOctoVariant1Mockup() {
           alt="OCTO Merchant app icon"
           width={108}
           height={108}
+          loading="lazy"
+          decoding="async"
           draggable={false}
           className="block h-[108px] w-[108px] object-contain"
           style={{ filter: "drop-shadow(0px 0px 50px rgba(0, 0, 0, 0.06))" }}
@@ -100,7 +100,6 @@ function DesignsDsVariant1Mockup() {
           src={PUBLIC_DESIGNS_CARDS_VARIANT1.desaSeminyakLogo}
           alt="Desa Seminyak logo"
           fill
-          unoptimized
           className="object-contain"
           sizes="140px"
         />
@@ -117,7 +116,6 @@ function DesignsSfsVariant1Mockup() {
           src={PUBLIC_DESIGNS_CARDS_VARIANT1.sfsLogo}
           alt="SF Sekuritas"
           fill
-          unoptimized
           className="object-contain"
           sizes="246px"
         />
@@ -211,7 +209,10 @@ export function DesignsPage() {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 gap-[24px] md:grid-cols-2">
+        <div
+          className="grid grid-cols-1 gap-[24px] md:grid-cols-2"
+          style={{ contentVisibility: "auto", containIntrinsicSize: "1px 2200px" }}
+        >
           {/* Left column */}
           <div className="flex min-w-0 flex-col gap-[24px]">
             <DesignsFeaturedDesignCard

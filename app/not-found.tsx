@@ -13,7 +13,6 @@ function LogoMark() {
         alt="Haekal"
         width={124}
         height={27}
-        unoptimized
         className="absolute inset-0 h-full w-full opacity-100 transition-opacity duration-200 group-hover:opacity-0"
       />
       <Image
@@ -21,7 +20,6 @@ function LogoMark() {
         alt="Haekal"
         width={124}
         height={27}
-        unoptimized
         className="absolute inset-0 h-full w-full opacity-0 transition-opacity duration-200 group-hover:opacity-100"
       />
     </Link>

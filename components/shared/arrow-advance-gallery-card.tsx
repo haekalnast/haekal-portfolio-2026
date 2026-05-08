@@ -174,7 +174,6 @@ export function ArrowAdvanceGalleryCard({
                     src={images[imageIndex]}
                     alt={imageAlt}
                     fill
-                    unoptimized
                     className={resolvedImageClassName}
                     priority={priority && imageIndex === 0}
                   />
@@ -206,7 +205,6 @@ export function ArrowAdvanceGalleryCard({
                     src={images[imageIndex]}
                     alt={imageAlt}
                     fill
-                    unoptimized
                     className={resolvedImageClassName}
                     priority={priority && imageIndex === 0}
                   />

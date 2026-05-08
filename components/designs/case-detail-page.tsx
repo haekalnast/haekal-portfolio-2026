@@ -58,7 +58,6 @@ function LogoMark() {
         alt="Haekal"
         width={124}
         height={27}
-        unoptimized
         className="absolute inset-0 h-full w-full opacity-100 transition-opacity duration-200 group-hover:opacity-0"
       />
       <Image
@@ -66,7 +65,6 @@ function LogoMark() {
         alt="Haekal"
         width={124}
         height={27}
-        unoptimized
         className="absolute inset-0 h-full w-full opacity-0 transition-opacity duration-200 group-hover:opacity-100"
       />
     </Link>
@@ -139,6 +137,8 @@ function CaseOctoMockup() {
           alt="OCTO Merchant app icon"
           width={108}
           height={108}
+          loading="lazy"
+          decoding="async"
           draggable={false}
           className="block h-[108px] w-[108px] object-contain"
           style={{ filter: "drop-shadow(0px 0px 50px rgba(0, 0, 0, 0.06))" }}

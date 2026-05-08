@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, useAnimationFrame, useMotionValue } from "framer-motion";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
@@ -16,11 +17,7 @@ import {
   getGlobalFocusMotionAnimate,
   getGlobalFocusStyle,
 } from "@/components/shared/arrow-reveal";
-import {
-  HomeFeaturedDesignCard,
-  HOME_FEATURED_CARDS,
-  type HomeFeaturedCardId,
-} from "@/components/shared/featured-design-card";
+import { HOME_FEATURED_CARDS, type HomeFeaturedCardId } from "@/components/shared/featured-design-card";
 import {
   SectionFeatureHeaderDesktopCta,
   SectionFeatureHeaderMobileCta,
@@ -29,6 +26,13 @@ import {
 } from "@/components/shared/section-feature-header";
 import { ExternalUnderlineLink } from "@/components/shared/external-underline-link";
 import { useIsMobileViewport } from "@/lib/use-is-mobile-viewport";
+
+const HomeFeaturedDesignCard = dynamic(
+  () => import("@/components/shared/featured-design-card").then((module) => module.HomeFeaturedDesignCard),
+  {
+    ssr: false,
+  },
+);
 
 type MarqueeItem = {
   key: string;
@@ -179,7 +183,6 @@ function LogoMark() {
         alt="Haekal"
         width={124}
         height={27}
-        unoptimized
         className="absolute inset-0 h-full w-full opacity-100 transition-opacity duration-200 group-hover:opacity-0"
       />
       <Image
@@ -187,7 +190,6 @@ function LogoMark() {
         alt="Haekal"
         width={124}
         height={27}
-        unoptimized
         className="absolute inset-0 h-full w-full opacity-0 transition-opacity duration-200 group-hover:opacity-100"
       />
     </Link>
@@ -783,7 +785,6 @@ function MarqueeCard({
                       width={item.mockupWidth}
                       height={item.mockupHeight}
                       sizes={`${item.mockupWidth}px`}
-                      unoptimized
                       draggable={false}
                       className="relative z-10 block h-full w-full object-cover object-top"
                     />
@@ -880,6 +881,7 @@ function AboutSection({
     <section
       id="about"
       className="mx-auto flex w-full max-w-[1440px] flex-col gap-10 bg-[#FAFAFA] px-4 py-20 sm:px-10 sm:py-[108px] lg:flex-row lg:gap-10 lg:px-[60px] lg:py-[124px]"
+      style={{ contentVisibility: "auto", containIntrinsicSize: "1px 900px" }}
     >
       <div className="w-full flex-1 space-y-10 transition-all duration-300" style={getGlobalFocusStyle(isGlobalFocus)}>
         <div className="space-y-4">
@@ -998,6 +1000,7 @@ function FeaturedDesignsSection({
       ref={sectionRef}
       id="designs"
       className="mx-auto w-full max-w-[1440px] bg-[#FAFAFA] px-4 py-20 sm:px-10 sm:py-[108px] lg:px-[60px] lg:py-[124px]"
+      style={{ contentVisibility: "auto", containIntrinsicSize: "1px 960px" }}
     >
       <SectionFeatureHeaderMotionRow isDimmed={isGlobalFocus}>
         <SectionFeatureHeaderTitleBlock
