@@ -1,6 +1,8 @@
 import { CREATIVE_JOURNAL_PNG_NAMES } from "@/lib/creative-journal-png-names";
 
 /** Central paths for files under `public/` — match folder-per-card layout. */
+const withAssetVersion = (path: string) => `${path}?v=20260508-hq`;
+
 export const PUBLIC_BRAND = {
   logoDefault: "/brand/logo-haekal-default.svg",
   logoHover: "/brand/logo-haekal-hover.svg",
@@ -18,41 +20,41 @@ export const PUBLIC_ABOUT = {
 
 /** Homepage hero marquee mockups — `public/home/marquee/*.png` */
 export const PUBLIC_HOME_MARQUEE = {
-  b2bMockup: "/home/marquee/b2b-mockup.png",
-  comproMockup: "/home/marquee/compro-mockup.png",
-  tradingMockup: "/home/marquee/trading-mockup.png",
-  ewalletMockup: "/home/marquee/ewallet-mockup.png",
+  b2bMockup: withAssetVersion("/home/marquee/b2b-mockup.png"),
+  comproMockup: withAssetVersion("/home/marquee/compro-mockup.png"),
+  tradingMockup: withAssetVersion("/home/marquee/trading-mockup.png"),
+  ewalletMockup: withAssetVersion("/home/marquee/ewallet-mockup.png"),
 } as const;
 
 /** Tools dock icons — `public/home/dock/*.png` */
 export const PUBLIC_HOME_DOCK = {
-  figma: "/home/dock/figma.png",
-  cursor: "/home/dock/cursor.png",
-  affinity: "/home/dock/affinity.png",
-  githubDesktop: "/home/dock/github-desktop.png",
-  notion: "/home/dock/notion.png",
-  framer: "/home/dock/framer.png",
-  spotify: "/home/dock/spotify.png",
-  whatsapp: "/home/dock/whatsapp.png",
-  finder: "/home/dock/finder.png",
-  trash: "/home/dock/trash.png",
+  figma: withAssetVersion("/home/dock/figma.png"),
+  cursor: withAssetVersion("/home/dock/cursor.png"),
+  affinity: withAssetVersion("/home/dock/affinity.png"),
+  githubDesktop: withAssetVersion("/home/dock/github-desktop.png"),
+  notion: withAssetVersion("/home/dock/notion.png"),
+  framer: withAssetVersion("/home/dock/framer.png"),
+  spotify: withAssetVersion("/home/dock/spotify.png"),
+  whatsapp: withAssetVersion("/home/dock/whatsapp.png"),
+  finder: withAssetVersion("/home/dock/finder.png"),
+  trash: withAssetVersion("/home/dock/trash.png"),
 } as const;
 
 /** Featured card shell rasters (replaces expired Figma MCP URLs). */
 export const PUBLIC_HOME_FEATURED_CARD = {
-  bprLaptopShell: "/home/featured/bpr-laptop-shell.png",
-  sfastCardHero: "/home/featured/sfast-card-hero.png",
-  personalPhoneFrame: "/home/featured/personal-phone-frame.png",
+  bprLaptopShell: withAssetVersion("/home/featured/bpr-laptop-shell.png"),
+  sfastCardHero: withAssetVersion("/home/featured/sfast-card-hero.png"),
+  personalPhoneFrame: withAssetVersion("/home/featured/personal-phone-frame.png"),
 } as const;
 
 /** SFAST dual-phone mockup — masks + screens + shells */
 export const PUBLIC_HOME_SFAST_MOCKUP = {
-  leftShell: "/home/featured/sfast/left-shell.png",
-  rightShell: "/home/featured/sfast/right-shell.png",
-  leftScreenDefault: "/home/featured/sfast/left-screen-default.png",
-  leftScreenHover: "/home/featured/sfast/left-screen-hover.png",
-  rightScreenDefault: "/home/featured/sfast/right-screen-default.png",
-  rightScreenHover: "/home/featured/sfast/right-screen-hover.png",
+  leftShell: withAssetVersion("/home/featured/sfast/left-shell.png"),
+  rightShell: withAssetVersion("/home/featured/sfast/right-shell.png"),
+  leftScreenDefault: withAssetVersion("/home/featured/sfast/left-screen-default.png"),
+  leftScreenHover: withAssetVersion("/home/featured/sfast/left-screen-hover.png"),
+  rightScreenDefault: withAssetVersion("/home/featured/sfast/right-screen-default.png"),
+  rightScreenHover: withAssetVersion("/home/featured/sfast/right-screen-hover.png"),
   /** SVG masks (must stay SVG — raster PNG MIME broke `-webkit-mask-image` in some browsers). */
   lightScreenMask: "/home/featured/sfast/light-screen-mask.svg",
   darkScreenMask: "/home/featured/sfast/dark-screen-mask.svg",
@@ -60,39 +62,39 @@ export const PUBLIC_HOME_SFAST_MOCKUP = {
 
 /** Designs page Variant 1 logos — centered logo cards. */
 export const PUBLIC_DESIGNS_CARDS_VARIANT1 = {
-  octoAppIcon: "/designs/cards-variant1/octo-app-icon.png",
-  desaSeminyakLogo: "/designs/cards-variant1/desa-seminyak-logo.png",
-  sfsLogo: "/designs/cards-variant1/sfs-logo.png",
+  octoAppIcon: withAssetVersion("/designs/cards-variant1/octo-app-icon.png"),
+  desaSeminyakLogo: withAssetVersion("/designs/cards-variant1/desa-seminyak-logo.png"),
+  sfsLogo: withAssetVersion("/designs/cards-variant1/sfs-logo.png"),
 } as const;
 
 /** Case detail — Dipay Personal hero + body images. */
 export const PUBLIC_CASE_PERSONAL = {
-  heroMockup: "/designs/case/personal/hero-mockup.png",
-  oldDesign: "/designs/case/personal/old-design.png",
-  benchmarking: "/designs/case/personal/benchmarking.png",
-  competitorTable: "/designs/case/personal/competitor-table.png",
-  spendingCategoryCards: "/designs/case/personal/spending-category-cards.png",
-  newCardHomepage: "/designs/case/personal/new-card-homepage.png",
-  newStatisticPage: "/designs/case/personal/new-statistic-page.png",
-  newQrisPayment: "/designs/case/personal/new-qris-payment.png",
-  newTransferPayment: "/designs/case/personal/new-transfer-payment.png",
-  ppobPayment: "/designs/case/personal/ppob-payment.png",
+  heroMockup: withAssetVersion("/designs/case/personal/hero-mockup.png"),
+  oldDesign: withAssetVersion("/designs/case/personal/old-design.png"),
+  benchmarking: withAssetVersion("/designs/case/personal/benchmarking.png"),
+  competitorTable: withAssetVersion("/designs/case/personal/competitor-table.png"),
+  spendingCategoryCards: withAssetVersion("/designs/case/personal/spending-category-cards.png"),
+  newCardHomepage: withAssetVersion("/designs/case/personal/new-card-homepage.png"),
+  newStatisticPage: withAssetVersion("/designs/case/personal/new-statistic-page.png"),
+  newQrisPayment: withAssetVersion("/designs/case/personal/new-qris-payment.png"),
+  newTransferPayment: withAssetVersion("/designs/case/personal/new-transfer-payment.png"),
+  ppobPayment: withAssetVersion("/designs/case/personal/ppob-payment.png"),
 } as const;
 
 /** Homepage Featured Designs — local mockup slices */
 export const PUBLIC_HOME_FEATURED = {
   bpr: {
-    navbarHq: "/home/featured-bpr/navbar-hq.png",
-    sectionsHq: "/home/featured-bpr/sections-hq.png",
+    navbarHq: withAssetVersion("/home/featured-bpr/navbar-hq.png"),
+    sectionsHq: withAssetVersion("/home/featured-bpr/sections-hq.png"),
     /** Optional / alternate exports — not wired in UI until referenced */
-    navbarUser: "/home/featured-bpr/navbar-user.png",
-    sectionsUser: "/home/featured-bpr/sections-user.png",
-    sectionsUser512: "/home/featured-bpr/sections-user-512x2008.png",
+    navbarUser: withAssetVersion("/home/featured-bpr/navbar-user.png"),
+    sectionsUser: withAssetVersion("/home/featured-bpr/sections-user.png"),
+    sectionsUser512: withAssetVersion("/home/featured-bpr/sections-user-512x2008.png"),
   },
   personal: {
-    topbar: "/home/featured-personal/topbar.png",
-    content: "/home/featured-personal/content.png",
-    bottombar: "/home/featured-personal/bottombar.png",
+    topbar: withAssetVersion("/home/featured-personal/topbar.png"),
+    content: withAssetVersion("/home/featured-personal/content.png"),
+    bottombar: withAssetVersion("/home/featured-personal/bottombar.png"),
   },
 } as const;
 
@@ -100,17 +102,17 @@ export const PUBLIC_HOME_FEATURED = {
 export const PUBLIC_DESIGNS_MOCKUPS = {
   /** Navbar: Figma frame ~396.8×28.44px in inset; PNG with alpha (e.g. 2048×160) — see `BPRFrameMockup` on designs page. Content 512×1927. */
   sfc: {
-    navbar: "/designs/mockups/sfc/navbar.png",
-    content: "/designs/mockups/sfc/content.png",
+    navbar: withAssetVersion("/designs/mockups/sfc/navbar.png"),
+    content: withAssetVersion("/designs/mockups/sfc/content.png"),
   },
   /** Navbar ~512×38.16 (or 1024×76 @2×); content 512×2733. */
   nuho: {
-    navbar: "/designs/mockups/nuho/navbar.png",
-    content: "/designs/mockups/nuho/content.png",
+    navbar: withAssetVersion("/designs/mockups/nuho/navbar.png"),
+    content: withAssetVersion("/designs/mockups/nuho/content.png"),
   },
   /** Dashboard — single full-bleed `content.png` in the laptop inset (no navbar strip, no scroll). */
   b2b: {
-    content: "/designs/mockups/b2b/content.png",
+    content: withAssetVersion("/designs/mockups/b2b/content.png"),
   },
 } as const;
 

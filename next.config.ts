@@ -8,6 +8,15 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   images: {
     formats: ["image/avif", "image/webp"],
+    localPatterns: [
+      {
+        pathname: "/**",
+      },
+      {
+        pathname: "/**",
+        search: "?v=20260508-hq",
+      },
+    ],
     remotePatterns: [
       {
         protocol: "https",
