@@ -238,7 +238,7 @@ function AboutToolsCard({
   return (
     <article
       ref={cardRef}
-      className="relative h-[398px] w-full transition-all duration-300 lg:h-[324px] lg:w-[648px]"
+      className="relative h-[324px] w-full transition-all duration-300 lg:w-[648px]"
       style={{
         ...getGlobalFocusStyle(isGlobalDimmed),
         touchAction: isScrollSequenceActive ? "none" : "auto",
@@ -331,7 +331,7 @@ function ResumeCard({
   return (
     <article
       ref={ref}
-      className="relative h-[278px] w-full shrink-0 overflow-visible rounded-[20px] sm:w-[348px] lg:w-[312px]"
+      className="relative h-[278px] w-full shrink-0 overflow-visible rounded-[20px]"
       onMouseEnter={() => setIsCardHovered(true)}
       onMouseLeave={() => {
         setIsCardHovered(false);
@@ -396,6 +396,7 @@ function ThisIsHaekalCard({
       imageAlt="This is Haekal"
       arrowAriaLabel="This is Haekal details"
       layout="haekal"
+      articleClassName="w-full sm:w-full lg:w-full"
       priority
       onArrowHoverStart={onArrowHoverStart}
       onArrowHoverEnd={onArrowHoverEnd}
@@ -448,7 +449,7 @@ export default function AboutPage() {
       </header>
 
       <main className="mx-auto w-full max-w-[1440px] px-4 pt-[124px] sm:px-10 lg:px-[60px]">
-        <section className="grid gap-10 py-10 lg:grid-cols-[1fr_648px] lg:py-14">
+        <section className="grid gap-[24px] py-10 lg:grid-cols-[1fr_648px] lg:gap-10 lg:py-14">
           <div className="space-y-4 transition-all duration-300" style={getGlobalFocusStyle(isTextDimmed)}>
             <h1 className="text-[26px] leading-[32px] tracking-[-1px] text-black lg:text-[40px] lg:leading-[56px]">
               About Haekal
@@ -459,14 +460,14 @@ export default function AboutPage() {
             <p className="max-w-[632px] text-base leading-6 text-[#707070]">More of a quiet builder. I think, structure, and iterate. Recently exploring how design decisions turn to implementation.</p>
           </div>
 
-          <div className="space-y-6">
+          <div className="flex flex-col gap-[24px]">
             <AboutToolsCard
               isGlobalDimmed={isAboutDimmed}
               onArrowHoverStart={() => setActiveArrowId(aboutArrowId)}
               onArrowHoverEnd={() => setActiveArrowId((current) => (current === aboutArrowId ? null : current))}
             />
 
-            <div className="relative z-10 grid gap-6 sm:grid-cols-2">
+            <div className="relative z-10 grid gap-[24px] sm:grid-cols-2">
               <div className="order-2 transition-all duration-300 sm:order-1" style={getGlobalFocusStyle(isResumeDimmed)}>
                 <ResumeCard
                   onArrowHoverStart={() => setActiveArrowId(resumeArrowId)}
@@ -493,7 +494,7 @@ export default function AboutPage() {
                 <h2 className="text-[26px] leading-[32px] tracking-[-1px] lg:text-[32px] lg:leading-[40px]">Experience</h2>
                 <p className="text-base leading-6 tracking-[0px] text-[#666666]">From communication and design to product and digital systems.</p>
               </div>
-              <div className="grid gap-6 lg:grid-cols-3">
+              <div className="grid gap-[24px] lg:grid-cols-3">
                 {experienceItems.map((item) => (
                   <article key={item.title} className="group relative flex items-center gap-2 rounded-[16px] bg-[#F2F2F2] p-2 transition-[background-color,transform] duration-[320ms] ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform hover:-translate-y-[1px] hover:scale-[1.01] hover:bg-white active:translate-y-0 active:scale-[0.995]">
                     <span className="pointer-events-none absolute inset-0 rounded-[16px] opacity-0 shadow-[0_0_0_1px_rgba(0,0,0,0.04),0_6px_16px_rgba(0,0,0,0.06)] transition-opacity duration-[240ms] delay-[60ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:opacity-100" />
@@ -517,7 +518,7 @@ export default function AboutPage() {
                 <h2 className="text-[26px] leading-[32px] tracking-[-1px] lg:text-[32px] lg:leading-[40px]">Learning &amp; Certifications</h2>
                 <p className="text-base leading-6 tracking-[0px] text-[#666666]">Covering design, frontend, communication, and security fundamentals.</p>
               </div>
-              <div className="grid gap-6 lg:grid-cols-2">
+              <div className="grid gap-[24px] lg:grid-cols-2">
                 {certificationItems.map((item) => (
                   <article key={item.title} className={cn(
                     "group relative flex items-center gap-2 rounded-[16px] bg-[#F2F2F2] p-2 transition-[background-color,transform] duration-[320ms] ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform hover:-translate-y-[1px] hover:scale-[1.01] hover:bg-white active:translate-y-0 active:scale-[0.995]",
@@ -558,7 +559,7 @@ export default function AboutPage() {
                   onArrowHoverEnd={() => setActiveArrowId((current) => (current === publicationArrowId ? null : current))}
                 />
                 <div className="flex w-full flex-col gap-[24px]">
-                  <div className="grid grid-cols-2 gap-6 lg:relative lg:z-[1]">
+                  <div className="grid grid-cols-2 gap-[24px] lg:relative lg:z-[1]">
                     <ArrowAdvanceGalleryCard
                       images={JOURNAL_ASSETS.collateralSlides}
                       title="Collateral Design"
@@ -597,7 +598,7 @@ export default function AboutPage() {
                     imageAlt="Campaign Design"
                     arrowAriaLabel="Campaign Design details"
                     layout="journal-short"
-                    articleClassName="lg:relative lg:z-0 lg:-mt-[68px]"
+                    articleClassName="lg:relative lg:z-0"
                     isDimmed={!isMobile && isGlobalFocus && activeArrowId !== campaignArrowId}
                     onArrowHoverStart={() => setActiveArrowId(campaignArrowId)}
                     onArrowHoverEnd={() => setActiveArrowId((current) => (current === campaignArrowId ? null : current))}
@@ -613,8 +614,8 @@ export default function AboutPage() {
                   onArrowHoverStart={() => setActiveArrowId(publicationArrowId)}
                   onArrowHoverEnd={() => setActiveArrowId((current) => (current === publicationArrowId ? null : current))}
                 />
-                <div className="flex w-full flex-col gap-6">
-                  <div className="grid grid-cols-2 gap-6">
+                <div className="flex w-full flex-col gap-[24px]">
+                  <div className="grid grid-cols-2 gap-[24px]">
                     <ArrowAdvanceGalleryCard
                       images={JOURNAL_ASSETS.collateralSlides}
                       title="Collateral Design"

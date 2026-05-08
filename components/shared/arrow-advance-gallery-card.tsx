@@ -44,18 +44,17 @@ type ArrowAdvanceGalleryCardProps = {
 
 const LAYOUT = {
   haekal: {
-    article: "relative h-[278px] w-full shrink-0 overflow-visible rounded-[20px] sm:w-[348px] lg:w-[312px]",
+    article: "relative h-[278px] w-full shrink-0 overflow-visible rounded-[20px]",
     mockup: "absolute inset-x-0 top-0 h-[210px] overflow-hidden rounded-[20px] bg-[#F2F2F2]",
     revealText: "pointer-events-none absolute left-0 top-[218px]",
   },
   "journal-short": {
-    /** min-height reserves space for `ArrowRevealText` at `top-[218px]` (~30+24px lines) so flex siblings do not overlap clipped copy. */
-    article: "relative min-h-[278px] w-full overflow-visible transition-all duration-300",
+    article: "relative h-[210px] w-full overflow-visible transition-all duration-300",
     mockup: "relative h-[210px] overflow-hidden rounded-[20px] bg-[#F2F2F2]",
     revealText: "pointer-events-none absolute left-0 top-[218px]",
   },
   "journal-tall": {
-    article: "relative min-h-[510px] w-full overflow-visible transition-all duration-300",
+    article: "relative h-[444px] w-full overflow-visible transition-all duration-300",
     mockup: "relative h-[444px] overflow-hidden rounded-[20px] bg-[#F2F2F2]",
     revealText: "pointer-events-none absolute left-0 top-[452px]",
   },

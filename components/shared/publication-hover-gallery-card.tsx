@@ -49,7 +49,7 @@ export function PublicationHoverGalleryCard({
   return (
     <article
       ref={ref}
-      className={cn("relative min-h-[510px] w-full overflow-visible transition-all duration-300", articleClassName)}
+      className={cn("relative h-[444px] w-full overflow-visible transition-all duration-300", articleClassName)}
       style={getGlobalFocusStyle(isDimmed)}
       onMouseEnter={() => setIsCardHovered(true)}
       onMouseLeave={() => {

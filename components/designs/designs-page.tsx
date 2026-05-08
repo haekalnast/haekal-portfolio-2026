@@ -38,10 +38,10 @@ const OCTO_VARIANT1_CARD_SHELL: FeaturedCardShellLayoutOverrides = {
 };
 
 const VARIANT1_SFS_CARD_SHELL: FeaturedCardShellLayoutOverrides = {
-  mockupInnerClassName: "h-[210px]",
-  titleBlockClassName: "pointer-events-none mt-6 lg:absolute lg:left-0 lg:mt-0 lg:top-[234px]",
-  articleCollapsed: "h-[210px] lg:h-[210px]",
-  articleRevealed: "h-[294px] lg:h-[210px]",
+  mockupInnerClassName: "h-[444px]",
+  titleBlockClassName: "pointer-events-none mt-4 lg:absolute lg:left-0 lg:top-[460px] lg:mt-0",
+  articleCollapsed: "h-[444px] lg:h-[444px]",
+  articleRevealed: "h-[500px] lg:h-[444px]",
 };
 
 const B2B_CARD_SHELL: FeaturedCardShellLayoutOverrides = {
