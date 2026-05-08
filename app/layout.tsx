@@ -58,6 +58,15 @@ export const metadata: Metadata = {
   },
 };
 
+const personJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Bagas Al Haekal Nasution",
+  jobTitle: "Product Designer",
+  url: "https://www.haekal.site",
+  sameAs: ["https://www.linkedin.com/in/haekalnast/", "https://github.com/haekalnast"],
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -66,6 +75,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${openSans.variable} h-full antialiased`}>
       <body suppressHydrationWarning className="min-h-full flex flex-col">
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }} />
         {children}
       </body>
     </html>
