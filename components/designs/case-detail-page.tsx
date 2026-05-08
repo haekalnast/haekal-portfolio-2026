@@ -102,7 +102,8 @@ function CaseSectionImage({
           alt={alt}
           fill
           priority={priority}
-          sizes="(min-width: 1024px) 800px, 100vw"
+          quality={95}
+          sizes="(min-width: 1440px) 1280px, (min-width: 1024px) 1100px, 100vw"
           className="object-cover"
         />
       </div>
