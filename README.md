@@ -1,5 +1,24 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Performance Guardrails
+
+To keep Lighthouse scores stable (especially mobile), optimize images before commit:
+
+```bash
+npm run optimize:images
+```
+
+This command optimizes `public/**/*.png` and applies stricter limits for critical hotspots:
+
+- `public/home/featured-bpr/*` <= 1024px wide (avoid multi-MB scroll screenshots)
+- `public/home/dock/*` <= 132x132 (rendered around 66x66)
+
+Recommended asset rules:
+
+- UI icons: prefer <= 132x132 source PNG
+- Hero/content images: avoid raw exports larger than needed for on-screen display
+- Keep `favicon` / OG images explicit and intentional (script skips those by default)
+
 ## Getting Started
 
 First, run the development server:
