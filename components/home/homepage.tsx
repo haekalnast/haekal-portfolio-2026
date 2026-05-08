@@ -29,9 +29,6 @@ import { useIsMobileViewport } from "@/lib/use-is-mobile-viewport";
 
 const HomeFeaturedDesignCard = dynamic(
   () => import("@/components/shared/featured-design-card").then((module) => module.HomeFeaturedDesignCard),
-  {
-    ssr: false,
-  },
 );
 
 type MarqueeItem = {

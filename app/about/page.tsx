@@ -29,9 +29,6 @@ import { useScrollRevealActive } from "@/lib/use-scroll-reveal-active";
 
 const ArrowAdvanceGalleryCard = dynamic(
   () => import("@/components/shared/arrow-advance-gallery-card").then((module) => module.ArrowAdvanceGalleryCard),
-  {
-    ssr: false,
-  },
 );
 
 const PublicationHoverGalleryCard = dynamic(
@@ -39,9 +36,6 @@ const PublicationHoverGalleryCard = dynamic(
     import("@/components/shared/publication-hover-gallery-card").then(
       (module) => module.PublicationHoverGalleryCard,
     ),
-  {
-    ssr: false,
-  },
 );
 
 const FALLBACK_ERROR_ROUTE = "/not-found";
