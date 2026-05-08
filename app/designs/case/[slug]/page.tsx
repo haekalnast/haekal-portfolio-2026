@@ -18,6 +18,9 @@ export async function generateMetadata({ params }: CaseDetailRouteProps): Promis
   if (slug === "personal") {
     return {
       title: "Personal Portfolio Case Study",
+      alternates: {
+        canonical: "/designs/case/personal",
+      },
     };
   }
 
