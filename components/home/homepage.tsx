@@ -137,10 +137,8 @@ const marqueeItems: MarqueeItem[] = [
   },
 ];
 
-/** First marquee card that renders a mockup image (used for LCP `priority` on one image only). */
-const FIRST_MARQUEE_MOCKUP_IMAGE_INDEX = marqueeItems.findIndex(
-  (it) => it.kind === "mockup" && Boolean(it.defaultImageUrl),
-);
+/** LCP candidate on homepage PSI runs (Surya Fajar Capital mockup). */
+const LCP_MARQUEE_IMAGE_KEY = "compro-mockup";
 
 const navItems = [
   { label: "Home", href: "/" },
@@ -379,12 +377,12 @@ function MarqueeShowcase({
     return (
       <div className="relative left-1/2 h-[342px] w-screen -translate-x-1/2 overflow-hidden">
         <div className="flex min-w-max gap-[14px] pt-8">
-          {marqueeItems.map((item, marqueeIndex) => (
+          {marqueeItems.map((item) => (
             <MarqueeCard
               key={`${item.key}-ssr`}
               item={item}
               cardWidth={cardWidth}
-              imagePriority={marqueeIndex === FIRST_MARQUEE_MOCKUP_IMAGE_INDEX}
+              imagePriority={item.key === LCP_MARQUEE_IMAGE_KEY}
               isGlobalDimmed={activeArrowId !== null && activeArrowId !== `${item.key}-ssr`}
               onIconHoverStart={() => {
                 onArrowHoverStart(`${item.key}-ssr`);
@@ -424,9 +422,7 @@ function MarqueeShowcase({
             key={`${item.key}-${i}`}
             item={item}
             cardWidth={cardWidth}
-            imagePriority={
-              FIRST_MARQUEE_MOCKUP_IMAGE_INDEX >= 0 && i === FIRST_MARQUEE_MOCKUP_IMAGE_INDEX
-            }
+            imagePriority={item.key === LCP_MARQUEE_IMAGE_KEY && i < marqueeItems.length}
             isGlobalDimmed={activeArrowId !== null && activeArrowId !== `${item.key}-${i}`}
             onIconHoverStart={() => {
               setIsPausedByIcon(true);
