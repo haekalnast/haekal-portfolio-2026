@@ -21,7 +21,10 @@ const openSans = Open_Sans({
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
-  title: siteConfig.title,
+  title: {
+    default: siteConfig.title,
+    template: siteConfig.titleTemplate,
+  },
   description: siteConfig.description,
   alternates: {
     canonical: siteConfig.url,
@@ -30,7 +33,7 @@ export const metadata: Metadata = {
     title: siteConfig.title,
     description: siteConfig.description,
     url: siteConfig.url,
-    siteName: siteConfig.name,
+    siteName: siteConfig.siteName,
     locale: siteConfig.locale,
     type: "website",
     images: [

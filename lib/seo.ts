@@ -1,8 +1,10 @@
 export const siteConfig = {
   name: "Bagas Al Haekal Nasution",
+  siteName: "Haekal",
   title: "Bagas Al Haekal Nasution | Product Designer",
+  titleTemplate: "%s | Bagas Al Haekal Nasution",
   description:
-    "Product designer building digital products across finance, payments, and business systems that make complex systems easier to use.",
+    "Product designer focused on turning business needs and complex systems into digital products that feel simple and useful.",
   url: "https://www.haekal.site",
   ogImage: "/og-image.png",
   locale: "en_US",
