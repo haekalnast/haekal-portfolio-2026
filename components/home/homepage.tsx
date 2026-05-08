@@ -137,6 +137,11 @@ const marqueeItems: MarqueeItem[] = [
   },
 ];
 
+/** First marquee card that renders a mockup image (used for LCP `priority` on one image only). */
+const FIRST_MARQUEE_MOCKUP_IMAGE_INDEX = marqueeItems.findIndex(
+  (it) => it.kind === "mockup" && Boolean(it.defaultImageUrl),
+);
+
 const navItems = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
@@ -374,11 +379,12 @@ function MarqueeShowcase({
     return (
       <div className="relative left-1/2 h-[342px] w-screen -translate-x-1/2 overflow-hidden">
         <div className="flex min-w-max gap-[14px] pt-8">
-          {marqueeItems.map((item) => (
+          {marqueeItems.map((item, marqueeIndex) => (
             <MarqueeCard
               key={`${item.key}-ssr`}
               item={item}
               cardWidth={cardWidth}
+              imagePriority={marqueeIndex === FIRST_MARQUEE_MOCKUP_IMAGE_INDEX}
               isGlobalDimmed={activeArrowId !== null && activeArrowId !== `${item.key}-ssr`}
               onIconHoverStart={() => {
                 onArrowHoverStart(`${item.key}-ssr`);
@@ -418,6 +424,9 @@ function MarqueeShowcase({
             key={`${item.key}-${i}`}
             item={item}
             cardWidth={cardWidth}
+            imagePriority={
+              FIRST_MARQUEE_MOCKUP_IMAGE_INDEX >= 0 && i === FIRST_MARQUEE_MOCKUP_IMAGE_INDEX
+            }
             isGlobalDimmed={activeArrowId !== null && activeArrowId !== `${item.key}-${i}`}
             onIconHoverStart={() => {
               setIsPausedByIcon(true);
@@ -683,12 +692,15 @@ function MarqueeCard({
   item,
   cardWidth = 312,
   isGlobalDimmed = false,
+  imagePriority = false,
   onIconHoverStart,
   onIconHoverEnd,
 }: {
   item: MarqueeItem;
   cardWidth?: number;
   isGlobalDimmed?: boolean;
+  /** First marquee mockup image above the fold — improves mobile LCP when image wins over headline text. */
+  imagePriority?: boolean;
   onIconHoverStart: () => void;
   onIconHoverEnd: () => void;
 }) {
@@ -782,6 +794,7 @@ function MarqueeCard({
                       width={item.mockupWidth}
                       height={item.mockupHeight}
                       sizes={`${item.mockupWidth}px`}
+                      priority={imagePriority}
                       draggable={false}
                       className="relative z-10 block h-full w-full object-cover object-top"
                     />
