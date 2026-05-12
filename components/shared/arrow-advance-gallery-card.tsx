@@ -46,17 +46,21 @@ const LAYOUT = {
   haekal: {
     article: "relative h-[278px] w-full shrink-0 overflow-visible rounded-[20px]",
     mockup: "absolute inset-x-0 top-0 h-[210px] overflow-hidden rounded-[20px] bg-[#F2F2F2]",
-    revealText: "pointer-events-none absolute left-0 top-[218px]",
+    revealText: "max-lg:pointer-events-auto lg:pointer-events-none absolute left-0 top-[218px]",
   },
   "journal-short": {
-    article: "relative h-[210px] w-full overflow-visible transition-all duration-300",
+    article:
+      "relative min-h-[280px] w-full overflow-visible transition-all duration-300 lg:min-h-0 lg:h-[210px]",
     mockup: "relative h-[210px] overflow-hidden rounded-[20px] bg-[#F2F2F2]",
-    revealText: "pointer-events-none absolute left-0 top-[218px]",
+    revealText:
+      "relative z-10 mt-4 w-full max-lg:pointer-events-auto lg:pointer-events-none lg:absolute lg:left-0 lg:top-[218px] lg:mt-0",
   },
   "journal-tall": {
-    article: "relative h-[444px] w-full overflow-visible transition-all duration-300",
+    article:
+      "relative min-h-[524px] w-full overflow-visible transition-all duration-300 lg:min-h-0 lg:h-[444px]",
     mockup: "relative h-[444px] overflow-hidden rounded-[20px] bg-[#F2F2F2]",
-    revealText: "pointer-events-none absolute left-0 top-[452px]",
+    revealText:
+      "relative z-10 mt-4 w-full max-lg:pointer-events-auto lg:pointer-events-none lg:absolute lg:left-0 lg:top-[452px] lg:mt-0",
   },
 } as const;
 
@@ -226,7 +230,13 @@ export function ArrowAdvanceGalleryCard({
         )}
       </div>
 
-      <ArrowRevealText isActive={isRevealActive} title={title} subtitle={subtitle} className={cfg.revealText} />
+      <ArrowRevealText
+        isActive={isRevealActive}
+        title={title}
+        subtitle={subtitle}
+        className={cfg.revealText}
+        onTextClick={isMobile ? nextImage : undefined}
+      />
     </article>
   );
 }

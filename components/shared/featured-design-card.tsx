@@ -2,9 +2,11 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
 import type { ReactNode, RefObject } from "react";
 import { cn } from "@/lib/cn";
 import { PUBLIC_HOME_FEATURED, PUBLIC_HOME_FEATURED_CARD, PUBLIC_HOME_SFAST_MOCKUP } from "@/lib/public-assets";
+import { useIsMobileViewport } from "@/lib/use-is-mobile-viewport";
 import { ArrowIcon, getGlobalFocusMotionAnimate } from "@/components/shared/arrow-reveal";
 import { StatusChip } from "@/components/shared/status-chip";
 import { useScrollRevealActive } from "@/lib/use-scroll-reveal-active";
@@ -24,7 +26,8 @@ export type FeaturedCardShellLayoutOverrides = Partial<{
 
 const DEFAULT_FEATURED_CARD_SHELL_LAYOUT = {
   mockupInnerClassName: "h-[444px]",
-  titleBlockClassName: "pointer-events-none mt-4 lg:absolute lg:left-0 lg:top-[460px] lg:mt-0",
+  titleBlockClassName:
+    "mt-4 max-lg:pointer-events-auto lg:pointer-events-none lg:absolute lg:left-0 lg:top-[460px] lg:mt-0",
   articleCollapsed: "h-[444px] lg:h-[444px]",
   articleRevealed: "h-[512px] lg:h-[444px]",
 } as const;
@@ -575,6 +578,25 @@ function FeaturedDesignCardShell({
 }) {
   const isPreviewStatus = revealStatus === "preview";
   const layout = { ...DEFAULT_FEATURED_CARD_SHELL_LAYOUT, ...shellLayout };
+  const isMobile = useIsMobileViewport();
+  const isExternal = href.startsWith("http");
+  const titleBlockInner = (
+    <>
+      <div className="mb-[6px] flex flex-wrap items-center gap-2">
+        <h3
+          className={cn(
+            "text-[20px] leading-[30px] tracking-[-1px] text-black",
+            shellLayout?.titleHeadingClassName,
+          )}
+        >
+          {title}
+        </h3>
+        <StatusChip label={isPreviewStatus ? "Preview" : "Live"} tone={isPreviewStatus ? "preview" : "live"} />
+        {caseChip ? <StatusChip label={caseChip} tone="neutral" /> : null}
+      </div>
+      <p className="text-base leading-6 text-[#707070]">{subtitle}</p>
+    </>
+  );
   return (
     <motion.article
       ref={cardRef}
@@ -632,21 +654,18 @@ function FeaturedDesignCardShell({
         animate={{ opacity: isRevealState ? 1 : 0, y: isRevealState ? 0 : 8 }}
         transition={{ duration: 0.36, ease: PREMIUM_EASE, delay: isRevealState ? 0.2 : 0 }}
       >
-        <div className="mb-[6px] flex flex-wrap items-center gap-2">
-          <h3
-            className={cn(
-              "text-[20px] leading-[30px] tracking-[-1px] text-black",
-              shellLayout?.titleHeadingClassName,
-            )}
+        {isMobile ? (
+          <Link
+            href={href}
+            target={isExternal ? "_blank" : undefined}
+            rel={isExternal ? "noopener noreferrer" : undefined}
+            className="block rounded-md text-left outline-none ring-offset-2 ring-offset-[#FAFAFA] focus-visible:ring-2 focus-visible:ring-black/25"
           >
-            {title}
-          </h3>
-          <StatusChip label={isPreviewStatus ? "Preview" : "Live"} tone={isPreviewStatus ? "preview" : "live"} />
-          {caseChip ? (
-            <StatusChip label={caseChip} tone="neutral" />
-          ) : null}
-        </div>
-        <p className="text-base leading-6 text-[#707070]">{subtitle}</p>
+            {titleBlockInner}
+          </Link>
+        ) : (
+          titleBlockInner
+        )}
       </motion.div>
     </motion.article>
   );

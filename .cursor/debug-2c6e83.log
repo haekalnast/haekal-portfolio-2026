@@ -1,0 +1,13 @@
+{"sessionId":"2c6e83","location":"about-tools-card.tsx:revealMobileDock","message":"mobile dock reveal","data":{"source":"arrow","hypothesisId":"H1"},"timestamp":1778592585925,"runId":"tools-mobile"}
+{"sessionId":"2c6e83","location":"about-tools-card.tsx:useEffect(postReveal)","message":"post-reveal dock state","data":{"hoveredApp":"Figma","mobileDockReveal":true,"hypothesisId":"H5"},"timestamp":1778592585943,"runId":"tools-mobile"}
+{"sessionId":"2c6e83","location":"about-tools-card.tsx:revealMobileDock","message":"mobile dock reveal","data":{"source":"arrow","hypothesisId":"H1"},"timestamp":1778592586662,"runId":"tools-mobile"}
+{"sessionId":"2c6e83","location":"about-tools-card.tsx:revealMobileDock","message":"mobile dock reveal","data":{"source":"arrow","hypothesisId":"H1"},"timestamp":1778592587880,"runId":"tools-mobile"}
+{"sessionId":"2c6e83","location":"about-tools-card.tsx:revealMobileDock","message":"mobile dock reveal","data":{"source":"text","hypothesisId":"H1"},"timestamp":1778592588728,"runId":"tools-mobile"}
+{"sessionId":"2c6e83","location":"about-tools-card.tsx:revealMobileDock","message":"mobile dock reveal","data":{"source":"text","hypothesisId":"H1"},"timestamp":1778592589196,"runId":"tools-mobile"}
+{"sessionId":"2c6e83","location":"about-tools-card.tsx:revealMobileDock","message":"mobile dock reveal","data":{"source":"text","hypothesisId":"H1"},"timestamp":1778592589394,"runId":"tools-mobile"}
+{"sessionId":"2c6e83","location":"about-tools-card.tsx:revealMobileDock","message":"mobile dock reveal","data":{"source":"arrow","hypothesisId":"H1"},"timestamp":1778592596859,"runId":"tools-mobile"}
+{"sessionId":"2c6e83","location":"about-tools-card.tsx:useEffect(postReveal)","message":"post-reveal dock state","data":{"hoveredApp":"Figma","mobileDockReveal":true,"hypothesisId":"H5"},"timestamp":1778592596874,"runId":"tools-mobile"}
+{"sessionId":"2c6e83","location":"about-tools-card.tsx:revealMobileDock","message":"mobile dock reveal","data":{"source":"text","hypothesisId":"H1"},"timestamp":1778592597870,"runId":"tools-mobile"}
+{"sessionId":"2c6e83","location":"about-tools-card.tsx:revealMobileDock","message":"mobile dock reveal","data":{"source":"text","hypothesisId":"H1"},"timestamp":1778592597958,"runId":"tools-mobile"}
+{"sessionId":"2c6e83","location":"about-tools-card.tsx:revealMobileDock","message":"mobile dock reveal","data":{"source":"text","hypothesisId":"H1"},"timestamp":1778592598143,"runId":"tools-mobile"}
+{"sessionId":"2c6e83","location":"about-tools-card.tsx:revealMobileDock","message":"mobile dock reveal","data":{"source":"text","hypothesisId":"H1"},"timestamp":1778592598345,"runId":"tools-mobile"}

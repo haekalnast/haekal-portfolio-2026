@@ -18,6 +18,23 @@ export const PUBLIC_ABOUT = {
   ],
 } as const;
 
+/** Experience row logos — PNGs under `public/about/experience/`. */
+export const PUBLIC_ABOUT_EXPERIENCE = {
+  sfSekuritas: "/about/experience/sf-sekuritas.png",
+  cimbNiaga: "/about/experience/cimb-niaga.png",
+  ristekBrin: "/about/experience/ristek-brin.png",
+} as const;
+
+/** Certification logos — PNGs under `public/about/certifications/`. */
+export const PUBLIC_ABOUT_CERTIFICATION = {
+  freecodecamp: "/about/certifications/freecodecamp.png",
+  progate: "/about/certifications/progate.png",
+  efset: "/about/certifications/efset.png",
+  iso: "/about/certifications/iso.png",
+  protopie: "/about/certifications/protopie.png",
+  ibm: "/about/certifications/ibm.png",
+} as const;
+
 /** Homepage hero marquee mockups — `public/home/marquee/*.png` */
 export const PUBLIC_HOME_MARQUEE = {
   b2bMockup: withAssetVersion("/home/marquee/b2b-mockup.png"),

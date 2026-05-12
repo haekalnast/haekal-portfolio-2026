@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { type CSSProperties, type MouseEvent } from "react";
+import { cn } from "@/lib/cn";
 
 export const ARROW_REVEAL_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 export const ARROW_REVEAL_DURATION = 0.32;
@@ -85,6 +86,8 @@ type ArrowRevealTextProps = {
   subtitle: string;
   className: string;
   delay?: number;
+  /** When set (e.g. mobile), title + subtitle act as a single tap target. */
+  onTextClick?: () => void;
 };
 
 export function ArrowRevealText({
@@ -93,10 +96,31 @@ export function ArrowRevealText({
   subtitle,
   className,
   delay = ARROW_REVEAL_DELAY,
+  onTextClick,
 }: ArrowRevealTextProps) {
   return (
     <motion.div
-      className={className}
+      className={cn(className, onTextClick && "cursor-pointer touch-manipulation")}
+      role={onTextClick ? "button" : undefined}
+      tabIndex={onTextClick ? 0 : undefined}
+      onClick={
+        onTextClick
+          ? (event) => {
+              event.preventDefault();
+              onTextClick();
+            }
+          : undefined
+      }
+      onKeyDown={
+        onTextClick
+          ? (event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                onTextClick();
+              }
+            }
+          : undefined
+      }
       initial={{ opacity: 0 }}
       animate={{ opacity: isActive ? 1 : 0, y: isActive ? 0 : 8 }}
       transition={{

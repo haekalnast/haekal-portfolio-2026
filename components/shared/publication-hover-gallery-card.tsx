@@ -49,7 +49,10 @@ export function PublicationHoverGalleryCard({
   return (
     <article
       ref={ref}
-      className={cn("relative h-[444px] w-full overflow-visible transition-all duration-300", articleClassName)}
+      className={cn(
+        "relative w-full overflow-visible transition-all duration-300 max-lg:min-h-[520px] lg:h-[444px]",
+        articleClassName,
+      )}
       style={getGlobalFocusStyle(isDimmed)}
       onMouseEnter={() => setIsCardHovered(true)}
       onMouseLeave={() => {
@@ -134,7 +137,7 @@ export function PublicationHoverGalleryCard({
         isActive={isRevealActive}
         title="Publication Design"
         subtitle="Print and editorial design"
-        className="pointer-events-none absolute left-0 top-[452px]"
+        className="relative z-10 mt-4 w-full max-lg:pointer-events-auto lg:pointer-events-none lg:absolute lg:left-0 lg:top-[452px] lg:mt-0"
       />
     </article>
   );

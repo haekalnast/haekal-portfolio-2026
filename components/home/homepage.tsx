@@ -6,11 +6,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
 import { cn } from "@/lib/cn";
-import {
-  isToolsDockTourSuppressedForThisLoad,
-  markToolsDockTourSuppressedForThisLoad,
-} from "@/lib/tools-dock-tour-suppress-until-reload";
-import { PUBLIC_BRAND, PUBLIC_HOME_DOCK, PUBLIC_HOME_MARQUEE } from "@/lib/public-assets";
+import { AboutToolsCard } from "@/components/shared/about-tools-card";
+import { PUBLIC_BRAND, PUBLIC_HOME_MARQUEE } from "@/lib/public-assets";
 import {
   ArrowRevealButton,
   ArrowRevealText,
@@ -153,19 +150,6 @@ const instagramLinks = {
   cimb: "https://www.instagram.com/cimb_niaga/",
   brin: "https://www.instagram.com/brin_indonesia/",
 };
-
-const dockApps = [
-  { name: "Figma", icon: PUBLIC_HOME_DOCK.figma },
-  { name: "Cursor", icon: PUBLIC_HOME_DOCK.cursor },
-  { name: "Affinity", icon: PUBLIC_HOME_DOCK.affinity },
-  { name: "Github Desktop", icon: PUBLIC_HOME_DOCK.githubDesktop },
-  { name: "Notion", icon: PUBLIC_HOME_DOCK.notion },
-  { name: "Framer", icon: PUBLIC_HOME_DOCK.framer },
-  { name: "Spotify", icon: PUBLIC_HOME_DOCK.spotify },
-  { name: "WhatsApp", icon: PUBLIC_HOME_DOCK.whatsapp },
-  { name: "Finder", icon: PUBLIC_HOME_DOCK.finder },
-  { name: "Trash", icon: PUBLIC_HOME_DOCK.trash },
-];
 
 const PREMIUM_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 const PREMIUM_DURATION = 0.32;
@@ -436,251 +420,6 @@ function MarqueeShowcase({
         ))}
       </motion.div>
     </div>
-  );
-}
-
-function AboutToolsCard({
-  isGlobalDimmed,
-  onArrowHoverStart,
-  onArrowHoverEnd,
-}: {
-  isGlobalDimmed: boolean;
-  onArrowHoverStart: () => void;
-  onArrowHoverEnd: () => void;
-}) {
-  const isMobile = useIsMobileViewport();
-  const cardRef = useRef<HTMLElement | null>(null);
-  const [hoveredApp, setHoveredApp] = useState<string | null>(null);
-  const [isIconHovered, setIsIconHovered] = useState(false);
-  const [mobileSequenceStep, setMobileSequenceStep] = useState(-1);
-  const [mobileSequenceDone, setMobileSequenceDone] = useState(false);
-  const [isCardCentered, setIsCardCentered] = useState(false);
-  const sequenceNames = useMemo(() => ["Figma", "Cursor", "Affinity"], []);
-  const wheelCooldownUntilRef = useRef(0);
-  const touchStartYRef = useRef<number | null>(null);
-  const touchCooldownUntilRef = useRef(0);
-  const lockScrollYRef = useRef(0);
-  const sessionTourSuppressed = isToolsDockTourSuppressedForThisLoad();
-  const isScrollSequenceActive =
-    isMobile && isCardCentered && !mobileSequenceDone && !sessionTourSuppressed;
-  const activeMobileTooltip =
-    isScrollSequenceActive && mobileSequenceStep >= 0 && mobileSequenceStep < sequenceNames.length
-      ? sequenceNames[mobileSequenceStep]
-      : null;
-  const isDetailsActive = isMobile || isIconHovered;
-  const activeTooltipName = isMobile ? (activeMobileTooltip ?? hoveredApp) : hoveredApp;
-
-  useEffect(() => {
-    if (!isMobile) return;
-    const updateCenteredState = () => {
-      const node = cardRef.current;
-      if (!node) return;
-      const rect = node.getBoundingClientRect();
-      const viewportCenterY = window.innerHeight / 2;
-      const cardCenterY = rect.top + rect.height / 2;
-      const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
-      const threshold = Math.min(96, rect.height * 0.22);
-      setIsCardCentered(isVisible && Math.abs(cardCenterY - viewportCenterY) <= threshold);
-    };
-    updateCenteredState();
-    window.addEventListener("scroll", updateCenteredState, { passive: true });
-    window.addEventListener("resize", updateCenteredState);
-    return () => {
-      window.removeEventListener("scroll", updateCenteredState);
-      window.removeEventListener("resize", updateCenteredState);
-    };
-  }, [isMobile]);
-
-  useEffect(() => {
-    if (!isScrollSequenceActive) return;
-    const body = document.body;
-    const html = document.documentElement;
-    lockScrollYRef.current = window.scrollY;
-    const previousBodyOverflow = body.style.overflow;
-    const previousBodyPosition = body.style.position;
-    const previousBodyTop = body.style.top;
-    const previousBodyWidth = body.style.width;
-    const previousHtmlOverflow = html.style.overflow;
-    body.style.overflow = "hidden";
-    html.style.overflow = "hidden";
-    body.style.position = "fixed";
-    body.style.top = `-${lockScrollYRef.current}px`;
-    body.style.width = "100%";
-    return () => {
-      body.style.overflow = previousBodyOverflow;
-      html.style.overflow = previousHtmlOverflow;
-      body.style.position = previousBodyPosition;
-      body.style.top = previousBodyTop;
-      body.style.width = previousBodyWidth;
-      window.scrollTo(0, lockScrollYRef.current);
-    };
-  }, [isScrollSequenceActive]);
-
-  useEffect(() => {
-    if (!isScrollSequenceActive) return;
-    const finishTour = () => {
-      markToolsDockTourSuppressedForThisLoad();
-      setMobileSequenceStep(sequenceNames.length);
-      setMobileSequenceDone(true);
-    };
-    const onWheelLock = (event: globalThis.WheelEvent) => {
-      if (event.deltaY <= 0 || Math.abs(event.deltaY) <= 2) return;
-      event.preventDefault();
-      const now = Date.now();
-      if (now < wheelCooldownUntilRef.current) return;
-      wheelCooldownUntilRef.current = now + 320;
-      setMobileSequenceStep((prev) => {
-        const next = Math.min(prev + 1, sequenceNames.length + 1);
-        if (next >= sequenceNames.length) {
-          window.setTimeout(finishTour, 320);
-        }
-        return next;
-      });
-    };
-    const onTouchMoveLock = (event: TouchEvent) => {
-      const startY = touchStartYRef.current;
-      const currentY = event.touches[0]?.clientY;
-      if (startY == null || currentY == null) return;
-      const delta = startY - currentY;
-      if (delta <= 10) return;
-      event.preventDefault();
-      const now = Date.now();
-      if (now < touchCooldownUntilRef.current) return;
-      touchCooldownUntilRef.current = now + 320;
-      touchStartYRef.current = currentY;
-      setMobileSequenceStep((prev) => {
-        const next = Math.min(prev + 1, sequenceNames.length + 1);
-        if (next >= sequenceNames.length) {
-          window.setTimeout(finishTour, 320);
-        }
-        return next;
-      });
-    };
-    const onTouchStartLock = (event: TouchEvent) => {
-      touchStartYRef.current = event.touches[0]?.clientY ?? null;
-    };
-    window.addEventListener("wheel", onWheelLock, { passive: false });
-    window.addEventListener("touchstart", onTouchStartLock, { passive: true });
-    window.addEventListener("touchmove", onTouchMoveLock, { passive: false });
-    return () => {
-      window.removeEventListener("wheel", onWheelLock);
-      window.removeEventListener("touchstart", onTouchStartLock);
-      window.removeEventListener("touchmove", onTouchMoveLock);
-    };
-  }, [isScrollSequenceActive, sequenceNames.length]);
-
-  return (
-    <article
-      ref={cardRef}
-      className="relative mx-auto w-full transition-all duration-300 lg:w-[648px]"
-      style={{
-        ...getGlobalFocusStyle(isGlobalDimmed),
-        touchAction: isScrollSequenceActive ? "none" : "auto",
-      }}
-    >
-      <div className="relative h-[324px] overflow-hidden rounded-[20px] bg-[#F2F2F2] pl-10 md:pl-0 lg:pl-10">
-        <div className="absolute top-6 right-0 bottom-20 flex items-center">
-          <div className="relative h-[124px] w-[290px] overflow-hidden md:w-[530px] lg:w-[530px]">
-            <div className="absolute top-[39px] left-0 h-[85px] w-[880px] rounded-[20px] border border-[#484848] bg-[rgba(40,40,40,0.6)] shadow-[0_2px_2px_rgba(0,0,0,0.25)] backdrop-blur-[12px]" />
-            <div className="absolute top-[48px] left-[6px] flex h-[66px] w-[868px] items-center gap-[5px] md:hidden">
-              {dockApps.map((app, index) => {
-                const hoverable = index <= 2; // up to Affinity on mobile
-                return (
-                  <div
-                    key={`mobile-${app.name}`}
-                    className="relative"
-                    onMouseEnter={hoverable ? () => setHoveredApp(app.name) : undefined}
-                    onMouseLeave={hoverable ? () => setHoveredApp(null) : undefined}
-                  >
-                    <motion.img
-                      src={app.icon}
-                      alt={app.name}
-                      width={66}
-                      height={66}
-                      className="h-[66px] w-[66px] shrink-0 object-cover"
-                      animate={
-                        hoverable && activeTooltipName === app.name
-                          ? { y: -4, scale: 1.08 }
-                          : { y: 0, scale: 1 }
-                      }
-                      transition={{ duration: 0.32, ease: PREMIUM_EASE }}
-                    />
-                    {hoverable && (
-                      <motion.div
-                        className="pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md bg-[#5A5A5A] px-3 py-1 text-sm text-white"
-                        initial={false}
-                        animate={
-                          activeTooltipName === app.name
-                            ? { opacity: 1, y: 0, visibility: "visible" as const }
-                            : { opacity: 0, y: 8, visibility: "hidden" as const }
-                        }
-                        transition={{ duration: 0.32, ease: PREMIUM_EASE }}
-                      >
-                        {app.name}
-                      </motion.div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-            <div className="absolute top-[48px] left-[6px] hidden h-[66px] w-[868px] items-center gap-[5px] md:flex">
-              {dockApps.map((app, index) => {
-                const hoverable = index <= 6; // up to Spotify on tablet/desktop
-                return (
-                  <div
-                    key={`desktop-${app.name}`}
-                    className="relative"
-                    onMouseEnter={hoverable ? () => setHoveredApp(app.name) : undefined}
-                    onMouseLeave={hoverable ? () => setHoveredApp(null) : undefined}
-                  >
-                    <motion.img
-                      src={app.icon}
-                      alt={app.name}
-                      width={66}
-                      height={66}
-                      className="h-[66px] w-[66px] shrink-0 object-cover"
-                      whileHover={hoverable ? { scale: 1.12, y: -4 } : undefined}
-                      transition={{ type: "spring", stiffness: 280, damping: 20 }}
-                    />
-                    {hoverable && activeTooltipName === app.name && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 6 }}
-                        transition={{ duration: 0.18, ease: "easeOut" }}
-                        className="pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md bg-[#5A5A5A] px-3 py-1 text-sm text-white"
-                      >
-                        {app.name}
-                      </motion.div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-
-        <ArrowRevealButton
-          isActive={isDetailsActive}
-          ariaLabel="Tools details"
-          className="absolute bottom-4 left-4 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-[#FAFAFA] shadow-[0_0_0_1px_rgba(0,0,0,0.06)] transition-all duration-300"
-          onHoverStart={() => {
-            setIsIconHovered(true);
-            onArrowHoverStart();
-          }}
-          onHoverEnd={() => {
-            setIsIconHovered(false);
-            onArrowHoverEnd();
-          }}
-          onClick={(event) => {
-            event.stopPropagation();
-            window.location.href = FALLBACK_ERROR_ROUTE;
-          }}
-        />
-      </div>
-
-      <ArrowRevealText isActive={isDetailsActive} title="Tools I Use" subtitle="The stack behind my work" className="pt-2" />
-    </article>
   );
 }
 
@@ -958,6 +697,7 @@ function AboutSection({
       </div>
 
       <AboutToolsCard
+        articleClassName="mx-auto"
         isGlobalDimmed={isGlobalFocus && !isAboutFocused}
         onArrowHoverStart={() => onArrowHoverStart(aboutArrowId)}
         onArrowHoverEnd={() => onArrowHoverEnd(aboutArrowId)}
