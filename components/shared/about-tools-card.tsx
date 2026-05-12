@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ARROW_REVEAL_EASE,
   ArrowRevealButton,
@@ -55,6 +55,12 @@ export function AboutToolsCard({ isGlobalDimmed, onArrowHoverStart, onArrowHover
   const advanceMobileDockCycle = () => {
     setMobileCycleIdx((prev) => (prev < 0 ? 0 : (prev + 1) % MOBILE_DOCK_CYCLE.length));
   };
+
+  /** When the tools card leaves the mobile “in view” zone, clear dock cycle (same ref as scroll-reveal). */
+  useEffect(() => {
+    if (!isMobile || isActive) return;
+    setMobileCycleIdx(-1);
+  }, [isMobile, isActive]);
 
   return (
     <article
