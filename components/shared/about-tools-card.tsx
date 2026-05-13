@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ARROW_REVEAL_EASE,
   ArrowRevealButton,
@@ -46,20 +46,28 @@ export function AboutToolsCard({ isGlobalDimmed, onArrowHoverStart, onArrowHover
   const [isIconHovered, setIsIconHovered] = useState(false);
   /** Mobile: -1 = no “hover” yet; 0,1,2 = index in MOBILE_DOCK_CYCLE (tap arrow or title advances, loops). */
   const [mobileCycleIdx, setMobileCycleIdx] = useState(-1);
+  const shouldResetMobileCycleRef = useRef(false);
 
   const isDetailsActive = isMobile || isIconHovered;
 
-  const mobileActiveName = mobileCycleIdx >= 0 ? MOBILE_DOCK_CYCLE[mobileCycleIdx] : null;
+  const effectiveMobileCycleIdx =
+    isMobile && isActive && !shouldResetMobileCycleRef.current ? mobileCycleIdx : -1;
+  const mobileActiveName = effectiveMobileCycleIdx >= 0 ? MOBILE_DOCK_CYCLE[effectiveMobileCycleIdx] : null;
   const activeTooltipName = isMobile ? mobileActiveName : hoveredApp;
 
   const advanceMobileDockCycle = () => {
-    setMobileCycleIdx((prev) => (prev < 0 ? 0 : (prev + 1) % MOBILE_DOCK_CYCLE.length));
+    setMobileCycleIdx((prev) => {
+      const base = shouldResetMobileCycleRef.current || !isMobile || !isActive ? -1 : prev;
+      shouldResetMobileCycleRef.current = false;
+      return base < 0 ? 0 : (base + 1) % MOBILE_DOCK_CYCLE.length;
+    });
   };
 
   /** When the tools card leaves the mobile “in view” zone, clear dock cycle (same ref as scroll-reveal). */
   useEffect(() => {
-    if (!isMobile || isActive) return;
-    setMobileCycleIdx(-1);
+    if (!isMobile || !isActive) {
+      shouldResetMobileCycleRef.current = true;
+    }
   }, [isMobile, isActive]);
 
   return (
