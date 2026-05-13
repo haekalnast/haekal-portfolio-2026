@@ -59,7 +59,9 @@ export function AboutToolsCard({ isGlobalDimmed, onArrowHoverStart, onArrowHover
   /** When the tools card leaves the mobile “in view” zone, clear dock cycle (same ref as scroll-reveal). */
   useEffect(() => {
     if (!isMobile || isActive) return;
-    setMobileCycleIdx(-1);
+
+    const resetId = window.setTimeout(() => setMobileCycleIdx(-1), 0);
+    return () => window.clearTimeout(resetId);
   }, [isMobile, isActive]);
 
   return (
