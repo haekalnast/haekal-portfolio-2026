@@ -3,6 +3,9 @@ import { CREATIVE_JOURNAL_PNG_NAMES } from "@/lib/creative-journal-png-names";
 /** Central paths for files under `public/` — match folder-per-card layout. */
 const withAssetVersion = (path: string) => `${path}?v=20260514-hq`;
 
+/** B2B case study rasters only — bump independently so global `withAssetVersion` stays stable. */
+const withB2bCaseAssetVersion = (path: string) => `${path}?v=20260516-b2b-case`;
+
 export const PUBLIC_BRAND = {
   logoDefault: "/brand/logo-haekal-default.svg",
   logoHover: "/brand/logo-haekal-hover.svg",
@@ -107,6 +110,24 @@ export const PUBLIC_CASE_OCTO = {
   flowEtb: withAssetVersion("/designs/case/octo/flow-etb.png"),
   welcomeKit: withAssetVersion("/designs/case/octo/welcome-kit.png"),
   mobileUiPreview: withAssetVersion("/designs/case/octo/mobile-ui-preview.png"),
+} as const;
+
+/** Case detail — Dipay Disbursement (B2B) — `public/designs/case/b2b/`. */
+export const PUBLIC_CASE_B2B = {
+  heroMockup: withB2bCaseAssetVersion("/designs/case/b2b/hero-mockup.png"),
+  oldLoginWireframe: withB2bCaseAssetVersion("/designs/case/b2b/old-login-wireframe.png"),
+  oldDashboardWireframe: withB2bCaseAssetVersion("/designs/case/b2b/old-dashboard-wireframe.png"),
+  benchmarkingFlip: withB2bCaseAssetVersion("/designs/case/b2b/benchmarking-flip.png"),
+  benchmarkingMekari: withB2bCaseAssetVersion("/designs/case/b2b/benchmarking-mekari.png"),
+  featureAspectTable: withB2bCaseAssetVersion("/designs/case/b2b/feature-aspect-table.png"),
+  newLogin: withB2bCaseAssetVersion("/designs/case/b2b/new-login.png"),
+  newHomepage: withB2bCaseAssetVersion("/designs/case/b2b/new-homepage.png"),
+  newTransactions: withB2bCaseAssetVersion("/designs/case/b2b/new-transactions.png"),
+  newHistoryTransactions: withB2bCaseAssetVersion("/designs/case/b2b/new-history-transactions.png"),
+  newDeposit: withB2bCaseAssetVersion("/designs/case/b2b/new-deposit.png"),
+  newTopUp: withB2bCaseAssetVersion("/designs/case/b2b/new-top-up.png"),
+  newProfile: withB2bCaseAssetVersion("/designs/case/b2b/new-profile.png"),
+  newMultiAccount: withB2bCaseAssetVersion("/designs/case/b2b/new-multi-account.png"),
 } as const;
 
 /** Homepage Featured Designs — local mockup slices */

@@ -318,7 +318,7 @@ export function BPRDashboardFrameMockup({
             height={320}
             loading="lazy"
             decoding="async"
-            className="pointer-events-none block h-full w-full object-cover object-top"
+            className="pointer-events-none block h-full w-full object-cover object-center"
             draggable={false}
           />
         </div>

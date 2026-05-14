@@ -22,6 +22,10 @@ const nextConfig: NextConfig = {
         pathname: "/**",
         search: "?v=20260514-hq",
       },
+      {
+        pathname: "/**",
+        search: "?v=20260516-b2b-case",
+      },
     ],
     remotePatterns: [
       {

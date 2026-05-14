@@ -28,6 +28,7 @@ import {
   PUBLIC_DESIGNS_CARDS_VARIANT1,
   PUBLIC_DESIGNS_MOCKUPS,
 } from "@/lib/public-assets";
+import { CaseB2bStudySections } from "@/components/designs/case-b2b-study-sections";
 import { CaseOctoStudySections } from "@/components/designs/case-octo-study-sections";
 import {
   CASE_DETAIL_MEDIA_FRAME,
@@ -258,6 +259,7 @@ export function CaseDetailPage({ slug }: { slug: CaseSlug }) {
   }, []);
 
   const isPersonal = slug === "personal";
+  const isB2b = slug === "b2b";
   const isOcto = slug === "octo";
 
   return (
@@ -675,6 +677,23 @@ export function CaseDetailPage({ slug }: { slug: CaseSlug }) {
               </div>
             </section>
           </>
+        ) : isB2b ? (
+          <CaseB2bStudySections
+            activeArrowId={activeArrowId}
+            relatedCards={relatedCards}
+            renderRelatedCaseCard={(relatedSlug) => (
+              <RelatedCaseCard
+                slug={relatedSlug}
+                activeArrowId={activeArrowId}
+                onArrowHoverStart={onArrowHoverStart}
+                onArrowHoverEnd={onArrowHoverEnd}
+                revealedKey={revealedKey}
+                setRevealedKey={setRevealedKey}
+                hoveredKey={hoveredKey}
+                setHoveredKey={setHoveredKey}
+              />
+            )}
+          />
         ) : isOcto ? (
           <CaseOctoStudySections
             activeArrowId={activeArrowId}

@@ -39,24 +39,25 @@ const OCTO_VARIANT1_CARD_SHELL: FeaturedCardShellLayoutOverrides = {
 };
 
 /**
- * Campaign laptop cards on All Designs (B2B, Nuho, SFC). `lg:` extras keep desktop column flex from
- * compressing this row below 444px chrome.
+ * **Designs page only — B2B + SFC laptop cards (desktop):** title block sits at `top-[460px]` below a 444px
+ * mockup; article must be taller so reveal text is not clipped. Do not use as global default (would widen
+ * vertical gaps for every card).
  */
-const DESIGNS_CAMPAIGN_CARD_SHELL: FeaturedCardShellLayoutOverrides = {
+const DESIGNS_B2B_SFC_LAPTOP_TITLE_REVEAL_SHELL: FeaturedCardShellLayoutOverrides = {
   mockupInnerClassName: "h-[444px]",
   titleBlockClassName:
     "mt-4 max-md:pointer-events-auto md:pointer-events-none md:absolute md:left-0 md:top-[460px] md:mt-0",
   articleCollapsed:
-    "h-[548px] md:h-[444px] lg:h-[444px] lg:min-h-[444px] lg:flex-none lg:shrink-0",
+    "h-[548px] md:h-[552px] md:min-h-[552px] lg:h-[552px] lg:min-h-[552px] lg:flex-none lg:shrink-0",
   articleRevealed:
-    "h-[548px] md:h-[444px] lg:h-[444px] lg:min-h-[444px] lg:flex-none lg:shrink-0",
+    "h-[548px] md:h-[552px] md:min-h-[552px] lg:h-[552px] lg:min-h-[552px] lg:flex-none lg:shrink-0",
 };
 
-const B2B_CARD_SHELL = DESIGNS_CAMPAIGN_CARD_SHELL;
+const B2B_CARD_SHELL = DESIGNS_B2B_SFC_LAPTOP_TITLE_REVEAL_SHELL;
 
 /**
- * SF Sekuritas — logo-only mockup. **Tablet (`md`–`lg-1`)** uses the same shell numbers as campaign cards
- * (`DESIGNS_CAMPAIGN_CARD_SHELL`). **Desktop (`lg+`) only** the gray chrome caps at **210px** like OCTO/DESA.
+ * SF Sekuritas — logo-only mockup. **Tablet (`md`–`lg-1`)** uses the same 444px laptop row as default featured
+ * cards. **Desktop (`lg+`) only** the gray chrome caps at **210px** like OCTO/DESA.
  */
 const VARIANT1_SFS_CARD_SHELL: FeaturedCardShellLayoutOverrides = {
   mockupInnerClassName: "h-[444px] lg:h-[210px] lg:max-h-[210px]",
@@ -285,7 +286,8 @@ export function DesignsPage() {
               cardKey="b2b"
               title="enterprise.dipay.id"
               subtitle="Web | Fintech"
-              href="https://enterprise.dipay.id/login"
+              href={CASE_DESIGNS.b2b.detailHref}
+              caseChip="Case"
               mockupPaddingClass="px-0 py-0"
               shellLayout={B2B_CARD_SHELL}
               renderMockup={(hovered) => (
@@ -352,6 +354,7 @@ export function DesignsPage() {
               subtitle="Web | Fintech"
               href="https://sfcapital.co.id/"
               mockupPaddingClass="px-0 py-0"
+              shellLayout={DESIGNS_B2B_SFC_LAPTOP_TITLE_REVEAL_SHELL}
               renderMockup={(hovered) => (
                 <BPRFrameMockup
                   hovered={hovered}

@@ -66,7 +66,8 @@ export const CASE_DESIGNS: Record<CaseSlug, CaseDesignConfig> = {
 export const CASE_RELATED_MAPPING: Record<CaseSlug, [CaseSlug, CaseSlug]> = {
   personal: ["sfc", "b2b"],
   octo: ["sfc", "b2b"],
-  b2b: ["personal", "octo"],
+  /** B2B case featured row: OCTO (left), Personal (right); card widths match Figma desktop layout. */
+  b2b: ["octo", "personal"],
   sfc: ["personal", "octo"],
 };
 
