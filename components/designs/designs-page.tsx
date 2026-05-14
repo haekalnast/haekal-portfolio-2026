@@ -38,16 +38,35 @@ const OCTO_VARIANT1_CARD_SHELL: FeaturedCardShellLayoutOverrides = {
   titleHeadingClassName: "text-[18px] leading-[20px] tracking-[-1px] text-black",
 };
 
-/** Laptop “campaign” cards (B2B, Nuho-style chrome) — SF Sekuritas shares this so desktop height matches. */
-const B2B_CARD_SHELL: FeaturedCardShellLayoutOverrides = {
+/**
+ * Campaign laptop cards on All Designs (B2B, Nuho, SFC). `lg:` extras keep desktop column flex from
+ * compressing this row below 444px chrome.
+ */
+const DESIGNS_CAMPAIGN_CARD_SHELL: FeaturedCardShellLayoutOverrides = {
   mockupInnerClassName: "h-[444px]",
   titleBlockClassName:
     "mt-4 max-md:pointer-events-auto md:pointer-events-none md:absolute md:left-0 md:top-[460px] md:mt-0",
-  articleCollapsed: "h-[548px] md:h-[444px] lg:h-[444px] lg:shrink-0",
-  articleRevealed: "h-[548px] md:h-[444px] lg:h-[444px] lg:shrink-0",
+  articleCollapsed:
+    "h-[548px] md:h-[444px] lg:h-[444px] lg:min-h-[444px] lg:flex-none lg:shrink-0",
+  articleRevealed:
+    "h-[548px] md:h-[444px] lg:h-[444px] lg:min-h-[444px] lg:flex-none lg:shrink-0",
 };
 
-const VARIANT1_SFS_CARD_SHELL = B2B_CARD_SHELL;
+const B2B_CARD_SHELL = DESIGNS_CAMPAIGN_CARD_SHELL;
+
+/**
+ * SF Sekuritas — logo-only mockup. **Tablet (`md`–`lg-1`)** uses the same shell numbers as campaign cards
+ * (`DESIGNS_CAMPAIGN_CARD_SHELL`). **Desktop (`lg+`) only** the gray chrome caps at **210px** like OCTO/DESA.
+ */
+const VARIANT1_SFS_CARD_SHELL: FeaturedCardShellLayoutOverrides = {
+  mockupInnerClassName: "h-[444px] lg:h-[210px] lg:max-h-[210px]",
+  titleBlockClassName:
+    "mt-4 max-md:pointer-events-auto md:pointer-events-none md:absolute md:left-0 md:mt-0 md:top-[460px] lg:mt-6 lg:top-[234px]",
+  articleCollapsed:
+    "h-[548px] md:h-[444px] lg:h-[210px] lg:max-h-[210px] lg:flex-none lg:shrink-0",
+  articleRevealed:
+    "h-[548px] md:h-[444px] lg:h-[210px] lg:max-h-[210px] lg:flex-none lg:shrink-0",
+};
 
 function LogoMark() {
   return (

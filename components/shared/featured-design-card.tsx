@@ -29,8 +29,10 @@ const DEFAULT_FEATURED_CARD_SHELL_LAYOUT = {
   /** Title under mockup only on small phones; from `md` (768px) match desktop overlay so row gaps read as true 24px. */
   titleBlockClassName:
     "mt-4 max-md:pointer-events-auto md:pointer-events-none md:absolute md:left-0 md:top-[460px] md:mt-0",
-  articleCollapsed: "h-[548px] md:h-[444px] lg:h-[444px] lg:shrink-0",
-  articleRevealed: "h-[548px] md:h-[444px] lg:h-[444px] lg:shrink-0",
+  articleCollapsed:
+    "h-[548px] md:h-[444px] lg:h-[444px] lg:min-h-[444px] lg:flex-none lg:shrink-0",
+  articleRevealed:
+    "h-[548px] md:h-[444px] lg:h-[444px] lg:min-h-[444px] lg:flex-none lg:shrink-0",
 } as const;
 
 export type HomeFeaturedCardId = "bpr" | "sfast" | "personal";
