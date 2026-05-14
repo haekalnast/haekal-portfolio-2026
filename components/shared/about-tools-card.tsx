@@ -59,7 +59,8 @@ export function AboutToolsCard({ isGlobalDimmed, onArrowHoverStart, onArrowHover
   /** When the tools card leaves the mobile “in view” zone, clear dock cycle (same ref as scroll-reveal). */
   useEffect(() => {
     if (!isMobile || isActive) return;
-    setMobileCycleIdx(-1);
+    const id = window.setTimeout(() => setMobileCycleIdx(-1), 0);
+    return () => window.clearTimeout(id);
   }, [isMobile, isActive]);
 
   return (
@@ -179,7 +180,7 @@ export function AboutToolsCard({ isGlobalDimmed, onArrowHoverStart, onArrowHover
         isActive={isDetailsActive}
         title="Tools I Use"
         subtitle="The stack behind my work"
-        className="relative z-10 mt-4 w-full bg-[#FAFAFA] lg:absolute lg:left-0 lg:top-[332px] lg:z-30 lg:mt-0"
+        className="relative z-10 mt-4 w-full bg-[#FAFAFA] max-md:pointer-events-auto md:pointer-events-none md:absolute md:left-0 md:top-[332px] md:z-30 md:mt-0"
         onTextClick={isMobile ? advanceMobileDockCycle : undefined}
       />
     </article>

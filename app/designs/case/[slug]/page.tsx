@@ -37,6 +37,25 @@ export async function generateMetadata({ params }: CaseDetailRouteProps): Promis
     };
   }
 
+  if (slug === "octo") {
+    return {
+      title: "OCTO Merchant — Case Study",
+      alternates: {
+        canonical: "/designs/case/octo",
+      },
+      openGraph: {
+        title: "OCTO Merchant — Case Study",
+        description: siteConfig.description,
+        url: "/designs/case/octo",
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: "OCTO Merchant — Case Study",
+        description: siteConfig.description,
+      },
+    };
+  }
+
   return {};
 }
 

@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { siteConfig } from "@/lib/seo";
 
 const STATIC_ROUTES = ["/", "/about", "/designs"] as const;
-const LIVE_CASE_ROUTES = ["/designs/case/personal"] as const;
+const LIVE_CASE_ROUTES = ["/designs/case/personal", "/designs/case/octo"] as const;
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();

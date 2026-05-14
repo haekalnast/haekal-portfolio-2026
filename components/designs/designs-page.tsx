@@ -16,21 +16,21 @@ import {
 import { ExternalUnderlineLink } from "@/components/shared/external-underline-link";
 import { getGlobalFocusMotionAnimate } from "@/components/shared/arrow-reveal";
 import { CASE_DESIGNS } from "@/lib/case-designs";
+import { useIsMobileViewport } from "@/lib/use-is-mobile-viewport";
 import { PUBLIC_BRAND, PUBLIC_DESIGNS_CARDS_VARIANT1, PUBLIC_DESIGNS_MOCKUPS } from "@/lib/public-assets";
 
 const PREMIUM_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 const PREMIUM_DURATION = 0.32;
 const FALLBACK = "/not-found";
-const OCTO_HREF = "https://play.google.com/store/apps/details?id=com.cimbedc&pcampaignid=web_share";
 const DS_HREF = "https://desa-seminyak.vercel.app/";
 const SFS_HREF = "https://www.sfsekuritas.co.id/";
 
 const VARIANT1_LOGO_CARD_SHELL: FeaturedCardShellLayoutOverrides = {
   mockupInnerClassName: "h-[210px]",
   titleBlockClassName:
-    "mt-6 max-lg:pointer-events-auto lg:pointer-events-none lg:absolute lg:left-0 lg:mt-0 lg:top-[234px]",
-  articleCollapsed: "h-[210px] lg:h-[210px]",
-  articleRevealed: "h-[294px] lg:h-[210px]",
+    "mt-6 max-md:pointer-events-auto md:pointer-events-none md:absolute md:left-0 md:mt-0 md:top-[234px]",
+  articleCollapsed: "h-[210px] md:h-[210px]",
+  articleRevealed: "h-[294px] md:h-[210px]",
 };
 
 const OCTO_VARIANT1_CARD_SHELL: FeaturedCardShellLayoutOverrides = {
@@ -41,17 +41,17 @@ const OCTO_VARIANT1_CARD_SHELL: FeaturedCardShellLayoutOverrides = {
 const VARIANT1_SFS_CARD_SHELL: FeaturedCardShellLayoutOverrides = {
   mockupInnerClassName: "h-[444px]",
   titleBlockClassName:
-    "mt-4 max-lg:pointer-events-auto lg:pointer-events-none lg:absolute lg:left-0 lg:top-[460px] lg:mt-0",
-  articleCollapsed: "h-[548px] lg:h-[444px]",
-  articleRevealed: "h-[548px] lg:h-[444px]",
+    "mt-4 max-md:pointer-events-auto md:pointer-events-none md:absolute md:left-0 md:top-[460px] md:mt-0",
+  articleCollapsed: "h-[548px] md:h-[444px]",
+  articleRevealed: "h-[548px] md:h-[444px]",
 };
 
 const B2B_CARD_SHELL: FeaturedCardShellLayoutOverrides = {
   mockupInnerClassName: "h-[444px]",
   titleBlockClassName:
-    "mt-4 max-lg:pointer-events-auto lg:pointer-events-none lg:absolute lg:left-0 lg:top-[460px] lg:mt-0",
-  articleCollapsed: "h-[548px] lg:h-[444px]",
-  articleRevealed: "h-[548px] lg:h-[444px]",
+    "mt-4 max-md:pointer-events-auto md:pointer-events-none md:absolute md:left-0 md:top-[460px] md:mt-0",
+  articleCollapsed: "h-[548px] md:h-[444px]",
+  articleRevealed: "h-[548px] md:h-[444px]",
 };
 
 function LogoMark() {
@@ -132,6 +132,9 @@ export function DesignsPage() {
   const [revealedKey, setRevealedKey] = useState<string | null>(null);
   const [hoveredKey, setHoveredKey] = useState<string | null>(null);
   const isGlobalArrowFocus = activeArrowId !== null;
+  /** `md` 2-col + tablet: card width ≈ mobile; legacy laptop inset. Desktop `lg+`: center artboard so 692px shell does not bleed into the other column (e.g. SF Sekuritas). */
+  const isDesignsDenseLaptopColumn = useIsMobileViewport(1023);
+  const designsLaptopArtboard = isDesignsDenseLaptopColumn ? "narrow-column" : "wide-card";
 
   const onArrowHoverStart = useCallback((id: string) => {
     setActiveArrowId(id);
@@ -217,14 +220,14 @@ export function DesignsPage() {
           style={{ contentVisibility: "auto", containIntrinsicSize: "1px 2200px" }}
         >
           {/* Left column */}
-          <div className="flex min-w-0 flex-col gap-[24px]">
+          <div className="flex min-w-0 flex-col gap-[24px] overflow-x-clip">
             <DesignsFeaturedDesignCard
               cardKey="bpr"
               title="bprqaya.co.id"
               subtitle="Web | Fintech"
               href="https://bprqaya.id/"
               mockupPaddingClass="px-0 py-0"
-              renderMockup={(hovered) => <BPRMockup hovered={hovered} />}
+              renderMockup={(hovered) => <BPRMockup hovered={hovered} artboardPlacement={designsLaptopArtboard} />}
               {...cardShellProps}
             />
 
@@ -233,7 +236,8 @@ export function DesignsPage() {
                 cardKey="octo"
                 title="OCTO Merchant"
                 subtitle="Mobile | Fintech"
-                href={OCTO_HREF}
+                href={CASE_DESIGNS.octo.detailHref}
+                caseChip="Case"
                 mockupPaddingClass="px-0 py-0"
                 shellLayout={OCTO_VARIANT1_CARD_SHELL}
                 renderMockup={() => <DesignsOctoVariant1Mockup />}
@@ -275,6 +279,7 @@ export function DesignsPage() {
                   hovered={hovered}
                   contentSrc={PUBLIC_DESIGNS_MOCKUPS.b2b.content}
                   contentAlt="Dipay enterprise dashboard"
+                  artboardPlacement={designsLaptopArtboard}
                 />
               )}
               {...cardShellProps}
@@ -282,7 +287,7 @@ export function DesignsPage() {
           </div>
 
           {/* Right column */}
-          <div className="flex min-w-0 flex-col gap-[24px]">
+          <div className="flex min-w-0 flex-col gap-[24px] overflow-x-clip">
             <div className="grid grid-cols-1 gap-[24px] lg:grid-cols-2">
               <DesignsFeaturedDesignCard
                 cardKey="sfast"
@@ -321,6 +326,7 @@ export function DesignsPage() {
                   navbarIntrinsicWidth={1024}
                   navbarIntrinsicHeight={76}
                   contentHeightPx={2733}
+                  artboardPlacement={designsLaptopArtboard}
                 />
               )}
               {...cardShellProps}
@@ -343,6 +349,7 @@ export function DesignsPage() {
                   navbarIntrinsicWidth={2048}
                   navbarIntrinsicHeight={160}
                   contentHeightPx={1927}
+                  artboardPlacement={designsLaptopArtboard}
                 />
               )}
               {...cardShellProps}

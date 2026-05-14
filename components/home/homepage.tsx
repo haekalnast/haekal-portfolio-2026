@@ -531,7 +531,7 @@ function MarqueeCard({
                       sizes={`${item.mockupWidth}px`}
                       priority={imagePriority}
                       draggable={false}
-                      className="relative z-10 block h-full w-full object-cover object-top"
+                      className="relative z-10 block h-full w-full object-center max-lg:object-contain lg:object-cover lg:object-top"
                     />
                   </motion.div>
                 </div>
@@ -625,7 +625,7 @@ function AboutSection({
   return (
     <section
       id="about"
-      className="mx-auto flex w-full max-w-[1440px] flex-col gap-10 bg-[#FAFAFA] px-4 py-20 sm:px-10 sm:py-[108px] lg:flex-row lg:gap-10 lg:px-[60px] lg:py-[124px]"
+      className="mx-auto flex w-full max-w-[1440px] flex-col gap-[24px] bg-[#FAFAFA] px-4 py-20 sm:px-10 sm:py-[108px] lg:flex-row lg:gap-x-10 lg:gap-y-0 lg:px-[60px] lg:py-[124px]"
       style={{ contentVisibility: "auto", containIntrinsicSize: "1px 900px" }}
     >
       <div className="w-full flex-1 space-y-10 transition-all duration-300" style={getGlobalFocusStyle(isGlobalFocus)}>

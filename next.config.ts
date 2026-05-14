@@ -8,6 +8,8 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   images: {
     formats: ["image/avif", "image/webp"],
+    /** Allow `quality={95}` on `next/image` (case study rasters). Default is `[75]`. */
+    qualities: [75, 95],
     localPatterns: [
       {
         pathname: "/**",
@@ -15,6 +17,10 @@ const nextConfig: NextConfig = {
       {
         pathname: "/**",
         search: "?v=20260508-hq",
+      },
+      {
+        pathname: "/**",
+        search: "?v=20260514-hq",
       },
     ],
     remotePatterns: [

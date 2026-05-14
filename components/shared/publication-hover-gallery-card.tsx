@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ARROW_REVEAL_EASE,
   ArrowRevealButton,
@@ -10,11 +10,12 @@ import {
   getGlobalFocusStyle,
 } from "@/components/shared/arrow-reveal";
 import { cn } from "@/lib/cn";
+import { useIsMobileViewport } from "@/lib/use-is-mobile-viewport";
 import { useScrollRevealActive } from "@/lib/use-scroll-reveal-active";
 
 /**
  * Publication row — same fixed pixel geometry as desktop (`156×271` × 3, `-space-x-8`).
- * Layout mirrors `BPRMockup` + `FeaturedDesignCard`: absolute artboard; artboard + book wrappers stay `overflow-visible` so hover lift is not clipped. Card shell keeps `overflow-hidden` for rounded crop.
+ * Layout mirrors `BPRMockup` + `FeaturedDesignCard`: absolute artboard; artboard + book wrappers stay `overflow-visible` so hover lift is not clipped. Card shell keeps `overflow-hidden` for rounded crop. Title overlays from `md` (768px) so tablet row gaps match the grid.
  */
 const PUBLICATION_ARTBOARD_W = 404;
 const PUBLICATION_ARTBOARD_H = 271;
@@ -38,19 +39,40 @@ export function PublicationHoverGalleryCard({
   onArrowHoverEnd,
   articleClassName,
 }: PublicationHoverGalleryCardProps) {
+  const isMobile = useIsMobileViewport();
   const [isCardHovered, setIsCardHovered] = useState(false);
   const [isIconHovered, setIsIconHovered] = useState(false);
   const [hoveredBook, setHoveredBook] = useState<number | null>(null);
+  /** Mobile: -1 = none lifted; 0..n-1 cycles like `AboutToolsCard` dock (tap arrow or title). */
+  const [mobileBookCycleIdx, setMobileBookCycleIdx] = useState(-1);
   const { ref, isActive } = useScrollRevealActive<HTMLElement>(0.45);
-  const isRevealActive = isIconHovered || isActive;
-  /** Same as FeaturedDesignCard + BPR: pointer hover OR mobile scroll-reveal. */
-  const isHoverState = isCardHovered || isActive;
+  const isDetailsActive = isMobile || isIconHovered || (!isMobile && isActive);
+  const isHoverState =
+    isCardHovered || isActive || (isMobile && mobileBookCycleIdx >= 0);
+
+  const bookCount = images.length;
+  const advanceMobileBookCycle = () => {
+    if (bookCount === 0) return;
+    setMobileBookCycleIdx((prev) => (prev < 0 ? 0 : (prev + 1) % bookCount));
+  };
+
+  useEffect(() => {
+    if (!isMobile || isActive) return;
+    const id = window.setTimeout(() => setMobileBookCycleIdx(-1), 0);
+    return () => window.clearTimeout(id);
+  }, [isMobile, isActive]);
+
+  const liftedBookIndex = isMobile
+    ? mobileBookCycleIdx >= 0
+      ? mobileBookCycleIdx
+      : null
+    : hoveredBook;
 
   return (
     <article
       ref={ref}
       className={cn(
-        "relative w-full overflow-visible transition-all duration-300 max-lg:min-h-[520px] lg:h-[444px]",
+        "relative w-full overflow-visible transition-all duration-300 max-md:min-h-[520px] md:h-[444px]",
         articleClassName,
       )}
       style={getGlobalFocusStyle(isDimmed)}
@@ -58,7 +80,7 @@ export function PublicationHoverGalleryCard({
       onMouseLeave={() => {
         setIsCardHovered(false);
         setIsIconHovered(false);
-        setHoveredBook(null);
+        if (!isMobile) setHoveredBook(null);
       }}
     >
       <div className="relative h-[444px] w-full touch-manipulation overflow-hidden rounded-[20px] bg-[#F2F2F2]">
@@ -84,7 +106,9 @@ export function PublicationHoverGalleryCard({
             >
               <div
                 className="flex h-full w-full items-center justify-center -space-x-8"
-                onMouseLeave={() => setHoveredBook(null)}
+                onMouseLeave={() => {
+                  if (!isMobile) setHoveredBook(null);
+                }}
               >
                 {images.map((src, index) => (
                   <motion.div
@@ -93,10 +117,12 @@ export function PublicationHoverGalleryCard({
                     style={{ zIndex: index + 1 }}
                     initial={false}
                     animate={{
-                      y: hoveredBook === index ? PUBLICATION_BOOK_HOVER_Y : 0,
+                      y: liftedBookIndex === index ? PUBLICATION_BOOK_HOVER_Y : 0,
                     }}
                     transition={{ type: "spring", stiffness: 320, damping: 26, mass: 0.72 }}
-                    onMouseEnter={() => setHoveredBook(index)}
+                    onMouseEnter={() => {
+                      if (!isMobile) setHoveredBook(index);
+                    }}
                   >
                     <Image
                       src={src}
@@ -113,11 +139,11 @@ export function PublicationHoverGalleryCard({
 
         <motion.div
           className="absolute bottom-4 left-4 z-20"
-          animate={{ y: isRevealActive ? -1 : 0, scale: isRevealActive ? 1.05 : 1 }}
+          animate={{ y: isDetailsActive ? -1 : 0, scale: isDetailsActive ? 1.05 : 1 }}
           transition={{ type: "spring", stiffness: 320, damping: 24, mass: 0.7 }}
         >
           <ArrowRevealButton
-            isActive={isRevealActive}
+            isActive={isDetailsActive}
             ariaLabel="Publication details"
             className="flex h-8 w-8 items-center justify-center rounded-[1000px] bg-[#FAFAFA] p-[6px] shadow-[0_0_0_1px_rgba(0,0,0,0.06)] transition-all duration-300"
             onHoverStart={() => {
@@ -128,16 +154,23 @@ export function PublicationHoverGalleryCard({
               setIsIconHovered(false);
               onArrowHoverEnd();
             }}
-            onClick={(event) => event.stopPropagation()}
+            onClick={(event) => {
+              event.stopPropagation();
+              if (isMobile) {
+                advanceMobileBookCycle();
+                return;
+              }
+            }}
           />
         </motion.div>
       </div>
 
       <ArrowRevealText
-        isActive={isRevealActive}
+        isActive={isDetailsActive}
         title="Publication Design"
         subtitle="Print and editorial design"
-        className="relative z-10 mt-4 w-full max-lg:pointer-events-auto lg:pointer-events-none lg:absolute lg:left-0 lg:top-[452px] lg:mt-0"
+        className="relative z-10 mt-4 w-full max-md:pointer-events-auto md:pointer-events-none md:absolute md:left-0 md:top-[452px] md:mt-0"
+        onTextClick={isMobile ? advanceMobileBookCycle : undefined}
       />
     </article>
   );

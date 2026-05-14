@@ -21,19 +21,25 @@ import {
   SectionFeatureHeaderTitleBlock,
 } from "@/components/shared/section-feature-header";
 import { CASE_DESIGNS, CASE_RELATED_MAPPING, type CaseSlug } from "@/lib/case-designs";
+import { cn } from "@/lib/cn";
 import {
   PUBLIC_BRAND,
   PUBLIC_CASE_PERSONAL,
   PUBLIC_DESIGNS_CARDS_VARIANT1,
   PUBLIC_DESIGNS_MOCKUPS,
 } from "@/lib/public-assets";
+import { CaseOctoStudySections } from "@/components/designs/case-octo-study-sections";
+import {
+  CASE_DETAIL_MEDIA_FRAME,
+  CASE_DETAIL_MEDIA_IMAGE,
+  CaseSectionImage,
+} from "@/components/designs/case-section-image";
 
 const PREMIUM_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 const PREMIUM_DURATION = 0.32;
 
 const TEXT_STYLE_BODY_DEFAULT = "text-[16px] leading-[24px] font-normal text-[#707070]";
 const TEXT_STYLE_BODY_SUBTLE = "text-[16px] leading-[24px] font-light text-[#707070]";
-const TEXT_STYLE_CAPTION = "text-[16px] leading-[24px] font-normal text-[#707070]";
 const TEXT_STYLE_H2 = "text-[32px] leading-[40px] tracking-[-1px] text-black lg:text-[40px] lg:leading-[56px]";
 const TEXT_STYLE_H3 = "text-[28px] leading-[36px] tracking-[-1px] text-black lg:text-[32px] lg:leading-[40px]";
 const TEXT_STYLE_H4 = "text-[20px] leading-[24px] tracking-[-1px] text-black";
@@ -45,9 +51,9 @@ const TEXT_STYLE_BODY_STRONG = "text-base leading-6 text-black";
 
 const CASE_SECTION_CARD_SHELL: FeaturedCardShellLayoutOverrides = {
   mockupInnerClassName: "h-[444px]",
-  titleBlockClassName: "pointer-events-none mt-4 sm:absolute sm:left-0 sm:top-[460px] sm:mt-0",
-  articleCollapsed: "h-[512px] sm:h-[444px]",
-  articleRevealed: "h-[512px] sm:h-[444px]",
+  titleBlockClassName: "pointer-events-none mt-4 md:absolute md:left-0 md:top-[460px] md:mt-0",
+  articleCollapsed: "h-[512px] md:h-[444px]",
+  articleRevealed: "h-[512px] md:h-[444px]",
 };
 
 function LogoMark() {
@@ -80,37 +86,6 @@ function CaseLinkButton({ href, label }: { href: string; label: string }) {
     >
       {label}
     </ExternalUnderlineLink>
-  );
-}
-
-function CaseSectionImage({
-  src,
-  alt,
-  caption,
-  priority,
-}: {
-  src: string;
-  alt: string;
-  caption?: string;
-  priority?: boolean;
-}) {
-  return (
-    <div className="flex w-full flex-col items-center gap-[16px]">
-      <div className="relative h-[260px] w-full overflow-hidden rounded-[16px] sm:h-[420px] lg:h-[533px]">
-        <Image
-          src={src}
-          alt={alt}
-          fill
-          priority={priority}
-          quality={95}
-          sizes="(min-width: 1440px) 1280px, (min-width: 1024px) 1100px, 100vw"
-          className="object-cover"
-        />
-      </div>
-      {caption ? (
-        <p className={`${TEXT_STYLE_CAPTION} w-full text-center`}>{caption}</p>
-      ) : null}
-    </div>
   );
 }
 
@@ -283,6 +258,7 @@ export function CaseDetailPage({ slug }: { slug: CaseSlug }) {
   }, []);
 
   const isPersonal = slug === "personal";
+  const isOcto = slug === "octo";
 
   return (
     <div className="bg-[#FAFAFA] text-black">
@@ -360,14 +336,14 @@ export function CaseDetailPage({ slug }: { slug: CaseSlug }) {
                   </div>
                 </div>
               </div>
-              <div className="relative h-[260px] w-full max-w-[800px] overflow-hidden rounded-[16px] sm:h-[420px] lg:h-[533px]">
+              <div className={cn(CASE_DETAIL_MEDIA_FRAME, "max-w-[800px]")}>
                 <Image
                   src={PUBLIC_CASE_PERSONAL.heroMockup}
                   alt="Dipay Personal — Spending Statistic"
                   fill
                   priority
                   sizes="(min-width: 1024px) 800px, 100vw"
-                  className="object-cover"
+                  className={CASE_DETAIL_MEDIA_IMAGE}
                 />
               </div>
               </section>
@@ -699,6 +675,23 @@ export function CaseDetailPage({ slug }: { slug: CaseSlug }) {
               </div>
             </section>
           </>
+        ) : isOcto ? (
+          <CaseOctoStudySections
+            activeArrowId={activeArrowId}
+            relatedCards={relatedCards}
+            renderRelatedCaseCard={(relatedSlug) => (
+              <RelatedCaseCard
+                slug={relatedSlug}
+                activeArrowId={activeArrowId}
+                onArrowHoverStart={onArrowHoverStart}
+                onArrowHoverEnd={onArrowHoverEnd}
+                revealedKey={revealedKey}
+                setRevealedKey={setRevealedKey}
+                hoveredKey={hoveredKey}
+                setHoveredKey={setHoveredKey}
+              />
+            )}
+          />
         ) : (
           <section className="py-20">
             <h1 className={TEXT_STYLE_SECTION_TITLE}>{currentCase.title}</h1>

@@ -8,6 +8,8 @@ type CaseDesignConfig = {
   cardKey: CaseSlug;
   detailHref: string;
   liveHref: string;
+  /** Optional second store link (e.g. App Store) for mobile case studies. */
+  appStoreHref?: string;
   summary: string;
   platform: string;
   domain: string;
@@ -53,7 +55,8 @@ export const CASE_DESIGNS: Record<CaseSlug, CaseDesignConfig> = {
     subtitle: "Mobile | Fintech",
     cardKey: "octo",
     detailHref: "/designs/case/octo",
-    liveHref: "https://play.google.com/store/apps/details?id=com.cimbedc&pcampaignid=web_share",
+    liveHref: "https://play.google.com/store/apps/details?id=com.cimbedc&hl=id",
+    appStoreHref: "https://apps.apple.com/id/app/octo-merchant/id1635709937",
     summary: "Merchant-facing mobile experience designed for quick transaction handling and day-to-day operations.",
     platform: "Mobile",
     domain: "Fintech",

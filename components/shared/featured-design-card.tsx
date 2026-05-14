@@ -26,11 +26,11 @@ export type FeaturedCardShellLayoutOverrides = Partial<{
 
 const DEFAULT_FEATURED_CARD_SHELL_LAYOUT = {
   mockupInnerClassName: "h-[444px]",
+  /** Title under mockup only on small phones; from `md` (768px) match desktop overlay so row gaps read as true 24px. */
   titleBlockClassName:
-    "mt-4 max-lg:pointer-events-auto lg:pointer-events-none lg:absolute lg:left-0 lg:top-[460px] lg:mt-0",
-  /** Below `lg`, title + chips sit in normal flow under the 444px mockup — article must be taller than the mockup alone. */
-  articleCollapsed: "h-[548px] lg:h-[444px]",
-  articleRevealed: "h-[548px] lg:h-[444px]",
+    "mt-4 max-md:pointer-events-auto md:pointer-events-none md:absolute md:left-0 md:top-[460px] md:mt-0",
+  articleCollapsed: "h-[548px] md:h-[444px]",
+  articleRevealed: "h-[548px] md:h-[444px]",
 } as const;
 
 export type HomeFeaturedCardId = "bpr" | "sfast" | "personal";
@@ -82,16 +82,56 @@ const PERSONAL_SCREEN_ASSETS = {
 
 const SFAST_MOCKUP_ASSETS = PUBLIC_HOME_SFAST_MOCKUP;
 
-export function BPRMockup({ hovered }: { hovered: boolean }) {
-  return (
-    <div className="relative h-full w-full">
+/** `wide-card`: center laptop strip below `lg` (home + case detail). `narrow-column`: legacy `-22px` for All Designs 2-col tablet cards. */
+export type LaptopArtboardPlacement = "wide-card" | "narrow-column";
+
+function FeaturedLaptopArtboard({
+  hovered,
+  placement = "wide-card",
+  children,
+}: {
+  hovered: boolean;
+  placement?: LaptopArtboardPlacement;
+  children: ReactNode;
+}) {
+  const scaleStyle = {
+    transform: hovered ? "scale(1.02)" : "scale(1)",
+    transformOrigin: "50% 50%" as const,
+  };
+
+  if (placement === "narrow-column") {
+    return (
       <motion.div
         className="absolute left-[-22px] top-4 h-[412px] w-[692px] overflow-hidden transition-transform duration-500 ease-out"
-        style={{
-          transform: hovered ? "scale(1.02)" : "scale(1)",
-          transformOrigin: "50% 50%",
-        }}
+        style={scaleStyle}
       >
+        {children}
+      </motion.div>
+    );
+  }
+
+  return (
+    <div className="absolute left-0 top-4 flex w-full justify-center lg:left-[-22px] lg:w-[692px] lg:justify-start">
+      <motion.div
+        className="relative h-[412px] w-[692px] shrink-0 overflow-hidden transition-transform duration-500 ease-out"
+        style={scaleStyle}
+      >
+        {children}
+      </motion.div>
+    </div>
+  );
+}
+
+export function BPRMockup({
+  hovered,
+  artboardPlacement = "wide-card",
+}: {
+  hovered: boolean;
+  artboardPlacement?: LaptopArtboardPlacement;
+}) {
+  return (
+    <div className="relative h-full w-full">
+      <FeaturedLaptopArtboard hovered={hovered} placement={artboardPlacement}>
         <Image
           src={FEATURED_ASSETS.bpr}
           alt="bprqaya.co.id"
@@ -124,7 +164,7 @@ export function BPRMockup({ hovered }: { hovered: boolean }) {
             />
           </div>
         </div>
-      </motion.div>
+      </FeaturedLaptopArtboard>
     </div>
   );
 }
@@ -150,6 +190,7 @@ export function BPRFrameMockup({
    */
   navbarIntrinsicWidth = 1024,
   navbarIntrinsicHeight = 52,
+  artboardPlacement = "wide-card",
 }: {
   hovered: boolean;
   navbarSrc: string;
@@ -160,16 +201,11 @@ export function BPRFrameMockup({
   contentHeightPx?: number;
   navbarIntrinsicWidth?: number;
   navbarIntrinsicHeight?: number;
+  artboardPlacement?: LaptopArtboardPlacement;
 }) {
   return (
     <div className="relative h-full w-full">
-      <motion.div
-        className="absolute left-[-22px] top-4 h-[412px] w-[692px] overflow-hidden transition-transform duration-500 ease-out"
-        style={{
-          transform: hovered ? "scale(1.02)" : "scale(1)",
-          transformOrigin: "50% 50%",
-        }}
-      >
+      <FeaturedLaptopArtboard hovered={hovered} placement={artboardPlacement}>
         <Image
           src={FEATURED_ASSETS.bpr}
           alt=""
@@ -219,7 +255,7 @@ export function BPRFrameMockup({
             />
           </div>
         </div>
-      </motion.div>
+      </FeaturedLaptopArtboard>
     </div>
   );
 }
@@ -229,20 +265,16 @@ export function BPRDashboardFrameMockup({
   hovered,
   contentSrc,
   contentAlt,
+  artboardPlacement = "wide-card",
 }: {
   hovered: boolean;
   contentSrc: string;
   contentAlt: string;
+  artboardPlacement?: LaptopArtboardPlacement;
 }) {
   return (
     <div className="relative h-full w-full">
-      <motion.div
-        className="absolute left-[-22px] top-4 h-[412px] w-[692px] overflow-hidden transition-transform duration-500 ease-out"
-        style={{
-          transform: hovered ? "scale(1.02)" : "scale(1)",
-          transformOrigin: "50% 50%",
-        }}
-      >
+      <FeaturedLaptopArtboard hovered={hovered} placement={artboardPlacement}>
         <Image
           src={FEATURED_ASSETS.bpr}
           alt=""
@@ -262,7 +294,7 @@ export function BPRDashboardFrameMockup({
             draggable={false}
           />
         </div>
-      </motion.div>
+      </FeaturedLaptopArtboard>
     </div>
   );
 }

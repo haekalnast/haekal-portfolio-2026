@@ -1,7 +1,7 @@
 import { CREATIVE_JOURNAL_PNG_NAMES } from "@/lib/creative-journal-png-names";
 
 /** Central paths for files under `public/` — match folder-per-card layout. */
-const withAssetVersion = (path: string) => `${path}?v=20260508-hq`;
+const withAssetVersion = (path: string) => `${path}?v=20260514-hq`;
 
 export const PUBLIC_BRAND = {
   logoDefault: "/brand/logo-haekal-default.svg",
@@ -96,6 +96,17 @@ export const PUBLIC_CASE_PERSONAL = {
   newQrisPayment: withAssetVersion("/designs/case/personal/new-qris-payment.png"),
   newTransferPayment: withAssetVersion("/designs/case/personal/new-transfer-payment.png"),
   ppobPayment: withAssetVersion("/designs/case/personal/ppob-payment.png"),
+} as const;
+
+/** Case detail — OCTO Merchant hero + body images (`public/designs/case/octo/`). */
+export const PUBLIC_CASE_OCTO = {
+  heroMockup: withAssetVersion("/designs/case/octo/hero-mockup.png"),
+  benchmarking: withAssetVersion("/designs/case/octo/benchmarking.png"),
+  featureAspectTable: withAssetVersion("/designs/case/octo/feature-aspect-table.png"),
+  flowNtb: withAssetVersion("/designs/case/octo/flow-ntb.png"),
+  flowEtb: withAssetVersion("/designs/case/octo/flow-etb.png"),
+  welcomeKit: withAssetVersion("/designs/case/octo/welcome-kit.png"),
+  mobileUiPreview: withAssetVersion("/designs/case/octo/mobile-ui-preview.png"),
 } as const;
 
 /** Homepage Featured Designs — local mockup slices */

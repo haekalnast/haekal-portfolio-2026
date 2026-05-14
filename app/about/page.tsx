@@ -151,7 +151,7 @@ function ResumeCard({
         isActive={isTextHover}
         title="Resume"
         subtitle="See details"
-        className="absolute left-0 top-[218px] max-lg:pointer-events-auto lg:pointer-events-none"
+        className="absolute left-0 top-[218px] max-md:pointer-events-auto md:pointer-events-none"
         onTextClick={isMobile ? () => { window.location.href = FALLBACK_ERROR_ROUTE; } : undefined}
       />
     </article>
@@ -226,7 +226,7 @@ export default function AboutPage() {
       </header>
 
       <main className="mx-auto w-full max-w-[1440px] px-4 pt-[124px] sm:px-10 lg:px-[60px]">
-        <section className="grid gap-[24px] py-10 lg:grid-cols-[1fr_648px] lg:gap-10 lg:py-14">
+        <section className="grid gap-[24px] py-10 lg:grid-cols-[1fr_648px] lg:gap-x-10 lg:gap-y-[24px] lg:py-14">
           <div className="space-y-4 transition-all duration-300" style={getGlobalFocusStyle(isTextDimmed)}>
             <h1 className="text-[26px] leading-[32px] tracking-[-1px] text-black lg:text-[40px] lg:leading-[56px]">
               About Haekal

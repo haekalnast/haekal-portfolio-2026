@@ -46,21 +46,21 @@ const LAYOUT = {
   haekal: {
     article: "relative h-[278px] w-full shrink-0 overflow-visible rounded-[20px]",
     mockup: "absolute inset-x-0 top-0 h-[210px] overflow-hidden rounded-[20px] bg-[#F2F2F2]",
-    revealText: "max-lg:pointer-events-auto lg:pointer-events-none absolute left-0 top-[218px]",
+    revealText: "max-md:pointer-events-auto md:pointer-events-none absolute left-0 top-[218px]",
   },
   "journal-short": {
     article:
-      "relative min-h-[280px] w-full overflow-visible transition-all duration-300 lg:min-h-0 lg:h-[210px]",
+      "relative min-h-[280px] w-full overflow-visible transition-all duration-300 md:min-h-0 md:h-[210px]",
     mockup: "relative h-[210px] overflow-hidden rounded-[20px] bg-[#F2F2F2]",
     revealText:
-      "relative z-10 mt-4 w-full max-lg:pointer-events-auto lg:pointer-events-none lg:absolute lg:left-0 lg:top-[218px] lg:mt-0",
+      "relative z-10 mt-4 w-full max-md:pointer-events-auto md:pointer-events-none md:absolute md:left-0 md:top-[218px] md:mt-0",
   },
   "journal-tall": {
     article:
-      "relative min-h-[524px] w-full overflow-visible transition-all duration-300 lg:min-h-0 lg:h-[444px]",
+      "relative min-h-[524px] w-full overflow-visible transition-all duration-300 md:min-h-0 md:h-[444px]",
     mockup: "relative h-[444px] overflow-hidden rounded-[20px] bg-[#F2F2F2]",
     revealText:
-      "relative z-10 mt-4 w-full max-lg:pointer-events-auto lg:pointer-events-none lg:absolute lg:left-0 lg:top-[452px] lg:mt-0",
+      "relative z-10 mt-4 w-full max-md:pointer-events-auto md:pointer-events-none md:absolute md:left-0 md:top-[452px] md:mt-0",
   },
 } as const;
 
