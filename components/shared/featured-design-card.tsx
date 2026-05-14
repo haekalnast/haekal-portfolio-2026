@@ -141,6 +141,7 @@ export function BPRMockup({
   artboardPlacement?: LaptopArtboardPlacement;
   wideCardStartBelowLg?: boolean;
 }) {
+  const isMobile = useIsMobileViewport();
   return (
     <div className="relative h-full w-full">
       <FeaturedLaptopArtboard
@@ -156,7 +157,12 @@ export function BPRMockup({
           sizes="692px"
         />
         <div className="absolute left-[90px] top-[46px] z-10 h-[320px] w-[512px] overflow-hidden rounded-[2px] bg-white">
-          <div className="absolute inset-0 z-10 overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+          <div
+            className={cn(
+              "absolute inset-0 z-10 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden",
+              isMobile ? "overflow-hidden" : "overflow-y-auto",
+            )}
+          >
             <div className="w-[512px]">
               <img
                 src={BPR_SCREEN_ASSETS.sections}
@@ -219,6 +225,7 @@ export function BPRFrameMockup({
   navbarIntrinsicHeight?: number;
   artboardPlacement?: LaptopArtboardPlacement;
 }) {
+  const isMobile = useIsMobileViewport();
   return (
     <div className="relative h-full w-full">
       <FeaturedLaptopArtboard hovered={hovered} placement={artboardPlacement}>
@@ -230,7 +237,12 @@ export function BPRFrameMockup({
           sizes="692px"
         />
         <div className="absolute left-[90px] top-[46px] z-10 h-[320px] w-[512px] overflow-hidden rounded-[2px] bg-white">
-          <div className="absolute inset-0 z-10 overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+          <div
+            className={cn(
+              "absolute inset-0 z-10 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden",
+              isMobile ? "overflow-hidden" : "overflow-y-auto",
+            )}
+          >
             <div className="w-[512px]">
               <img
                 src={contentSrc}
@@ -395,6 +407,7 @@ export function SFASTMockup({ hovered }: { hovered: boolean }) {
 }
 
 export function PersonalMockup({ hovered }: { hovered: boolean }) {
+  const isMobile = useIsMobileViewport();
   return (
     <div className="relative h-full w-full">
       <div className="absolute inset-0 flex items-center justify-center">
@@ -416,7 +429,12 @@ export function PersonalMockup({ hovered }: { hovered: boolean }) {
               />
             </div>
 
-            <div className="absolute inset-x-0 top-[55.74px] bottom-[33.05px] z-10 overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+            <div
+              className={cn(
+                "absolute inset-x-0 top-[55.74px] bottom-[33.05px] z-10 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden",
+                isMobile ? "overflow-hidden" : "overflow-y-auto",
+              )}
+            >
               <Image
                 src={PERSONAL_SCREEN_ASSETS.content}
                 alt="Personal statistics content"
