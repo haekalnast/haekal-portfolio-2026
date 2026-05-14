@@ -38,21 +38,16 @@ const OCTO_VARIANT1_CARD_SHELL: FeaturedCardShellLayoutOverrides = {
   titleHeadingClassName: "text-[18px] leading-[20px] tracking-[-1px] text-black",
 };
 
-const VARIANT1_SFS_CARD_SHELL: FeaturedCardShellLayoutOverrides = {
-  mockupInnerClassName: "h-[444px]",
-  titleBlockClassName:
-    "mt-4 max-md:pointer-events-auto md:pointer-events-none md:absolute md:left-0 md:top-[460px] md:mt-0",
-  articleCollapsed: "h-[548px] md:h-[444px]",
-  articleRevealed: "h-[548px] md:h-[444px]",
-};
-
+/** Laptop “campaign” cards (B2B, Nuho-style chrome) — SF Sekuritas shares this so desktop height matches. */
 const B2B_CARD_SHELL: FeaturedCardShellLayoutOverrides = {
   mockupInnerClassName: "h-[444px]",
   titleBlockClassName:
     "mt-4 max-md:pointer-events-auto md:pointer-events-none md:absolute md:left-0 md:top-[460px] md:mt-0",
-  articleCollapsed: "h-[548px] md:h-[444px]",
-  articleRevealed: "h-[548px] md:h-[444px]",
+  articleCollapsed: "h-[548px] md:h-[444px] lg:h-[444px] lg:shrink-0",
+  articleRevealed: "h-[548px] md:h-[444px] lg:h-[444px] lg:shrink-0",
 };
+
+const VARIANT1_SFS_CARD_SHELL = B2B_CARD_SHELL;
 
 function LogoMark() {
   return (

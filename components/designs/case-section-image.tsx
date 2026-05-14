@@ -3,18 +3,15 @@ import { cn } from "@/lib/cn";
 
 /**
  * Fixed frame for case study rasters (Personal, OCTO, etc.):
- * - Mobile: 240px tall
- * - Tablet and up (`md`, 768px): 448px tall
- * - Gray fill so `object-contain` letterboxing matches case sections.
+ * - Mobile: **240px** tall
+ * - Tablet and up (`md`, 768px): **448px** tall
+ * - Gray underlay only peeks if the image is slow to paint; raster uses **cover** (fill), not contain.
  */
 export const CASE_DETAIL_MEDIA_FRAME =
   "relative h-[240px] w-full overflow-hidden rounded-[16px] bg-[#F2F2F2] md:h-[448px]";
 
-/**
- * Below desktop (`lg`, 1024px): `contain` + `center` keeps the full mockup centered in the frame (tablet + phone).
- * `lg+`: `cover` for edge-to-edge on wide layouts.
- */
-export const CASE_DETAIL_MEDIA_IMAGE = "object-center max-lg:object-contain lg:object-cover";
+/** Fill the frame edge-to-edge (`object-cover`); fixed frame heights live on `CASE_DETAIL_MEDIA_FRAME`. */
+export const CASE_DETAIL_MEDIA_IMAGE = "h-full w-full object-cover object-center";
 
 const CAPTION = "text-[16px] leading-[24px] font-normal text-[#707070]";
 
