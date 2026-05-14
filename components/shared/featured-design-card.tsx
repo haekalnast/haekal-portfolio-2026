@@ -84,16 +84,19 @@ const PERSONAL_SCREEN_ASSETS = {
 
 const SFAST_MOCKUP_ASSETS = PUBLIC_HOME_SFAST_MOCKUP;
 
-/** `wide-card`: center laptop strip below `lg` (home + case detail). `narrow-column`: legacy `-22px` for All Designs 2-col tablet cards. */
+/** `wide-card`: centers laptop strip below `lg` (default; All Designs + case cards). `narrow-column`: legacy `-22px` for All Designs 2-col tablet cards. Homepage BPR uses `wideCardStartBelowLg` on `BPRMockup` for left alignment below `lg`. */
 export type LaptopArtboardPlacement = "wide-card" | "narrow-column";
 
 function FeaturedLaptopArtboard({
   hovered,
   placement = "wide-card",
+  /** Homepage BPR only: `justify-start` below `lg`. Designs `wide-card` keeps `justify-center` until `lg`. */
+  wideCardStartBelowLg = false,
   children,
 }: {
   hovered: boolean;
   placement?: LaptopArtboardPlacement;
+  wideCardStartBelowLg?: boolean;
   children: ReactNode;
 }) {
   const scaleStyle = {
@@ -113,7 +116,12 @@ function FeaturedLaptopArtboard({
   }
 
   return (
-    <div className="absolute left-0 top-4 flex w-full justify-center lg:left-[-22px] lg:w-[692px] lg:justify-start">
+    <div
+      className={cn(
+        "absolute left-0 top-4 flex w-full lg:left-[-22px] lg:w-[692px] lg:justify-start",
+        wideCardStartBelowLg ? "justify-start" : "justify-center",
+      )}
+    >
       <motion.div
         className="relative h-[412px] w-[692px] shrink-0 overflow-hidden transition-transform duration-500 ease-out"
         style={scaleStyle}
@@ -127,13 +135,19 @@ function FeaturedLaptopArtboard({
 export function BPRMockup({
   hovered,
   artboardPlacement = "wide-card",
+  wideCardStartBelowLg = false,
 }: {
   hovered: boolean;
   artboardPlacement?: LaptopArtboardPlacement;
+  wideCardStartBelowLg?: boolean;
 }) {
   return (
     <div className="relative h-full w-full">
-      <FeaturedLaptopArtboard hovered={hovered} placement={artboardPlacement}>
+      <FeaturedLaptopArtboard
+        hovered={hovered}
+        placement={artboardPlacement}
+        wideCardStartBelowLg={wideCardStartBelowLg}
+      >
         <Image
           src={FEATURED_ASSETS.bpr}
           alt="bprqaya.co.id"
@@ -464,7 +478,7 @@ export function HomeFeaturedDesignCard({
   const isGlobalDimmed = activeArrowId !== null && activeArrowId !== cardArrowId;
 
   let mockup: ReactNode;
-  if (card.id === "bpr") mockup = <BPRMockup hovered={isHoverState} />;
+  if (card.id === "bpr") mockup = <BPRMockup hovered={isHoverState} wideCardStartBelowLg />;
   else if (card.id === "sfast") mockup = <SFASTMockup hovered={isHoverState} />;
   else mockup = <PersonalMockup hovered={isHoverState} />;
 
