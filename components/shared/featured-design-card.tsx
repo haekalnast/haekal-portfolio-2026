@@ -28,8 +28,9 @@ const DEFAULT_FEATURED_CARD_SHELL_LAYOUT = {
   mockupInnerClassName: "h-[444px]",
   titleBlockClassName:
     "mt-4 max-lg:pointer-events-auto lg:pointer-events-none lg:absolute lg:left-0 lg:top-[460px] lg:mt-0",
-  articleCollapsed: "h-[444px] lg:h-[444px]",
-  articleRevealed: "h-[512px] lg:h-[444px]",
+  /** Below `lg`, title + chips sit in normal flow under the 444px mockup — article must be taller than the mockup alone. */
+  articleCollapsed: "h-[548px] lg:h-[444px]",
+  articleRevealed: "h-[548px] lg:h-[444px]",
 } as const;
 
 export type HomeFeaturedCardId = "bpr" | "sfast" | "personal";

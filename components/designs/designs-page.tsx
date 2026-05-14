@@ -42,16 +42,16 @@ const VARIANT1_SFS_CARD_SHELL: FeaturedCardShellLayoutOverrides = {
   mockupInnerClassName: "h-[444px]",
   titleBlockClassName:
     "mt-4 max-lg:pointer-events-auto lg:pointer-events-none lg:absolute lg:left-0 lg:top-[460px] lg:mt-0",
-  articleCollapsed: "h-[444px] lg:h-[444px]",
-  articleRevealed: "h-[500px] lg:h-[444px]",
+  articleCollapsed: "h-[548px] lg:h-[444px]",
+  articleRevealed: "h-[548px] lg:h-[444px]",
 };
 
 const B2B_CARD_SHELL: FeaturedCardShellLayoutOverrides = {
   mockupInnerClassName: "h-[444px]",
   titleBlockClassName:
     "mt-4 max-lg:pointer-events-auto lg:pointer-events-none lg:absolute lg:left-0 lg:top-[460px] lg:mt-0",
-  articleCollapsed: "h-[444px] lg:h-[444px]",
-  articleRevealed: "h-[500px] lg:h-[444px]",
+  articleCollapsed: "h-[548px] lg:h-[444px]",
+  articleRevealed: "h-[548px] lg:h-[444px]",
 };
 
 function LogoMark() {
