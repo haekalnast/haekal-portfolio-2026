@@ -352,7 +352,8 @@ export function DesignsPage() {
               cardKey="sfc"
               title="sfcapital.co.id"
               subtitle="Web | Fintech"
-              href="https://sfcapital.co.id/"
+              href={CASE_DESIGNS.sfc.detailHref}
+              caseChip="Case"
               mockupPaddingClass="px-0 py-0"
               shellLayout={DESIGNS_B2B_SFC_LAPTOP_TITLE_REVEAL_SHELL}
               renderMockup={(hovered) => (

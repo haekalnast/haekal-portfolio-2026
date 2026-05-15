@@ -30,6 +30,7 @@ import {
 } from "@/lib/public-assets";
 import { CaseB2bStudySections } from "@/components/designs/case-b2b-study-sections";
 import { CaseOctoStudySections } from "@/components/designs/case-octo-study-sections";
+import { CaseSfcStudySections } from "@/components/designs/case-sfc-study-sections";
 import {
   CASE_DETAIL_MEDIA_FRAME,
   CASE_DETAIL_MEDIA_IMAGE,
@@ -260,6 +261,7 @@ export function CaseDetailPage({ slug }: { slug: CaseSlug }) {
 
   const isPersonal = slug === "personal";
   const isB2b = slug === "b2b";
+  const isSfc = slug === "sfc";
   const isOcto = slug === "octo";
 
   return (
@@ -679,6 +681,23 @@ export function CaseDetailPage({ slug }: { slug: CaseSlug }) {
           </>
         ) : isB2b ? (
           <CaseB2bStudySections
+            activeArrowId={activeArrowId}
+            relatedCards={relatedCards}
+            renderRelatedCaseCard={(relatedSlug) => (
+              <RelatedCaseCard
+                slug={relatedSlug}
+                activeArrowId={activeArrowId}
+                onArrowHoverStart={onArrowHoverStart}
+                onArrowHoverEnd={onArrowHoverEnd}
+                revealedKey={revealedKey}
+                setRevealedKey={setRevealedKey}
+                hoveredKey={hoveredKey}
+                setHoveredKey={setHoveredKey}
+              />
+            )}
+          />
+        ) : isSfc ? (
+          <CaseSfcStudySections
             activeArrowId={activeArrowId}
             relatedCards={relatedCards}
             renderRelatedCaseCard={(relatedSlug) => (

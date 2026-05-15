@@ -6,6 +6,9 @@ const withAssetVersion = (path: string) => `${path}?v=20260514-hq`;
 /** B2B case study rasters only — bump independently so global `withAssetVersion` stays stable. */
 const withB2bCaseAssetVersion = (path: string) => `${path}?v=20260516-b2b-case`;
 
+/** SFC case study rasters only — bump independently so global `withAssetVersion` stays stable. */
+const withSfcCaseAssetVersion = (path: string) => `${path}?v=20260516-sfc-case`;
+
 export const PUBLIC_BRAND = {
   logoDefault: "/brand/logo-haekal-default.svg",
   logoHover: "/brand/logo-haekal-hover.svg",
@@ -128,6 +131,20 @@ export const PUBLIC_CASE_B2B = {
   newTopUp: withB2bCaseAssetVersion("/designs/case/b2b/new-top-up.png"),
   newProfile: withB2bCaseAssetVersion("/designs/case/b2b/new-profile.png"),
   newMultiAccount: withB2bCaseAssetVersion("/designs/case/b2b/new-multi-account.png"),
+} as const;
+
+/** Case detail — SF Capital (SFC) — `public/designs/case/sfc/`. */
+export const PUBLIC_CASE_SFC = {
+  heroMockup: withSfcCaseAssetVersion("/designs/case/sfc/hero-mockup.png"),
+  oldWebsiteDesign: withSfcCaseAssetVersion("/designs/case/sfc/old-website-design.png"),
+  benchmarkingSaratoga: withSfcCaseAssetVersion("/designs/case/sfc/benchmarking-saratoga.png"),
+  benchmarkingNorthstar: withSfcCaseAssetVersion("/designs/case/sfc/benchmarking-northstar.png"),
+  featureAspectTable: withSfcCaseAssetVersion("/designs/case/sfc/feature-aspect-table.png"),
+  newHomepage: withSfcCaseAssetVersion("/designs/case/sfc/new-homepage.png"),
+  newPortfolioSection: withSfcCaseAssetVersion("/designs/case/sfc/new-portfolio-section.png"),
+  newIrPage: withSfcCaseAssetVersion("/designs/case/sfc/new-ir-page.png"),
+  responsiveViews: withSfcCaseAssetVersion("/designs/case/sfc/responsive-views.png"),
+  designSystemPreview: withSfcCaseAssetVersion("/designs/case/sfc/design-system-preview.png"),
 } as const;
 
 /** Homepage Featured Designs — local mockup slices */

@@ -37,6 +37,25 @@ export async function generateMetadata({ params }: CaseDetailRouteProps): Promis
     };
   }
 
+  if (slug === "sfc") {
+    return {
+      title: "SF Capital — Case Study",
+      alternates: {
+        canonical: "/designs/case/sfc",
+      },
+      openGraph: {
+        title: "SF Capital — Case Study",
+        description: siteConfig.description,
+        url: "/designs/case/sfc",
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: "SF Capital — Case Study",
+        description: siteConfig.description,
+      },
+    };
+  }
+
   if (slug === "octo") {
     return {
       title: "OCTO Merchant — Case Study",

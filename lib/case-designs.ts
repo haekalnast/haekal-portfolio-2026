@@ -68,7 +68,8 @@ export const CASE_RELATED_MAPPING: Record<CaseSlug, [CaseSlug, CaseSlug]> = {
   octo: ["sfc", "b2b"],
   /** B2B case featured row: OCTO (left), Personal (right); card widths match Figma desktop layout. */
   b2b: ["octo", "personal"],
-  sfc: ["personal", "octo"],
+  /** SFC case featured row: OCTO (left), Personal (right); matches B2B case detail layout. */
+  sfc: ["octo", "personal"],
 };
 
 const CASE_STATUS_DRAFT: Record<CaseSlug, CaseRevealStatus> = {
