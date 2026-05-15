@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { CaseNavPrevNextButton } from "@/components/designs/case-nav-prev-next-button";
+import { MobileBottomNavShell, PILL_NAV_CLASS } from "@/components/shared/mobile-bottom-nav";
 import { CASE_DESIGNS, getAdjacentCaseSlugs, type CaseSlug } from "@/lib/case-designs";
 import { cn } from "@/lib/cn";
 import { PUBLIC_BRAND } from "@/lib/public-assets";
@@ -31,43 +32,72 @@ function LogoMark() {
   );
 }
 
-function CaseNavPillLinks() {
+function CaseNavPillLinks({ fitBar = false }: { fitBar?: boolean }) {
+  const linkClass = fitBar
+    ? "flex h-[46px] min-w-0 flex-1 items-center justify-center rounded-[230px] text-center text-base leading-[21px] text-[#707070] transition-colors hover:bg-[#F2F2F2]"
+    : NAV_LINK_CLASS;
+
   return (
     <nav
       aria-label="Primary navigation"
-      className="flex items-center rounded-[56px] border border-black/10 bg-white/80 p-[5px] shadow-[0_10px_10px_-5px_rgba(0,0,0,0.10)] backdrop-blur-[8px]"
+      className={cn(PILL_NAV_CLASS, fitBar && "min-w-0 flex-1")}
     >
-      <Link href="/" className={NAV_LINK_CLASS}>
+      <Link href="/" className={linkClass}>
         Home
       </Link>
-      <Link href="/about" className={NAV_LINK_CLASS}>
+      <Link href="/about" className={linkClass}>
         About
       </Link>
-      <Link href="/designs" className={NAV_LINK_CLASS}>
+      <Link href="/designs" className={linkClass}>
         Designs
       </Link>
     </nav>
   );
 }
 
-function CaseNavPrevNextCluster({ slug, className }: { slug: CaseSlug; className?: string }) {
+function CaseNavPrevNextCluster({
+  slug,
+  className,
+  layout = "inline",
+}: {
+  slug: CaseSlug;
+  className?: string;
+  layout?: "inline" | "bottomBar";
+}) {
   const { prev, next } = getAdjacentCaseSlugs(slug);
   const prevCase = CASE_DESIGNS[prev];
   const nextCase = CASE_DESIGNS[next];
 
+  const prevButton = (
+    <CaseNavPrevNextButton
+      direction="prev"
+      href={prevCase.detailHref}
+      label={`Previous case study: ${prevCase.title}`}
+    />
+  );
+  const nextButton = (
+    <CaseNavPrevNextButton
+      direction="next"
+      href={nextCase.detailHref}
+      label={`Next case study: ${nextCase.title}`}
+    />
+  );
+
+  if (layout === "bottomBar") {
+    return (
+      <>
+        {prevButton}
+        <CaseNavPillLinks fitBar />
+        {nextButton}
+      </>
+    );
+  }
+
   return (
     <div className={cn("flex items-center gap-2", className)}>
-      <CaseNavPrevNextButton
-        direction="prev"
-        href={prevCase.detailHref}
-        label={`Previous case study: ${prevCase.title}`}
-      />
+      {prevButton}
       <CaseNavPillLinks />
-      <CaseNavPrevNextButton
-        direction="next"
-        href={nextCase.detailHref}
-        label={`Next case study: ${nextCase.title}`}
-      />
+      {nextButton}
     </div>
   );
 }
@@ -75,7 +105,6 @@ function CaseNavPrevNextCluster({ slug, className }: { slug: CaseSlug; className
 export function CaseDetailNavbar({ slug }: { slug: CaseSlug }) {
   return (
     <>
-      {/* Desktop / tablet — logo · prev+pill+next · Let's Talk */}
       <header className="pointer-events-none fixed inset-x-0 top-6 z-[60] hidden px-10 sm:block lg:px-[60px]">
         <div className="pointer-events-auto mx-auto flex h-14 w-full max-w-[1320px] items-center gap-6">
           <div className="flex min-w-0 flex-1 justify-start">
@@ -93,7 +122,6 @@ export function CaseDetailNavbar({ slug }: { slug: CaseSlug }) {
         </div>
       </header>
 
-      {/* Mobile top — logo + Let's Talk only (no prev/next) */}
       <header className="pointer-events-none fixed inset-x-0 top-6 z-[60] px-4 sm:hidden">
         <div className="pointer-events-auto mx-auto flex h-[46px] w-full items-center justify-between">
           <LogoMark />
@@ -109,13 +137,10 @@ export function CaseDetailNavbar({ slug }: { slug: CaseSlug }) {
   );
 }
 
-/** Mobile bottom — prev + Home/About/Designs + next (Figma mobile case header). */
 export function CaseDetailMobileBottomNav({ slug }: { slug: CaseSlug }) {
   return (
-    <div className="pointer-events-none fixed inset-x-0 bottom-6 z-[60] px-4 sm:hidden">
-      <div className="pointer-events-auto mx-auto flex justify-center">
-        <CaseNavPrevNextCluster slug={slug} />
-      </div>
-    </div>
+    <MobileBottomNavShell>
+      <CaseNavPrevNextCluster slug={slug} layout="bottomBar" />
+    </MobileBottomNavShell>
   );
 }

@@ -22,6 +22,7 @@ import {
   SectionFeatureHeaderTitleBlock,
 } from "@/components/shared/section-feature-header";
 import { ExternalUnderlineLink } from "@/components/shared/external-underline-link";
+import { MobileSiteBottomNav } from "@/components/shared/mobile-bottom-nav";
 import { useIsMobileViewport } from "@/lib/use-is-mobile-viewport";
 
 const HomeFeaturedDesignCard = dynamic(
@@ -226,27 +227,7 @@ function FloatingNavbar() {
         </div>
       </header>
 
-      <div className="pointer-events-none fixed inset-x-0 bottom-6 z-[60] px-4 sm:hidden">
-        <nav
-          aria-label="Mobile navigation"
-          className="pointer-events-auto mx-auto flex w-fit items-center rounded-[56px] border border-black/10 bg-white/80 p-[5px] shadow-[0_10px_10px_-5px_rgba(0,0,0,0.10)] backdrop-blur-[8px]"
-        >
-          {navItems.map((item, index) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                "flex h-[46px] w-[84px] items-center justify-center rounded-[230px] text-center text-base leading-[21px] transition-colors",
-                index === 0
-                  ? "bg-[#F2F2F2] text-black"
-                  : "text-[#707070] hover:bg-[#F2F2F2] hover:text-[#707070]",
-              )}
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-      </div>
+      <MobileSiteBottomNav />
     </>
   );
 }

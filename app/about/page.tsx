@@ -14,6 +14,7 @@ import {
   getGlobalFocusStyle,
 } from "@/components/shared/arrow-reveal";
 import { ExternalUnderlineLink } from "@/components/shared/external-underline-link";
+import { MobileSiteBottomNav } from "@/components/shared/mobile-bottom-nav";
 import {
   SectionFeatureHeaderDesktopCta,
   SectionFeatureHeaderMobileCta,
@@ -512,13 +513,7 @@ export default function AboutPage() {
         </div>
       </footer>
 
-      <div className="pointer-events-none fixed inset-x-0 bottom-6 z-[60] px-4 sm:hidden">
-        <nav aria-label="Mobile navigation" className="pointer-events-auto mx-auto flex w-fit items-center rounded-[56px] border border-black/10 bg-white/80 p-[5px] shadow-[0_10px_10px_-5px_rgba(0,0,0,0.10)] backdrop-blur-[8px]">
-          <Link href="/" className="flex h-[46px] w-[84px] items-center justify-center rounded-[230px] text-base leading-[21px] text-[#707070]">Home</Link>
-          <Link href="/about" className="flex h-[46px] w-[84px] items-center justify-center rounded-[230px] bg-[#F2F2F2] text-base leading-[21px] text-black">About</Link>
-          <Link href="/designs" className="flex h-[46px] w-[84px] items-center justify-center rounded-[230px] text-base leading-[21px] text-[#707070]">Designs</Link>
-        </nav>
-      </div>
+      <MobileSiteBottomNav />
     </div>
   );
 }

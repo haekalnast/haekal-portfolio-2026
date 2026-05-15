@@ -1,7 +1,8 @@
 import { cn } from "@/lib/cn";
+import { SITE_PAGE_GUTTER } from "@/lib/fixed-chrome";
 
 /** Horizontal gutter shared by case detail `main`, footer, and featured sections. */
-export const CASE_DETAIL_PAGE_GUTTER = "px-4 sm:px-10 lg:px-[60px]";
+export const CASE_DETAIL_PAGE_GUTTER = SITE_PAGE_GUTTER;
 
 /**
  * Featured Designs Case block inside padded `<main>`.

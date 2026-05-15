@@ -1,25 +1,36 @@
 import type { MetadataRoute } from "next";
+import { CASE_NAV_ORDER } from "@/lib/case-designs";
 import { siteConfig } from "@/lib/seo";
 
-const STATIC_ROUTES = ["/", "/about", "/designs"] as const;
-const LIVE_CASE_ROUTES = ["/designs/case/personal", "/designs/case/octo"] as const;
+/** Primary routes requested for indexing foundation. */
+const PRIMARY_ROUTES = ["/", "/about"] as const;
+
+/** Additional public portfolio routes. */
+const SECONDARY_ROUTES = ["/designs"] as const;
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
 
-  const staticEntries: MetadataRoute.Sitemap = STATIC_ROUTES.map((route) => ({
+  const primaryEntries: MetadataRoute.Sitemap = PRIMARY_ROUTES.map((route) => ({
     url: `${siteConfig.url}${route}`,
     lastModified: now,
     changeFrequency: route === "/" ? "weekly" : "monthly",
-    priority: route === "/" ? 1 : 0.8,
+    priority: route === "/" ? 1 : 0.9,
   }));
 
-  const caseStudyEntries: MetadataRoute.Sitemap = LIVE_CASE_ROUTES.map((route) => ({
+  const secondaryEntries: MetadataRoute.Sitemap = SECONDARY_ROUTES.map((route) => ({
     url: `${siteConfig.url}${route}`,
+    lastModified: now,
+    changeFrequency: "monthly",
+    priority: 0.8,
+  }));
+
+  const caseStudyEntries: MetadataRoute.Sitemap = CASE_NAV_ORDER.map((slug) => ({
+    url: `${siteConfig.url}/designs/case/${slug}`,
     lastModified: now,
     changeFrequency: "monthly",
     priority: 0.7,
   }));
 
-  return [...staticEntries, ...caseStudyEntries];
+  return [...primaryEntries, ...secondaryEntries, ...caseStudyEntries];
 }

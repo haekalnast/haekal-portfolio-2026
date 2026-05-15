@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Open_Sans } from "next/font/google";
 import "./globals.css";
-import { siteConfig } from "@/lib/seo";
+import { getPersonJsonLd, siteConfig } from "@/lib/seo";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,8 +26,17 @@ export const metadata: Metadata = {
     template: siteConfig.titleTemplate,
   },
   description: siteConfig.description,
+  keywords: [...siteConfig.keywords],
   alternates: {
     canonical: "/",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
   },
   openGraph: {
     title: siteConfig.title,
@@ -39,6 +48,7 @@ export const metadata: Metadata = {
     images: [
       {
         url: siteConfig.ogImage,
+        alt: `${siteConfig.siteName} — Product Designer`,
       },
     ],
   },
@@ -58,24 +68,20 @@ export const metadata: Metadata = {
   },
 };
 
-const personJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Person",
-  name: "Bagas Al Haekal Nasution",
-  jobTitle: "Product Designer",
-  url: "https://www.haekal.site",
-  sameAs: ["https://www.linkedin.com/in/haekalnast/", "https://github.com/haekalnast"],
-};
-
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const personJsonLd = getPersonJsonLd();
+
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${openSans.variable} h-full antialiased`}>
       <body suppressHydrationWarning className="min-h-full flex flex-col">
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+        />
         {children}
       </body>
     </html>
