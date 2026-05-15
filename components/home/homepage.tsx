@@ -294,7 +294,7 @@ function HeroSection({
               Let&apos;s Talk!
             </Link>
             <p className="text-base font-light leading-6 text-[#141414]">
-              Based in Jakarta, Indonesia
+              Based in Jakarta, IND
             </p>
           </div>
         </div>

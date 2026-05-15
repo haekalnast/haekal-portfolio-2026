@@ -599,7 +599,6 @@ export function DesignsFeaturedDesignCard({
         onArrowHoverStart(cardArrowId);
       }}
       onRevealHoverEnd={() => {
-        setRevealedKey(null);
         onArrowHoverEnd(cardArrowId);
       }}
     />
@@ -667,11 +666,14 @@ function FeaturedDesignCardShell({
   return (
     <motion.article
       ref={cardRef}
-      className={cn("relative", isRevealState ? layout.articleRevealed : layout.articleCollapsed)}
+      className={cn(
+        "relative overflow-visible",
+        isRevealState ? layout.articleRevealed : layout.articleCollapsed,
+      )}
       initial={false}
       animate={getGlobalFocusMotionAnimate(isGlobalDimmed)}
       transition={{ duration: PREMIUM_DURATION, ease: PREMIUM_EASE }}
-      style={{ zIndex: isRevealState ? 30 : 20 }}
+      style={{ zIndex: isRevealState ? 50 : 20 }}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
@@ -696,10 +698,10 @@ function FeaturedDesignCardShell({
         <button
           type="button"
           aria-label={`${title} details`}
-          className="absolute bottom-4 left-4 z-30 flex h-8 w-8 items-center justify-center rounded-full bg-[#FAFAFA] shadow-[0_0_0_1px_rgba(0,0,0,0.06)] transition-shadow duration-300 hover:shadow-[0_0_0_1px_rgba(0,0,0,0.06),0_0_50px_rgba(0,0,0,0.1)]"
+          className="absolute bottom-4 left-4 z-30 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-[#FAFAFA] shadow-[0_0_0_1px_rgba(0,0,0,0.06)] transition-shadow duration-300 hover:shadow-[0_0_0_1px_rgba(0,0,0,0.06),0_0_50px_rgba(0,0,0,0.1)]"
           style={{ transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)" }}
-          onMouseEnter={onRevealHoverStart}
-          onMouseLeave={onRevealHoverEnd}
+          onPointerEnter={onRevealHoverStart}
+          onPointerLeave={onRevealHoverEnd}
           onFocus={onRevealHoverStart}
           onBlur={onRevealHoverEnd}
           onClick={(event) => {
@@ -716,7 +718,7 @@ function FeaturedDesignCardShell({
       </div>
 
       <motion.div
-        className={layout.titleBlockClassName}
+        className={cn(layout.titleBlockClassName, isRevealState && "z-10")}
         initial={false}
         animate={{ opacity: isRevealState ? 1 : 0, y: isRevealState ? 0 : 8 }}
         transition={{ duration: 0.36, ease: PREMIUM_EASE, delay: isRevealState ? 0.2 : 0 }}

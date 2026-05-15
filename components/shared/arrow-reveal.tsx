@@ -54,7 +54,7 @@ export function ArrowRevealButton({
     <button
       type="button"
       aria-label={ariaLabel}
-      className={className}
+      className={cn("cursor-pointer", className)}
       style={{ transitionTimingFunction: ARROW_REVEAL_TIMING }}
       onMouseEnter={onHoverStart}
       onMouseLeave={onHoverEnd}
