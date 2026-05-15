@@ -10,6 +10,7 @@ import {
   DesignsFeaturedDesignCard,
   PersonalMockup,
   type FeaturedCardShellLayoutOverrides,
+  type LaptopArtboardPlacement,
 } from "@/components/shared/featured-design-card";
 import { ExternalUnderlineLink } from "@/components/shared/external-underline-link";
 import { getGlobalFocusMotionAnimate } from "@/components/shared/arrow-reveal";
@@ -20,7 +21,9 @@ import {
   SectionFeatureHeaderMotionRow,
   SectionFeatureHeaderTitleBlock,
 } from "@/components/shared/section-feature-header";
-import { CASE_DESIGNS, CASE_RELATED_MAPPING, type CaseSlug } from "@/lib/case-designs";
+import { useIsMobileViewport } from "@/lib/use-is-mobile-viewport";
+import { CaseDetailMobileBottomNav, CaseDetailNavbar } from "@/components/designs/case-detail-navbar";
+import { CASE_DESIGNS, getCaseRelatedFromNav, type CaseSlug } from "@/lib/case-designs";
 import { cn } from "@/lib/cn";
 import {
   PUBLIC_BRAND,
@@ -51,11 +54,22 @@ const TEXT_STYLE_SECTION_TITLE = TEXT_STYLE_H2;
 const TEXT_STYLE_BODY = "text-base leading-6 text-[#707070]";
 const TEXT_STYLE_BODY_STRONG = "text-base leading-6 text-black";
 
+/** Logo / phone featured row — same as before. */
 const CASE_SECTION_CARD_SHELL: FeaturedCardShellLayoutOverrides = {
   mockupInnerClassName: "h-[444px]",
-  titleBlockClassName: "pointer-events-none mt-4 md:absolute md:left-0 md:top-[460px] md:mt-0",
-  articleCollapsed: "h-[512px] md:h-[444px]",
-  articleRevealed: "h-[512px] md:h-[444px]",
+  titleBlockClassName:
+    "mt-4 max-md:pointer-events-auto md:pointer-events-none md:absolute md:left-0 md:mt-0 md:top-[460px]",
+  articleCollapsed: "h-[548px] md:h-[444px] md:min-h-[444px] lg:h-[444px] lg:min-h-[444px] lg:flex-none lg:shrink-0",
+  articleRevealed: "h-[548px] md:h-[444px] md:min-h-[444px] lg:h-[444px] lg:min-h-[444px] lg:flex-none lg:shrink-0",
+};
+
+/** Laptop featured row — match `DESIGNS_LAPTOP_CARD_SHELL` + `designsLaptopArtboard` on `/designs`. */
+const CASE_FEATURED_LAPTOP_SHELL: FeaturedCardShellLayoutOverrides = {
+  mockupInnerClassName: "h-[444px]",
+  titleBlockClassName:
+    "mt-4 max-md:pointer-events-auto md:pointer-events-none md:absolute md:left-0 md:mt-0 md:top-[460px]",
+  articleCollapsed: "h-[548px] md:h-[444px] md:min-h-[444px] lg:h-[444px] lg:min-h-[444px] lg:flex-none lg:shrink-0",
+  articleRevealed: "h-[548px] md:h-[444px] md:min-h-[444px] lg:h-[444px] lg:min-h-[444px] lg:flex-none lg:shrink-0",
 };
 
 function LogoMark() {
@@ -139,6 +153,9 @@ type RelatedCaseCardProps = {
 };
 
 function RelatedCaseCard(props: RelatedCaseCardProps) {
+  const laptopArtboardPlacement: LaptopArtboardPlacement = useIsMobileViewport(1023)
+    ? "narrow-column"
+    : "wide-card";
   const cardHref = props.hrefOverride ?? CASE_DESIGNS[props.slug].detailHref;
   if (props.slug === "personal") {
     return (
@@ -171,12 +188,13 @@ function RelatedCaseCard(props: RelatedCaseCardProps) {
         href={cardHref}
         caseChip="Case"
         mockupPaddingClass="px-0 py-0"
-        shellLayout={CASE_SECTION_CARD_SHELL}
+        shellLayout={CASE_FEATURED_LAPTOP_SHELL}
         renderMockup={(hovered) => (
           <BPRDashboardFrameMockup
             hovered={hovered}
             contentSrc={PUBLIC_DESIGNS_MOCKUPS.b2b.content}
             contentAlt="Dipay enterprise dashboard"
+            artboardPlacement={laptopArtboardPlacement}
           />
         )}
         activeArrowId={props.activeArrowId}
@@ -199,7 +217,7 @@ function RelatedCaseCard(props: RelatedCaseCardProps) {
         href={cardHref}
         caseChip="Case"
         mockupPaddingClass="px-0 py-0"
-        shellLayout={CASE_SECTION_CARD_SHELL}
+        shellLayout={CASE_FEATURED_LAPTOP_SHELL}
         renderMockup={(hovered) => (
           <BPRFrameMockup
             hovered={hovered}
@@ -211,6 +229,7 @@ function RelatedCaseCard(props: RelatedCaseCardProps) {
             navbarIntrinsicWidth={2048}
             navbarIntrinsicHeight={160}
             contentHeightPx={1927}
+            artboardPlacement={laptopArtboardPlacement}
           />
         )}
         activeArrowId={props.activeArrowId}
@@ -250,7 +269,7 @@ export function CaseDetailPage({ slug }: { slug: CaseSlug }) {
   const [revealedKey, setRevealedKey] = useState<string | null>(null);
   const [hoveredKey, setHoveredKey] = useState<string | null>(null);
   const currentCase = CASE_DESIGNS[slug];
-  const relatedCards = useMemo(() => CASE_RELATED_MAPPING[slug], [slug]);
+  const relatedCards = useMemo(() => getCaseRelatedFromNav(slug), [slug]);
 
   const onArrowHoverStart = useCallback((id: string) => {
     setActiveArrowId(id);
@@ -266,52 +285,7 @@ export function CaseDetailPage({ slug }: { slug: CaseSlug }) {
 
   return (
     <div className="bg-[#FAFAFA] text-black">
-      <header className="pointer-events-none fixed inset-x-0 top-6 z-40 hidden px-10 sm:block lg:px-[60px]">
-        <div className="pointer-events-auto mx-auto flex h-14 w-full max-w-[1320px] items-center justify-between">
-          <LogoMark />
-          <nav
-            aria-label="Primary navigation"
-            className="flex items-center rounded-[56px] border border-black/10 bg-white/80 p-[5px] shadow-[0_10px_10px_-5px_rgba(0,0,0,0.10)] backdrop-blur-[8px]"
-          >
-            <Link
-              href="/"
-              className="flex h-[46px] w-[84px] items-center justify-center rounded-[230px] text-center text-base leading-[21px] text-[#707070] transition-colors hover:bg-[#F2F2F2]"
-            >
-              Home
-            </Link>
-            <Link
-              href="/about"
-              className="flex h-[46px] w-[84px] items-center justify-center rounded-[230px] text-center text-base leading-[21px] text-[#707070] transition-colors hover:bg-[#F2F2F2]"
-            >
-              About
-            </Link>
-            <Link
-              href="/designs"
-              className="flex h-[46px] w-[84px] items-center justify-center rounded-[230px] text-center text-base leading-[21px] text-[#707070] transition-colors hover:bg-[#F2F2F2]"
-            >
-              Designs
-            </Link>
-          </nav>
-          <Link
-            href="mailto:alhaekalnast@gmail.com"
-            className="rounded-[230px] bg-[#F2F2F2] px-6 py-3 text-base leading-[21px] text-[#707070] transition-colors hover:text-black"
-          >
-            Let&apos;s Talk
-          </Link>
-        </div>
-      </header>
-
-      <header className="pointer-events-none fixed inset-x-0 top-6 z-40 px-4 sm:hidden">
-        <div className="pointer-events-auto mx-auto flex h-[46px] w-full items-center justify-between">
-          <LogoMark />
-          <Link
-            href="mailto:alhaekalnast@gmail.com"
-            className="rounded-[230px] bg-[#F2F2F2] px-6 py-3 text-base leading-[21px] text-[#707070]"
-          >
-            Let&apos;s Talk
-          </Link>
-        </div>
-      </header>
+      <CaseDetailNavbar slug={slug} />
 
       <main className="mx-auto w-full max-w-[1440px] px-4 pt-[124px] sm:px-10 lg:px-[60px]">
         {isPersonal ? (
@@ -766,22 +740,7 @@ export function CaseDetailPage({ slug }: { slug: CaseSlug }) {
         </div>
       </motion.footer>
 
-      <div className="pointer-events-none fixed inset-x-0 bottom-6 z-40 px-4 sm:hidden">
-        <nav
-          aria-label="Mobile navigation"
-          className="pointer-events-auto mx-auto flex w-fit items-center rounded-[56px] border border-black/10 bg-white/80 p-[5px] shadow-[0_10px_10px_-5px_rgba(0,0,0,0.10)] backdrop-blur-[8px]"
-        >
-          <Link href="/" className="flex h-[46px] w-[84px] items-center justify-center rounded-[230px] text-base leading-[21px] text-[#707070]">
-            Home
-          </Link>
-          <Link href="/about" className="flex h-[46px] w-[84px] items-center justify-center rounded-[230px] text-base leading-[21px] text-[#707070]">
-            About
-          </Link>
-          <Link href="/designs" className="flex h-[46px] w-[84px] items-center justify-center rounded-[230px] text-base leading-[21px] text-[#707070]">
-            Designs
-          </Link>
-        </nav>
-      </div>
+      <CaseDetailMobileBottomNav slug={slug} />
     </div>
   );
 }

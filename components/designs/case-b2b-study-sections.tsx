@@ -15,6 +15,7 @@ import {
 import { CASE_DESIGNS, type CaseSlug } from "@/lib/case-designs";
 import { cn } from "@/lib/cn";
 import { PUBLIC_CASE_B2B } from "@/lib/public-assets";
+import { CASE_DETAIL_FEATURED_SECTION_CLASS } from "@/components/designs/case-detail-layout";
 import {
   CASE_DETAIL_MEDIA_FRAME,
   CASE_DETAIL_MEDIA_IMAGE,
@@ -56,9 +57,6 @@ function BodyMixedParagraph({
     </p>
   );
 }
-
-const B2B_FEATURED_CARD_WRAP =
-  "mx-auto w-full max-w-[358px] md:max-w-[720px] lg:mx-0 lg:max-w-none";
 
 export function CaseB2bStudySections({
   activeArrowId,
@@ -388,7 +386,7 @@ export function CaseB2bStudySections({
         </section>
       </motion.div>
 
-      <section className="mx-auto w-full max-w-[1440px] bg-[#FAFAFA] py-20 sm:py-[108px] lg:py-[124px]">
+      <section className={CASE_DETAIL_FEATURED_SECTION_CLASS}>
         <div className="mx-auto w-full max-w-[1320px]">
           <SectionFeatureHeaderMotionRow isDimmed={activeArrowId !== null}>
             <SectionFeatureHeaderTitleBlock
@@ -399,8 +397,8 @@ export function CaseB2bStudySections({
           </SectionFeatureHeaderMotionRow>
 
           <div className="grid grid-cols-1 gap-[24px] lg:grid-cols-2">
-            <div className={B2B_FEATURED_CARD_WRAP}>{renderRelatedCaseCard(relatedCards[0])}</div>
-            <div className={B2B_FEATURED_CARD_WRAP}>{renderRelatedCaseCard(relatedCards[1])}</div>
+            {renderRelatedCaseCard(relatedCards[0])}
+            {renderRelatedCaseCard(relatedCards[1])}
           </div>
           <SectionFeatureHeaderMobileCta href="/designs">See All Designs</SectionFeatureHeaderMobileCta>
         </div>

@@ -63,14 +63,8 @@ export const CASE_DESIGNS: Record<CaseSlug, CaseDesignConfig> = {
   },
 };
 
-export const CASE_RELATED_MAPPING: Record<CaseSlug, [CaseSlug, CaseSlug]> = {
-  personal: ["sfc", "b2b"],
-  octo: ["sfc", "b2b"],
-  /** B2B case featured row: OCTO (left), Personal (right); card widths match Figma desktop layout. */
-  b2b: ["octo", "personal"],
-  /** SFC case featured row: OCTO (left), Personal (right); matches B2B case detail layout. */
-  sfc: ["octo", "personal"],
-};
+/** Prev/Next case detail nav — loop order (shared with status chips). */
+export const CASE_NAV_ORDER: CaseSlug[] = ["personal", "b2b", "sfc", "octo"];
 
 const CASE_STATUS_DRAFT: Record<CaseSlug, CaseRevealStatus> = {
   personal: "preview",
@@ -79,7 +73,7 @@ const CASE_STATUS_DRAFT: Record<CaseSlug, CaseRevealStatus> = {
   octo: "preview",
 };
 
-const CASE_STATUS_ORDER: CaseSlug[] = ["personal", "b2b", "sfc", "octo"];
+const CASE_STATUS_ORDER: CaseSlug[] = CASE_NAV_ORDER;
 const CASE_DEFAULT_PREVIEW_ORDER: CaseSlug[] = ["personal", "octo"];
 
 export function getCaseStatusMap(): Record<CaseSlug, CaseRevealStatus> {
@@ -106,3 +100,27 @@ export function getCaseStatusMap(): Record<CaseSlug, CaseRevealStatus> {
 export function isCaseSlug(value: string): value is CaseSlug {
   return value in CASE_DESIGNS;
 }
+
+export function getAdjacentCaseSlugs(slug: CaseSlug): { prev: CaseSlug; next: CaseSlug } {
+  const index = CASE_NAV_ORDER.indexOf(slug);
+  const length = CASE_NAV_ORDER.length;
+  const safeIndex = index >= 0 ? index : 0;
+  return {
+    prev: CASE_NAV_ORDER[(safeIndex - 1 + length) % length]!,
+    next: CASE_NAV_ORDER[(safeIndex + 1) % length]!,
+  };
+}
+
+/** Featured row on case detail — `[prev, next]` in nav order (same shell for all four). */
+export function getCaseRelatedFromNav(slug: CaseSlug): [CaseSlug, CaseSlug] {
+  const { prev, next } = getAdjacentCaseSlugs(slug);
+  return [prev, next];
+}
+
+/** @deprecated Prefer `getCaseRelatedFromNav` — kept for any legacy imports. */
+export const CASE_RELATED_MAPPING: Record<CaseSlug, [CaseSlug, CaseSlug]> = {
+  personal: ["octo", "b2b"],
+  b2b: ["personal", "sfc"],
+  sfc: ["b2b", "octo"],
+  octo: ["sfc", "personal"],
+};
