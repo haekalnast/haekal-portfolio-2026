@@ -206,7 +206,7 @@ export default function AboutPage() {
 
   return (
     <div className="bg-[#FAFAFA] text-black">
-      <header className="pointer-events-none fixed inset-x-0 top-6 z-40 hidden px-10 sm:block lg:px-[60px]">
+      <header className="pointer-events-none fixed inset-x-0 top-6 z-[60] hidden px-10 sm:block lg:px-[60px]">
         <div className="pointer-events-auto mx-auto flex h-14 w-full max-w-[1320px] items-center justify-between">
           <LogoMark />
           <nav aria-label="Primary navigation" className="flex items-center rounded-[56px] border border-black/10 bg-white/80 p-[5px] shadow-[0_10px_10px_-5px_rgba(0,0,0,0.10)] backdrop-blur-[8px]">
@@ -218,7 +218,7 @@ export default function AboutPage() {
         </div>
       </header>
 
-      <header className="pointer-events-none fixed inset-x-0 top-6 z-40 px-4 sm:hidden">
+      <header className="pointer-events-none fixed inset-x-0 top-6 z-[60] px-4 sm:hidden">
         <div className="pointer-events-auto mx-auto flex h-[46px] w-full items-center justify-between">
           <LogoMark />
           <Link href="mailto:alhaekalnast@gmail.com" className="rounded-[230px] bg-[#F2F2F2] px-6 py-3 text-base leading-[21px] text-[#707070]">Let&apos;s Talk</Link>
@@ -512,7 +512,7 @@ export default function AboutPage() {
         </div>
       </footer>
 
-      <div className="pointer-events-none fixed inset-x-0 bottom-6 z-40 px-4 sm:hidden">
+      <div className="pointer-events-none fixed inset-x-0 bottom-6 z-[60] px-4 sm:hidden">
         <nav aria-label="Mobile navigation" className="pointer-events-auto mx-auto flex w-fit items-center rounded-[56px] border border-black/10 bg-white/80 p-[5px] shadow-[0_10px_10px_-5px_rgba(0,0,0,0.10)] backdrop-blur-[8px]">
           <Link href="/" className="flex h-[46px] w-[84px] items-center justify-center rounded-[230px] text-base leading-[21px] text-[#707070]">Home</Link>
           <Link href="/about" className="flex h-[46px] w-[84px] items-center justify-center rounded-[230px] bg-[#F2F2F2] text-base leading-[21px] text-black">About</Link>
