@@ -14,6 +14,9 @@ export const PUBLIC_BRAND = {
   logoHover: "/brand/logo-haekal-hover.svg",
 } as const;
 
+/** SFAST featured / designs cards — App Store listing. */
+export const SFAST_APP_STORE_HREF = "https://apps.apple.com/us/app/sfast/id1581067563";
+
 export const PUBLIC_ABOUT = {
   resumeSheet: "/about/resume/sheet.png",
   thisIsHaekalPhotos: [

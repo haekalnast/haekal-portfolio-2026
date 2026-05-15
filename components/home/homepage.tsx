@@ -7,7 +7,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
 import { cn } from "@/lib/cn";
 import { AboutToolsCard } from "@/components/shared/about-tools-card";
-import { PUBLIC_BRAND, PUBLIC_HOME_MARQUEE } from "@/lib/public-assets";
+import { PUBLIC_BRAND, PUBLIC_HOME_MARQUEE, SFAST_APP_STORE_HREF } from "@/lib/public-assets";
 import {
   ArrowRevealButton,
   ArrowRevealText,
@@ -104,7 +104,7 @@ const marqueeItems: MarqueeItem[] = [
     key: "trading-mockup",
     title: "SFAST Mobile App",
     subtitle: "Mobile | Trading App",
-    href: FALLBACK_ERROR_ROUTE,
+    href: SFAST_APP_STORE_HREF,
     kind: "mockup",
     defaultCardBg: "#73B8FF",
     defaultImageUrl: PUBLIC_HOME_MARQUEE.tradingMockup,
@@ -625,7 +625,7 @@ function AboutSection({
   return (
     <section
       id="about"
-      className="mx-auto flex w-full max-w-[1440px] flex-col gap-[24px] bg-[#FAFAFA] px-4 py-20 sm:px-10 sm:py-[108px] lg:flex-row lg:gap-x-10 lg:gap-y-0 lg:px-[60px] lg:py-[124px]"
+      className="mx-auto flex w-full max-w-[1440px] flex-col gap-[40px] bg-[#FAFAFA] px-4 py-20 sm:px-10 sm:py-[108px] lg:flex-row lg:gap-x-10 lg:gap-y-0 lg:px-[60px] lg:py-[124px]"
       style={{ contentVisibility: "auto", containIntrinsicSize: "1px 900px" }}
     >
       <div className="w-full flex-1 space-y-10 transition-all duration-300" style={getGlobalFocusStyle(isGlobalFocus)}>

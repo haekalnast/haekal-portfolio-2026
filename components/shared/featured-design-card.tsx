@@ -5,7 +5,12 @@ import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode, RefObject } from "react";
 import { cn } from "@/lib/cn";
-import { PUBLIC_HOME_FEATURED, PUBLIC_HOME_FEATURED_CARD, PUBLIC_HOME_SFAST_MOCKUP } from "@/lib/public-assets";
+import {
+  PUBLIC_HOME_FEATURED,
+  PUBLIC_HOME_FEATURED_CARD,
+  PUBLIC_HOME_SFAST_MOCKUP,
+  SFAST_APP_STORE_HREF,
+} from "@/lib/public-assets";
 import { useIsMobileViewport } from "@/lib/use-is-mobile-viewport";
 import { ArrowIcon, getGlobalFocusMotionAnimate } from "@/components/shared/arrow-reveal";
 import { StatusChip } from "@/components/shared/status-chip";
@@ -55,7 +60,7 @@ export const HOME_FEATURED_CARDS: HomeFeaturedCard[] = [
     id: "sfast",
     title: "SFAST Mobile App",
     subtitle: "Mobile | Fintech",
-    href: "/not-found",
+    href: SFAST_APP_STORE_HREF,
   },
   {
     id: "personal",

@@ -28,7 +28,12 @@ import { ExternalUnderlineLink } from "@/components/shared/external-underline-li
 import { getGlobalFocusMotionAnimate } from "@/components/shared/arrow-reveal";
 import { CASE_DESIGNS } from "@/lib/case-designs";
 import { useIsMobileViewport } from "@/lib/use-is-mobile-viewport";
-import { PUBLIC_BRAND, PUBLIC_DESIGNS_CARDS_VARIANT1, PUBLIC_DESIGNS_MOCKUPS } from "@/lib/public-assets";
+import {
+  PUBLIC_BRAND,
+  PUBLIC_DESIGNS_CARDS_VARIANT1,
+  PUBLIC_DESIGNS_MOCKUPS,
+  SFAST_APP_STORE_HREF,
+} from "@/lib/public-assets";
 
 const PREMIUM_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 const PREMIUM_DURATION = 0.32;
@@ -327,7 +332,7 @@ export function DesignsPage() {
               cardKey="sfast"
               title="SFAST Mobile App"
               subtitle="Mobile | Fintech"
-              href={FALLBACK}
+              href={SFAST_APP_STORE_HREF}
               mockupPaddingClass="px-0 py-0"
               renderMockup={(hovered) => <SFASTMockup hovered={hovered} />}
               {...shared}
