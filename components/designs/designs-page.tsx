@@ -28,7 +28,6 @@ import { ExternalUnderlineLink } from "@/components/shared/external-underline-li
 import { MobileSiteBottomNav } from "@/components/shared/mobile-bottom-nav";
 import { getGlobalFocusMotionAnimate } from "@/components/shared/arrow-reveal";
 import { CASE_DESIGNS } from "@/lib/case-designs";
-import { useIsMobileViewport } from "@/lib/use-is-mobile-viewport";
 import {
   PUBLIC_BRAND,
   PUBLIC_DESIGNS_CARDS_VARIANT1,
@@ -198,9 +197,6 @@ export function DesignsPage() {
   const [revealedKey, setRevealedKey] = useState<string | null>(null);
   const [hoveredKey, setHoveredKey] = useState<string | null>(null);
   const isGlobalArrowFocus = activeArrowId !== null;
-  /** `md` 2-col + tablet: card width ≈ mobile; legacy laptop inset. Desktop `lg+`: center artboard so 692px shell does not bleed into the other column (e.g. SF Sekuritas). */
-  const isDesignsDenseLaptopColumn = useIsMobileViewport(1023);
-  const designsLaptopArtboard = isDesignsDenseLaptopColumn ? "narrow-column" : "wide-card";
   const [isDesignsTabletViewport, setIsDesignsTabletViewport] = useState(false);
 
   useEffect(() => {
@@ -210,6 +206,9 @@ export function DesignsPage() {
     mediaQuery.addEventListener("change", update);
     return () => mediaQuery.removeEventListener("change", update);
   }, []);
+
+  /** Tablet `md`–`lg-1` 2-col: half-width cards use legacy laptop inset. Mobile single-col + desktop `lg+` full/half rows: center artboard. */
+  const designsLaptopArtboard = isDesignsTabletViewport ? "narrow-column" : "wide-card";
 
   const onArrowHoverStart = useCallback((id: string) => {
     setActiveArrowId(id);

@@ -154,8 +154,8 @@ type RelatedCaseCardProps = {
 
 function RelatedCaseCard(props: RelatedCaseCardProps) {
   const laptopArtboardPlacement: LaptopArtboardPlacement = useIsMobileViewport(1023)
-    ? "narrow-column"
-    : "wide-card";
+    ? "wide-card"
+    : "narrow-column";
   const cardHref = props.hrefOverride ?? CASE_DESIGNS[props.slug].detailHref;
   if (props.slug === "personal") {
     return (

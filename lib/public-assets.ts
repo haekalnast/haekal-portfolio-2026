@@ -164,6 +164,8 @@ export const PUBLIC_HOME_FEATURED = {
     topbar: withAssetVersion("/home/featured-personal/topbar.png"),
     content: withAssetVersion("/home/featured-personal/content.png"),
     bottombar: withAssetVersion("/home/featured-personal/bottombar.png"),
+    /** SVG mask — same pattern as SFAST; keeps screen layers inside the phone cutout. */
+    screenMask: "/home/featured/personal/personal-screen-mask.svg",
   },
 } as const;
 

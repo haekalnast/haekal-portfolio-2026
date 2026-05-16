@@ -89,7 +89,7 @@ const PERSONAL_SCREEN_ASSETS = {
 
 const SFAST_MOCKUP_ASSETS = PUBLIC_HOME_SFAST_MOCKUP;
 
-/** `wide-card`: centers laptop strip below `lg` (default; All Designs + case cards). `narrow-column`: legacy `-22px` for All Designs 2-col tablet cards. Homepage BPR uses `wideCardStartBelowLg` on `BPRMockup` for left alignment below `lg`. */
+/** `wide-card`: centers laptop in full-width cards. `narrow-column`: `-22px` inset for ~half-width 2-col cards (tablet `/designs`, case featured at `lg+`). */
 export type LaptopArtboardPlacement = "wide-card" | "narrow-column";
 
 function FeaturedLaptopArtboard({
@@ -411,67 +411,89 @@ export function SFASTMockup({ hovered }: { hovered: boolean }) {
   );
 }
 
+const PERSONAL_SCREEN_MASK_STYLE = {
+  WebkitMaskImage: `url(${PUBLIC_HOME_FEATURED.personal.screenMask})`,
+  WebkitMaskRepeat: "no-repeat",
+  WebkitMaskPosition: "0 0",
+  WebkitMaskSize: "100% 100%",
+  maskImage: `url(${PUBLIC_HOME_FEATURED.personal.screenMask})`,
+  maskRepeat: "no-repeat",
+  maskPosition: "0 0",
+  maskSize: "100% 100%",
+} as const;
+
+/** Phone shell + masked 155×336 inset — scroll content on tablet/desktop (BPR pattern); clip only on mobile. */
 export function PersonalMockup({ hovered }: { hovered: boolean }) {
   const isMobile = useIsMobileViewport();
+
   return (
     <div className="relative h-full w-full">
       <div className="absolute inset-0 flex items-center justify-center">
         <div
-          className="relative h-[351px] w-[174px] transition-transform duration-500 ease-out"
+          className="relative h-[351px] w-[174px] shrink-0 transition-transform duration-500 ease-out"
           style={{
             transformOrigin: "50% 50%",
             transform: hovered ? "rotate(0deg)" : "rotate(-12deg)",
           }}
         >
-          <div className="absolute left-[9.55px] top-[7.55px] h-[336.06px] w-[155.29px] overflow-hidden rounded-[12px] bg-[#F6F6F6]">
-            <div className="absolute inset-x-0 top-0 z-20 h-[55.74px] overflow-hidden">
-              <Image
-                src={PERSONAL_SCREEN_ASSETS.topbar}
-                alt="Personal top app bar"
-                width={155}
-                height={56}
-                className="h-[55.74px] w-[155.29px] object-cover"
-              />
-            </div>
-
-            <div
-              className={cn(
-                "absolute inset-x-0 top-[55.74px] bottom-[33.05px] z-10 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden",
-                isMobile ? "overflow-hidden" : "overflow-y-auto",
-              )}
-            >
-              <Image
-                src={PERSONAL_SCREEN_ASSETS.content}
-                alt="Personal statistics content"
-                width={155}
-                height={1200}
-                className="block h-auto w-[155.29px] max-w-none"
-              />
-            </div>
-
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-[33.05px] overflow-hidden">
-              <Image
-                src={PERSONAL_SCREEN_ASSETS.bottombar}
-                alt="Personal bottom navigation"
-                width={155}
-                height={33}
-                className="h-[33.05px] w-[155.29px] object-cover"
-              />
+          <div
+            className="absolute left-[9.55px] top-[7.55px] z-10 h-[336.06px] w-[155.29px] overflow-hidden bg-[#F6F6F6]"
+            style={PERSONAL_SCREEN_MASK_STYLE}
+          >
+            <div className="relative flex h-full w-full flex-col">
+              <div className="relative z-20 h-[55.74px] w-full shrink-0 overflow-hidden">
+                <Image
+                  src={PERSONAL_SCREEN_ASSETS.topbar}
+                  alt="Personal top app bar"
+                  width={622}
+                  height={223}
+                  className="block h-full w-full object-cover object-top"
+                  sizes="155px"
+                />
+              </div>
+              <div
+                className={cn(
+                  "relative z-10 min-h-0 flex-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden",
+                  isMobile ? "overflow-hidden" : "overflow-y-auto",
+                )}
+              >
+                <img
+                  src={PERSONAL_SCREEN_ASSETS.content}
+                  alt="Personal statistics content"
+                  width={620}
+                  height={1604}
+                  loading="lazy"
+                  decoding="async"
+                  draggable={false}
+                  className="block w-full max-w-none"
+                />
+              </div>
+              <div className="pointer-events-none relative z-20 h-[33.05px] w-full shrink-0 overflow-hidden">
+                <Image
+                  src={PERSONAL_SCREEN_ASSETS.bottombar}
+                  alt="Personal bottom navigation"
+                  width={622}
+                  height={134}
+                  className="block h-full w-full object-cover object-bottom"
+                  sizes="155px"
+                />
+              </div>
             </div>
           </div>
 
           <Image
             src={FEATURED_ASSETS.personal}
             alt="Dipay Personal phone mockup"
-            width={174}
-            height={351}
-            className="pointer-events-none absolute inset-0 z-30 h-full w-full object-contain"
+            fill
+            sizes="174px"
+            className="pointer-events-none absolute inset-0 z-30 object-fill"
           />
         </div>
       </div>
     </div>
   );
 }
+
 
 export function HomeFeaturedDesignCard({
   card,
@@ -501,7 +523,7 @@ export function HomeFeaturedDesignCard({
   const isGlobalDimmed = activeArrowId !== null && activeArrowId !== cardArrowId;
 
   let mockup: ReactNode;
-  if (card.id === "bpr") mockup = <BPRMockup hovered={isHoverState} wideCardStartBelowLg />;
+  if (card.id === "bpr") mockup = <BPRMockup hovered={isHoverState} />;
   else if (card.id === "sfast") mockup = <SFASTMockup hovered={isHoverState} />;
   else mockup = <PersonalMockup hovered={isHoverState} />;
 
