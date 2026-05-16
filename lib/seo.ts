@@ -73,7 +73,7 @@ export function buildPageMetadata({
       images: [
         {
           url: ogImage,
-          alt: `${title} — ${siteConfig.siteName}`,
+          alt: `${title} | ${siteConfig.siteName}`,
         },
       ],
     },
