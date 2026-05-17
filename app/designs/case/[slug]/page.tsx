@@ -15,7 +15,13 @@ const CASE_OG_IMAGE: Partial<Record<CaseSlug, string>> = {
 
 async function resolveCaseSlug(params: CaseDetailRouteProps["params"]): Promise<string> {
   const resolvedParams = await Promise.resolve(params);
-  return decodeURIComponent((resolvedParams.slug ?? "").trim()).toLowerCase();
+  const rawSlug = (resolvedParams.slug ?? "").trim();
+
+  try {
+    return decodeURIComponent(rawSlug).toLowerCase();
+  } catch {
+    return "";
+  }
 }
 
 export async function generateMetadata({ params }: CaseDetailRouteProps): Promise<Metadata> {
