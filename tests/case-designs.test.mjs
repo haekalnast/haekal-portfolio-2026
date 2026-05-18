@@ -18,18 +18,18 @@ function loadCaseDesignsModule() {
       target: ts.ScriptTarget.ES2020,
     },
   });
-  const module = { exports: {} };
+  const moduleShim = { exports: {} };
 
   vm.runInNewContext(
     outputText,
     {
-      exports: module.exports,
-      module,
+      exports: moduleShim.exports,
+      module: moduleShim,
     },
     { filename: sourcePath },
   );
 
-  return module.exports;
+  return moduleShim.exports;
 }
 
 test("isCaseSlug only accepts configured own case slugs", () => {
