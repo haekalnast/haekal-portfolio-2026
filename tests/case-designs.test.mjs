@@ -15,11 +15,11 @@ function loadCaseDesignsModule() {
     fileName: filename.pathname,
   });
 
-  const module = new Module(filename.pathname);
-  module.filename = filename.pathname;
-  module.paths = Module._nodeModulePaths(new URL("..", import.meta.url).pathname);
-  module._compile(outputText, filename.pathname);
-  return module.exports;
+  const testModule = new Module(filename.pathname);
+  testModule.filename = filename.pathname;
+  testModule.paths = Module._nodeModulePaths(new URL("..", import.meta.url).pathname);
+  testModule._compile(outputText, filename.pathname);
+  return testModule.exports;
 }
 
 const { CASE_DESIGNS, isCaseSlug } = loadCaseDesignsModule();
