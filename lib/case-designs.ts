@@ -98,7 +98,15 @@ export function getCaseStatusMap(): Record<CaseSlug, CaseRevealStatus> {
 }
 
 export function isCaseSlug(value: string): value is CaseSlug {
-  return value in CASE_DESIGNS;
+  return Object.hasOwn(CASE_DESIGNS, value);
+}
+
+export function normalizeCaseSlugParam(value: string | null | undefined): string | null {
+  try {
+    return decodeURIComponent((value ?? "").trim()).toLowerCase();
+  } catch {
+    return null;
+  }
 }
 
 export function getAdjacentCaseSlugs(slug: CaseSlug): { prev: CaseSlug; next: CaseSlug } {
