@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { isCaseSlug, normalizeCaseSlugParam } from "../lib/case-designs.ts";
+import { isCaseSlug, normalizeCaseSlugParam, resolveCaseSlugParam } from "../lib/case-designs.ts";
 
 test("isCaseSlug only accepts configured own keys", () => {
   assert.equal(isCaseSlug("personal"), true);
@@ -16,4 +16,9 @@ test("normalizeCaseSlugParam rejects malformed percent encodings", () => {
   assert.equal(normalizeCaseSlugParam(" personal "), "personal");
   assert.equal(normalizeCaseSlugParam("%"), null);
   assert.equal(normalizeCaseSlugParam("%E0%A4%A"), null);
+});
+
+test("resolveCaseSlugParam treats rejected params as invalid", async () => {
+  await assert.doesNotReject(resolveCaseSlugParam(Promise.reject(new URIError("bad slug"))));
+  assert.equal(await resolveCaseSlugParam(Promise.reject(new URIError("bad slug"))), "");
 });

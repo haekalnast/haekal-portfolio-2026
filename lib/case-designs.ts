@@ -109,6 +109,17 @@ export function normalizeCaseSlugParam(value: string | null | undefined): string
   }
 }
 
+export async function resolveCaseSlugParam(
+  params: { slug?: string | null } | Promise<{ slug?: string | null }>,
+): Promise<string> {
+  try {
+    const resolvedParams = await Promise.resolve(params);
+    return normalizeCaseSlugParam(resolvedParams.slug) ?? "";
+  } catch {
+    return "";
+  }
+}
+
 export function getAdjacentCaseSlugs(slug: CaseSlug): { prev: CaseSlug; next: CaseSlug } {
   const index = CASE_NAV_ORDER.indexOf(slug);
   const length = CASE_NAV_ORDER.length;
