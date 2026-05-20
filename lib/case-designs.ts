@@ -98,7 +98,26 @@ export function getCaseStatusMap(): Record<CaseSlug, CaseRevealStatus> {
 }
 
 export function isCaseSlug(value: string): value is CaseSlug {
-  return value in CASE_DESIGNS;
+  return Object.hasOwn(CASE_DESIGNS, value);
+}
+
+export function normalizeCaseSlugParam(value: string | null | undefined): string | null {
+  try {
+    return decodeURIComponent((value ?? "").trim()).toLowerCase();
+  } catch {
+    return null;
+  }
+}
+
+export async function resolveCaseSlugParam(
+  params: { slug?: string | null } | Promise<{ slug?: string | null }>,
+): Promise<string> {
+  try {
+    const resolvedParams = await Promise.resolve(params);
+    return normalizeCaseSlugParam(resolvedParams.slug) ?? "";
+  } catch {
+    return "";
+  }
 }
 
 export function getAdjacentCaseSlugs(slug: CaseSlug): { prev: CaseSlug; next: CaseSlug } {
