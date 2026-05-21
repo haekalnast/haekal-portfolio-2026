@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { isCaseSlug, normalizeCaseSlug } from "../lib/case-designs.ts";
+import { hasMalformedPercentEncoding } from "../lib/url-encoding.ts";
 
 describe("case design slug handling", () => {
   it("normalizes valid case slugs", () => {
@@ -19,5 +20,12 @@ describe("case design slug handling", () => {
     assert.equal(isCaseSlug("personal"), true);
     assert.equal(isCaseSlug("toString"), false);
     assert.equal(isCaseSlug("constructor"), false);
+  });
+
+  it("detects raw malformed percent encoding before route matching", () => {
+    assert.equal(hasMalformedPercentEncoding("/designs/case/%"), true);
+    assert.equal(hasMalformedPercentEncoding("/designs/case/%GG"), true);
+    assert.equal(hasMalformedPercentEncoding("/designs/case/%25"), false);
+    assert.equal(hasMalformedPercentEncoding("/designs/case/personal"), false);
   });
 });
