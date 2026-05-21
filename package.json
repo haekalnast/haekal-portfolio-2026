@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "test": "node --experimental-strip-types --test tests/*.test.ts",
     "lint": "eslint",
     "optimize:images": "python3 scripts/optimize_images.py"
   },
