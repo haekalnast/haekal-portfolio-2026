@@ -97,8 +97,22 @@ export function getCaseStatusMap(): Record<CaseSlug, CaseRevealStatus> {
   return normalized;
 }
 
+export function hasMalformedPercentEncoding(value: string): boolean {
+  try {
+    decodeURIComponent(value);
+    return false;
+  } catch {
+    return true;
+  }
+}
+
+export function normalizeCaseSlugParam(value: string | undefined): string {
+  const trimmed = (value ?? "").trim();
+  return hasMalformedPercentEncoding(trimmed) ? "" : decodeURIComponent(trimmed).toLowerCase();
+}
+
 export function isCaseSlug(value: string): value is CaseSlug {
-  return value in CASE_DESIGNS;
+  return Object.hasOwn(CASE_DESIGNS, value);
 }
 
 export function getAdjacentCaseSlugs(slug: CaseSlug): { prev: CaseSlug; next: CaseSlug } {
