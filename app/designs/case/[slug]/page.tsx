@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CaseDetailPage } from "@/components/designs/case-detail-page";
-import { CASE_DESIGNS, isCaseSlug, type CaseSlug } from "@/lib/case-designs";
+import { CASE_DESIGNS, isCaseSlug, normalizeCaseSlug, type CaseSlug } from "@/lib/case-designs";
 import { buildPageMetadata, siteConfig } from "@/lib/seo";
 
 type CaseDetailRouteProps = {
@@ -13,15 +13,15 @@ const CASE_OG_IMAGE: Partial<Record<CaseSlug, string>> = {
   personal: "/og-case-personal.png",
 };
 
-async function resolveCaseSlug(params: CaseDetailRouteProps["params"]): Promise<string> {
+async function resolveCaseSlug(params: CaseDetailRouteProps["params"]): Promise<string | null> {
   const resolvedParams = await Promise.resolve(params);
-  return decodeURIComponent((resolvedParams.slug ?? "").trim()).toLowerCase();
+  return normalizeCaseSlug(resolvedParams.slug ?? "");
 }
 
 export async function generateMetadata({ params }: CaseDetailRouteProps): Promise<Metadata> {
   const slug = await resolveCaseSlug(params);
 
-  if (!isCaseSlug(slug)) {
+  if (!slug || !isCaseSlug(slug)) {
     return {};
   }
 
@@ -39,7 +39,7 @@ export async function generateMetadata({ params }: CaseDetailRouteProps): Promis
 export default async function CaseDetailRoute({ params }: CaseDetailRouteProps) {
   const slug = await resolveCaseSlug(params);
 
-  if (!isCaseSlug(slug)) {
+  if (!slug || !isCaseSlug(slug)) {
     notFound();
   }
 
