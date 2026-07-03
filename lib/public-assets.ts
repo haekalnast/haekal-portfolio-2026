@@ -16,6 +16,8 @@ export const PUBLIC_BRAND = {
 
 /** SFAST featured / designs cards — App Store listing. */
 export const SFAST_APP_STORE_HREF = "https://apps.apple.com/us/app/sfast/id1581067563";
+export const RESUME_DOCUMENT_HREF =
+  "https://docs.google.com/document/d/1rFAuSJrV4IpffI2PRfBmjHlHG5QDDF6L/edit?usp=sharing&ouid=107776713613949709441&rtpof=true&sd=true";
 
 export const PUBLIC_ABOUT = {
   resumeSheet: "/about/resume/sheet.png",

@@ -27,6 +27,7 @@ import {
   PUBLIC_ABOUT_EXPERIENCE,
   PUBLIC_BRAND,
   PUBLIC_CREATIVE_JOURNAL,
+  RESUME_DOCUMENT_HREF,
 } from "@/lib/public-assets";
 import { useIsMobileViewport } from "@/lib/use-is-mobile-viewport";
 import { useScrollRevealActive } from "@/lib/use-scroll-reveal-active";
@@ -41,8 +42,6 @@ const PublicationHoverGalleryCard = dynamic(
       (module) => module.PublicationHoverGalleryCard,
     ),
 );
-
-const FALLBACK_ERROR_ROUTE = "/not-found";
 
 const experienceItems = [
   { logo: PUBLIC_ABOUT_EXPERIENCE.sfSekuritas, title: "Product Designer", company: "SF Sekuritas", date: "Dec 2021 - Present", href: "https://www.instagram.com/sfast.official/" },
@@ -144,7 +143,7 @@ function ResumeCard({
           }}
           onClick={(event) => {
             event.stopPropagation();
-            window.location.href = FALLBACK_ERROR_ROUTE;
+            window.location.href = RESUME_DOCUMENT_HREF;
           }}
         />
       </div>
@@ -153,7 +152,7 @@ function ResumeCard({
         title="Resume"
         subtitle="See details"
         className="absolute left-0 top-[218px] max-md:pointer-events-auto md:pointer-events-none"
-        onTextClick={isMobile ? () => { window.location.href = FALLBACK_ERROR_ROUTE; } : undefined}
+        onTextClick={isMobile ? () => { window.location.href = RESUME_DOCUMENT_HREF; } : undefined}
       />
     </article>
   );
@@ -498,7 +497,7 @@ export default function AboutPage() {
             <div className="flex items-start justify-between gap-8 sm:gap-6">
               <LogoMark />
               <nav className="flex flex-col items-end gap-6 text-base leading-6 text-black sm:flex-row sm:items-center sm:gap-6">
-                <ExternalUnderlineLink href="https://docs.google.com/document/d/1rFAuSJrV4IpffI2PRfBmjHlHG5QDDF6L/edit?usp=sharing&ouid=107776713613949709441&rtpof=true&sd=true">Resume</ExternalUnderlineLink>
+                <ExternalUnderlineLink href={RESUME_DOCUMENT_HREF}>Resume</ExternalUnderlineLink>
                 <ExternalUnderlineLink href="https://www.linkedin.com/in/haekalnast/">Linkedin</ExternalUnderlineLink>
                 <ExternalUnderlineLink href="https://github.com/haekalnast">Github</ExternalUnderlineLink>
               </nav>

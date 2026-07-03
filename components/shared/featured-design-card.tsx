@@ -124,7 +124,9 @@ function FeaturedLaptopArtboard({
     <div
       className={cn(
         "absolute left-0 top-4 flex w-full lg:left-[-22px] lg:w-[692px] lg:justify-start",
-        wideCardStartBelowLg ? "justify-start" : "justify-center",
+        /** Mobile (`max-md`): Figma Variant 1 — mockup at x=40, y=16 inside 358×444 card; bleed right, not centered. */
+        "max-md:pl-10 lg:pl-0",
+        wideCardStartBelowLg ? "justify-start" : "max-md:justify-start md:justify-center",
       )}
     >
       <motion.div

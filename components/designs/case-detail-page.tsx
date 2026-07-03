@@ -30,6 +30,7 @@ import {
   PUBLIC_CASE_PERSONAL,
   PUBLIC_DESIGNS_CARDS_VARIANT1,
   PUBLIC_DESIGNS_MOCKUPS,
+  RESUME_DOCUMENT_HREF,
 } from "@/lib/public-assets";
 import { CaseB2bStudySections } from "@/components/designs/case-b2b-study-sections";
 import { CaseOctoStudySections } from "@/components/designs/case-octo-study-sections";
@@ -723,7 +724,7 @@ export function CaseDetailPage({ slug }: { slug: CaseSlug }) {
             <div className="flex items-start justify-between gap-8 sm:gap-6">
               <LogoMark />
               <nav className="flex flex-col items-end gap-6 text-base leading-6 text-black sm:flex-row sm:items-center sm:gap-6">
-                <ExternalUnderlineLink href="https://docs.google.com/document/d/1rFAuSJrV4IpffI2PRfBmjHlHG5QDDF6L/edit?usp=sharing&ouid=107776713613949709441&rtpof=true&sd=true">
+                <ExternalUnderlineLink href={RESUME_DOCUMENT_HREF}>
                   Resume
                 </ExternalUnderlineLink>
                 <ExternalUnderlineLink href="https://www.linkedin.com/in/haekalnast/">Linkedin</ExternalUnderlineLink>

@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { MobileSiteBottomNav } from "@/components/shared/mobile-bottom-nav";
-import { PUBLIC_BRAND } from "@/lib/public-assets";
+import { PUBLIC_BRAND, RESUME_DOCUMENT_HREF } from "@/lib/public-assets";
 
 function LogoMark() {
   return (
@@ -137,7 +137,7 @@ export default function NotFound() {
             <div className="mb-16 flex items-start justify-between gap-8 sm:mb-16 sm:gap-6">
               <LogoMark />
               <nav className="flex flex-col items-end gap-6 text-base leading-6 sm:flex-row sm:items-center sm:gap-6">
-                <FooterActionLink href="https://docs.google.com/document/d/1rFAuSJrV4IpffI2PRfBmjHlHG5QDDF6L/edit?usp=sharing&ouid=107776713613949709441&rtpof=true&sd=true">
+                <FooterActionLink href={RESUME_DOCUMENT_HREF}>
                   Resume
                 </FooterActionLink>
                 <FooterActionLink href="https://www.linkedin.com/in/haekalnast/">Linkedin</FooterActionLink>

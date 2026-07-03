@@ -7,7 +7,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
 import { cn } from "@/lib/cn";
 import { AboutToolsCard } from "@/components/shared/about-tools-card";
-import { PUBLIC_BRAND, PUBLIC_HOME_MARQUEE, SFAST_APP_STORE_HREF } from "@/lib/public-assets";
+import { PUBLIC_BRAND, PUBLIC_HOME_MARQUEE, RESUME_DOCUMENT_HREF, SFAST_APP_STORE_HREF } from "@/lib/public-assets";
 import {
   ArrowRevealButton,
   ArrowRevealText,
@@ -788,7 +788,7 @@ function FooterSection() {
           <div className="flex items-start justify-between gap-8 sm:gap-6">
             <LogoMark />
             <nav className="flex flex-col items-end gap-6 text-base leading-6 text-black sm:flex-row sm:items-center sm:gap-6">
-              <ExternalUnderlineLink href="https://docs.google.com/document/d/1rFAuSJrV4IpffI2PRfBmjHlHG5QDDF6L/edit?usp=sharing&ouid=107776713613949709441&rtpof=true&sd=true">
+              <ExternalUnderlineLink href={RESUME_DOCUMENT_HREF}>
                 Resume
               </ExternalUnderlineLink>
               <ExternalUnderlineLink href="https://www.linkedin.com/in/haekalnast/">Linkedin</ExternalUnderlineLink>
